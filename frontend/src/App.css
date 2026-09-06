@@ -1,0 +1,32 @@
+/* App.css — BulkMatrix */
+/* All global styles are in index.css. This file is intentionally minimal. */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+/* Hidden on mobile, visible on large screens */
+@media (max-width: 1024px) {
+  .lg\:flex { display: flex !important; }
+  .hidden.lg\:flex { display: none !important; }
+}
+
+@media (min-width: 1024px) {
+  .hidden.lg\:flex { display: flex !important; }
+}
