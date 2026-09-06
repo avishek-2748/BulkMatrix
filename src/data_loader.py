@@ -103,7 +103,7 @@ class DataLoader:
             # Parse dates if requested
             if parse_dates:
                 # Try to find date column
-                date_cols = ['Date', 'date', 'DATE', 'Date_x', 'Date_y']
+                date_cols = ['Date', 'date', 'DATE', 'event_date', 'Date_x', 'Date_y']
                 for col in date_cols:
                     if col in df.columns:
                         df[col] = pd.to_datetime(df[col])
@@ -119,6 +119,28 @@ class DataLoader:
                         df = df.rename(columns={first_col: 'date'})
                     except:
                         pass
+            
+            # Standardize all column names: lowercase, strip, replace spaces with underscores
+            df.columns = [col.lower().strip().replace(' ', '_') for col in df.columns]
+            
+            # Rename 'price' column to specific names based on dataset
+            if 'price' in df.columns:
+                if 'bdi' in filename:
+                    df = df.rename(columns={'price': 'bdi_score'})
+                elif 'brent' in filename:
+                    df = df.rename(columns={'price': 'brent_price'})
+                elif 'coal' in filename:
+                    df = df.rename(columns={'price': 'coal_price'})
+                elif 'iron_ore' in filename:
+                    df = df.rename(columns={'price': 'iron_ore_price'})
+                elif 'dxy' in filename:
+                    df = df.rename(columns={'price': 'dxy'})
+                elif 'usd_inr' in filename:
+                    df = df.rename(columns={'price': 'usd_inr_rate'})
+            
+            # For vessel proxies, ensure Date is renamed properly
+            if 'date' in df.columns:
+                pass  # Already handled above
             
             logger.info(f"✅ Loaded: {filename} ({len(df)} rows, {len(df.columns)} columns)")
             return df
