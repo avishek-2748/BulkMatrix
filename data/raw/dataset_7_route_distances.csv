@@ -1,0 +1,57 @@
+origin_port,destination_port,distance_nm,route_type
+Hay Point / Dalrymple Bay,Paradip,4393.5,Coal
+Hay Point / Dalrymple Bay,Visakhapatnam (Inner),4504.8,Coal
+Hay Point / Dalrymple Bay,Visakhapatnam (Outer/VGCB),4502.2,Coal
+Hay Point / Dalrymple Bay,Gangavaram,4505.5,Coal
+Hay Point / Dalrymple Bay,Dhamra,4411.1,Coal
+Hay Point / Dalrymple Bay,Gopalpur,4469.2,Coal
+Hay Point / Dalrymple Bay,Haldia Dock Complex,4394.9,Coal
+Newcastle (Kooragang Bay),Paradip,4886.5,Coal
+Newcastle (Kooragang Bay),Visakhapatnam (Inner),4959.6,Coal
+Newcastle (Kooragang Bay),Visakhapatnam (Outer/VGCB),4956.9,Coal
+Newcastle (Kooragang Bay),Gangavaram,4959.5,Coal
+Newcastle (Kooragang Bay),Dhamra,4915.1,Coal
+Newcastle (Kooragang Bay),Gopalpur,4947.8,Coal
+Newcastle (Kooragang Bay),Haldia Dock Complex,4914.9,Coal
+Gladstone,Paradip,4594.2,Coal
+Gladstone,Visakhapatnam (Inner),4696.6,Coal
+Gladstone,Visakhapatnam (Outer/VGCB),4693.9,Coal
+Gladstone,Gangavaram,4697.1,Coal
+Gladstone,Dhamra,4614.5,Coal
+Gladstone,Gopalpur,4666.7,Coal
+Gladstone,Haldia Dock Complex,4601.9,Coal
+Port Hedland,Paradip,3050.9,Iron Ore
+Port Hedland,Visakhapatnam (Inner),3087.4,Iron Ore
+Port Hedland,Visakhapatnam (Outer/VGCB),3084.6,Iron Ore
+Port Hedland,Gangavaram,3086.6,Iron Ore
+Port Hedland,Dhamra,3090.4,Iron Ore
+Port Hedland,Gopalpur,3096.0,Iron Ore
+Port Hedland,Haldia Dock Complex,3109.3,Iron Ore
+Richards Bay Coal Terminal,Paradip,4303.4,Coal
+Richards Bay Coal Terminal,Visakhapatnam (Inner),4076.1,Coal
+Richards Bay Coal Terminal,Visakhapatnam (Outer/VGCB),4076.1,Coal
+Richards Bay Coal Terminal,Gangavaram,4071.7,Coal
+Richards Bay Coal Terminal,Dhamra,4358.4,Coal
+Richards Bay Coal Terminal,Gopalpur,4208.1,Coal
+Richards Bay Coal Terminal,Haldia Dock Complex,4451.1,Coal
+Maputo (Matola),Paradip,4181.4,Coal
+Maputo (Matola),Visakhapatnam (Inner),3952.8,Coal
+Maputo (Matola),Visakhapatnam (Outer/VGCB),3953.0,Coal
+Maputo (Matola),Gangavaram,3948.5,Coal
+Maputo (Matola),Dhamra,4235.0,Coal
+Maputo (Matola),Gopalpur,4084.4,Coal
+Maputo (Matola),Haldia Dock Complex,4327.1,Coal
+Taboneo Anchorage,Paradip,2184.2,Coal
+Taboneo Anchorage,Visakhapatnam (Inner),2273.9,Coal
+Taboneo Anchorage,Visakhapatnam (Outer/VGCB),2271.2,Coal
+Taboneo Anchorage,Gangavaram,2274.3,Coal
+Taboneo Anchorage,Dhamra,2211.0,Coal
+Taboneo Anchorage,Gopalpur,2250.2,Coal
+Taboneo Anchorage,Haldia Dock Complex,2210.6,Coal
+Baltimore / Norfolk,Paradip,7269.8,Coal
+Baltimore / Norfolk,Visakhapatnam (Inner),7330.1,Coal
+Baltimore / Norfolk,Visakhapatnam (Outer/VGCB),7332.7,Coal
+Baltimore / Norfolk,Gangavaram,7332.7,Coal
+Baltimore / Norfolk,Dhamra,7212.0,Coal
+Baltimore / Norfolk,Gopalpur,7267.7,Coal
+Baltimore / Norfolk,Haldia Dock Complex,7158.4,Coal

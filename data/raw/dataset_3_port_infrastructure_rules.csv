@@ -1,0 +1,16 @@
+port_name,country,port_type,max_draft_m,max_loa_m,max_beam_m,discharge_rate_tpd,max_vessel_class,notes
+Paradip,India,Discharge,16.5,300,46.0,35000,Capesize,Major coal/iron ore hub on East Coast; handles Capesize with restrictions.
+Visakhapatnam (Inner),India,Discharge,14.5,240,32.5,20000,Panamax,Inner harbor limits; typically Panamax/Supramax.
+Visakhapatnam (Outer/VGCB),India,Discharge,18.1,356,50.0,70000,Capesize,VGCB outer berth; deep-draft Capesize friendly.
+Gangavaram,India,Discharge,19.5,320,48.0,45000,Capesize,Private port (Adani); designed for large bulkers.
+Dhamra,India,Discharge,18.0,310,48.0,50000,Capesize,Deep-draft port; coal/iron ore focus.
+Gopalpur,India,Discharge,14.5,230,33.0,18000,Supramax,Smaller East Coast port; Supramax/Handy friendly.
+Haldia Dock Complex,India,Discharge,8.5,230,32.26,12000,Handysize,Shallow draft; restricts to Handysize/Small Supramax.
+Hay Point / Dalrymple Bay,Australia,Loading,19.0,300,50.0,80000,Capesize,Major coal export terminal; Capesize frequent.
+Newcastle (Kooragang Bay),Australia,Loading,16.5,300,45.0,70000,Capesize,World-scale coal export hub; Capesize/Panamax.
+Gladstone,Australia,Loading,17.5,300,46.0,65000,Capesize,Coal exports; Capesize/Panamax.
+Port Hedland,Australia,Loading,21.0,320,50.0,90000,Capesize,Premier iron ore export terminal; very high loading rates.
+Richards Bay Coal Terminal,South Africa,Loading,17.5,300,47.0,65000,Capesize,Coal export hub; Capesize/Panamax.
+Taboneo Anchorage,Indonesia,Loading,14.0,240,38.0,25000,Panamax,Coal loading anchorage; Panamax/Supramax typical.
+Maputo (Matola),Mozambique,Loading,13.5,230,32.2,20000,Panamax,Coal/bulk; Panamax/Supramax.
+Baltimore / Norfolk,USA,Loading,15.2,290,45.0,40000,Capesize,US East Coast coal exports; Capesize/Panamax.
