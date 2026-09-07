@@ -16,3 +16,6 @@ Thumbs.db
 .vscode/
 .idea/
 venv/
+data/features/*.csv
+data/features/*.parquet
+data/processed/*.csv

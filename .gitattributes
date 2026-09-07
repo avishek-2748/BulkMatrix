@@ -1,3 +1,0 @@
-data/features/*.csv filter=lfs diff=lfs merge=lfs -text
-data/features/*.parquet filter=lfs diff=lfs merge=lfs -text
-data/processed/*.csv filter=lfs diff=lfs merge=lfs -text
