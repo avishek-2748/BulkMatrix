@@ -1,0 +1,4 @@
+Horizon,Best MAE,Best RMSE,Best MAPE,Recommended
+15 days,Prophet (393),Prophet (501),Prophet (21.7%),Prophet
+30 days,Prophet (382),Prophet (499),Prophet (22.6%),Prophet
+90 days,Prophet (415),Prophet (519),LightGBM (21.3%),LightGBM
