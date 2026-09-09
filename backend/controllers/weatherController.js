@@ -1,7 +1,4 @@
-/**
- * weatherController.js
- * Handles weather-related API requests.
- */
+
 
 import INDIAN_PORTS from '../data/indianPorts.js';
 import { fetchAllWeatherData } from '../services/weatherService.js';
