@@ -1,0 +1,10 @@
+model,horizon,mae_mean,mae_std,rmse_mean,rmse_std,mape_mean,mape_std
+catboost,15,397.07,,540.56,,20.4,
+catboost,30,502.24,,631.75,,26.03,
+catboost,90,465.33,,604.78,,24.99,
+lightgbm,15,655.51,,791.92,,34.31,
+lightgbm,30,503.16,,638.13,,26.8,
+lightgbm,90,516.53,,644.04,,27.76,
+xgboost,15,620.35,,757.06,,30.54,
+xgboost,30,487.89,,625.07,,26.6,
+xgboost,90,472.52,,596.37,,25.84,
