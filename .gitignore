@@ -19,3 +19,5 @@ venv/
 data/features/*.csv
 data/features/*.parquet
 data/processed/*.csv
+
+models/archived

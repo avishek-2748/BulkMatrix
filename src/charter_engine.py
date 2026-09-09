@@ -10,7 +10,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 
-# Fix import - use relative import
+# Import the updated prediction pipeline
 from .prediction_pipeline import PredictionPipeline
 
 logging.basicConfig(level=logging.INFO)
@@ -25,6 +25,7 @@ class CharterEngine:
         logger.info("🚢 Initializing Charter Engine")
         logger.info("=" * 60)
         
+        # Initialize prediction pipeline
         self.prediction = PredictionPipeline()
         
         # Load static data
@@ -574,14 +575,20 @@ class CharterEngine:
         # 5. Buy/Hold signal (use first destination)
         route_id = f"{origin}_{destinations[0]}"
         current_rate = self.prediction.get_current_rate(route_id)
-        forecast_rate = forecasts[0].get('prediction', current_rate) if forecasts else current_rate
+        
+        # Get forecast for 30 days (or use the first available forecast)
+        forecast_rate = current_rate
+        for f in forecasts:
+            if f.get('horizon') == 30 and 'prediction' in f:
+                forecast_rate = f['prediction']
+                break
+        
         buy_hold = self.prediction.get_buy_hold_signal(
             current_rate, forecast_rate, 30
         )
         
         # 6. Best port selection
         if port_times:
-            # Filter out error entries
             valid_ports = [p for p in port_times if 'error' not in p]
             if valid_ports:
                 best_port = min(valid_ports, key=lambda x: x.get('total_days', 999))
