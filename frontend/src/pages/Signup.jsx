@@ -62,9 +62,14 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
 
-  const { signup } = useAuth();
+  const { user, signup } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     let strength = 0;
@@ -581,12 +586,13 @@ const Signup = () => {
           style={{
             marginTop: '20px',
             textAlign: 'center',
-            fontSize: '13.5px'
+            fontSize: '13.5px',
+            color: 'var(--text-secondary)'
           }}
         >
           Already have an account?{' '}
 
-          <Link to="/login">
+          <Link to="/login" style={{ color: 'var(--brand-blue)', fontWeight: 700, textDecoration: 'none' }}>
             Sign in
           </Link>
 
