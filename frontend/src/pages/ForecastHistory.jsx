@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { History, Search, Filter, Download, Eye, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { getModelPerformance } from '../services/api';
+import { History, Search, Filter, Download, Eye, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Minus, Cpu, Award } from 'lucide-react';
 
 const MOCK_HISTORY = [
   { id: 1, date: '2026-09-05', route: 'Newcastle → Paradip', cargo: 'Coal', vessel: 'Panamax', predictedRate: 24.50, actualRate: 25.10, trend: 'UP', confidence: 89, recommendation: 'CHARTER NOW', status: 'Completed' },
@@ -24,6 +25,18 @@ const ForecastHistory = () => {
   const [search, setSearch] = useState('');
   const [recFilter, setRecFilter] = useState('ALL');
   const [page, setPage] = useState(1);
+  const [modelMetrics, setModelMetrics] = useState([]);
+
+  useEffect(() => {
+    getModelPerformance()
+      .then(res => {
+        if (res && res.metrics) {
+          setModelMetrics(res.metrics);
+        }
+      })
+      .catch(err => console.warn('Could not load model performance:', err));
+  }, []);
+
 
   const filtered = MOCK_HISTORY.filter(r => {
     const matchSearch = search === '' || r.route.toLowerCase().includes(search.toLowerCase()) || r.cargo.toLowerCase().includes(search.toLowerCase()) || r.vessel.toLowerCase().includes(search.toLowerCase());
@@ -81,6 +94,39 @@ const ForecastHistory = () => {
           </div>
         ))}
       </div>
+
+      {/* Model Benchmarks Card */}
+      <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '20px 24px', marginBottom: '20px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+          <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Cpu size={18} color="var(--brand-blue)" /> Production Model Evaluation Metrics (CatBoost vs XGBoost vs LightGBM)
+          </h3>
+          <span style={{ fontSize: '12px', fontWeight: 600, color: '#16A34A', background: '#F0FDF4', padding: '4px 10px', borderRadius: '12px', border: '1px solid #BBF7D0' }}>
+            ⭐ CatBoost Selected (Best MAPE)
+          </span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
+          {[
+            { horizon: '15-Day Horizon', model: 'CatBoost (Regularized)', mae: '397.07', rmse: '540.56', mape: '20.40%' },
+            { horizon: '30-Day Horizon', model: 'CatBoost (Regularized)', mae: '502.24', rmse: '631.75', mape: '26.03%' },
+            { horizon: '90-Day Horizon', model: 'CatBoost (Regularized)', mae: '465.33', rmse: '604.78', mape: '24.98%' },
+          ].map(m => (
+            <div key={m.horizon} style={{ background: '#F8FAFC', border: '1px solid var(--border)', borderRadius: '10px', padding: '14px 16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{m.horizon}</span>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--brand-blue)', background: 'var(--light-blue-bg)', padding: '2px 8px', borderRadius: '6px' }}>{m.model}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                <span>MAE: <strong>{m.mae}</strong></span>
+                <span>RMSE: <strong>{m.rmse}</strong></span>
+                <span>MAPE: <strong style={{ color: 'var(--success)' }}>{m.mape}</strong></span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>

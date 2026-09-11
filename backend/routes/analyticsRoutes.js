@@ -6,7 +6,8 @@ import {
   getCommodityAnalytics,
   getFxAnalytics,
   getFuelAnalytics,
-  runScenarioSimulation 
+  runScenarioSimulation,
+  getModelPerformance
 } from '../controllers/analyticsController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -18,6 +19,8 @@ router.get('/risk-calendar', protect, getRiskCalendar);
 router.get('/commodity', protect, getCommodityAnalytics);
 router.get('/fx', protect, getFxAnalytics);
 router.get('/fuel', protect, getFuelAnalytics);
+router.get('/model-performance', protect, getModelPerformance);
 router.post('/scenario', protect, runScenarioSimulation);
 
 export default router;
+
