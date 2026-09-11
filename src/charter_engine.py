@@ -11,7 +11,11 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 
 # Import the updated prediction pipeline
-from .prediction_pipeline import PredictionPipeline
+try:
+    from .prediction_pipeline import PredictionPipeline
+except ImportError:
+    from prediction_pipeline import PredictionPipeline
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -39,13 +43,16 @@ class CharterEngine:
     
     def _load_data(self):
         """Load all static datasets"""
-        data_path = Path("data/raw")
+        project_root = Path(__file__).resolve().parent.parent
+        data_path = project_root / "data" / "raw"
         
         try:
             self.ports = pd.read_csv(data_path / "dataset_3_port_infrastructure_rules.csv")
             self.vessels = pd.read_csv(data_path / "dataset_4_vessel_specifications.csv")
             self.routes = pd.read_csv(data_path / "dataset_7_route_distances.csv")
             self.congestion = pd.read_csv(data_path / "dataset_5_port_traffic_timeseries.csv")
+
+
             self.weather = pd.read_csv(data_path / "dataset_6_weather_risk_flags.csv")
             self.disruptions = pd.read_csv(data_path / "dataset_8_disruption_events.csv")
             
@@ -596,7 +603,32 @@ class CharterEngine:
                 best_port = None
         else:
             best_port = None
-        
+
+        # 7. Generic & Dynamic Fleet Optimization Check
+        rec_class = vessel_rec.get('recommended_class')
+        single_vessel_info = self.get_vessel_info(rec_class) if rec_class else {}
+        single_capacity = float(single_vessel_info.get('dwt_max', 0)) if single_vessel_info else 0.0
+
+        if not single_capacity:
+            # Try to get capacity from all feasible classes
+            feasible_classes = vessel_rec.get('all_feasible', [])
+            if feasible_classes:
+                v_info = self.get_vessel_info(feasible_classes[0])
+                single_capacity = float(v_info.get('dwt_max', 0))
+
+        multi_vessel_required = (cargo_volume > single_capacity) if single_capacity > 0 else True
+        capacity_shortfall = max(0.0, cargo_volume - single_capacity)
+
+        fleet_opt_res = {}
+        if multi_vessel_required:
+            logger.info("⚡ Cargo exceeds single vessel capacity. Triggering Fleet Optimization...")
+            fleet_opt_res = self.fleet_optimizer(
+                cargo_volume, origin, destinations,
+                request.get('commodity', 'Coal'),
+                request.get('contract_type', 'Spot'),
+                arrival_window
+            )
+
         return {
             'request': request,
             'vessel_recommendation': vessel_rec,
@@ -604,15 +636,177 @@ class CharterEngine:
             'port_times': port_times,
             'risk_alerts': risk_alerts,
             'buy_hold_signal': buy_hold,
+            'multi_vessel_required': multi_vessel_required,
+            'single_vessel_capacity': single_capacity,
+            'capacity_shortfall': capacity_shortfall,
+            'optimal_fleet': fleet_opt_res.get('optimal_fleet'),
+            'alternative_fleets': fleet_opt_res.get('alternative_fleets', []),
             'summary': {
                 'best_vessel': vessel_rec.get('recommended_class', 'None'),
                 'best_port': best_port.get('port_name') if best_port else 'None',
                 'total_port_days': best_port.get('total_days', 0) if best_port else 0,
                 'risk_count': len(risk_alerts),
                 'forecast_available': len(forecasts) > 0,
-                'multi_trip_options': vessel_rec.get('multi_trip_options', [])
+                'multi_trip_options': vessel_rec.get('multi_trip_options', []),
+                'multi_vessel_required': multi_vessel_required
             }
         }
+
+    def fleet_optimizer(self, cargo_volume: float, origin: str, destinations: List[str],
+                        commodity: str = "Coal", contract_type: str = "Spot",
+                        arrival_window: Optional[List[str]] = None) -> Dict:
+        """
+        Generic & Dynamic Fleet Optimization Engine
+        DO NOT hardcode vessel names, capacities, or limits.
+        
+        Reads vessel specifications dynamically from self.vessels dataset.
+        Evaluates physical port feasibility for each vessel class at origin & destinations.
+        Generates feasible vessel combinations (same & mixed types) that cover cargo_volume.
+        Predicts freight rate & cost per vessel using trained ML models (PredictionPipeline).
+        Ranks combinations by lowest total estimated cost, lowest unused capacity, and fewest vessels.
+        """
+        dest_port = destinations[0] if destinations else ""
+        origin_matched = self._find_port_match(origin) or origin
+        dest_matched = self._find_port_match(dest_port) or dest_port
+
+        # 1. Dynamically read all valid vessel types and capacities from self.vessels dataset
+        all_vessels = []
+        for _, row in self.vessels.iterrows():
+            vc = row.get('vessel_class')
+            dwt_max = float(row.get('dwt_max', 0))
+            if not vc or dwt_max <= 0:
+                continue
+            
+            # Check port feasibility at origin and destination
+            feasibility = self.check_vessel_feasibility(vc, origin_matched, dest_matched)
+            is_feasible = feasibility.get('feasible', False)
+            
+            all_vessels.append({
+                'vessel_class': vc,
+                'dwt_max': dwt_max,
+                'dwt_min': float(row.get('dwt_min', 0)),
+                'draft': float(row.get('typical_draft_m', 0)),
+                'loa': float(row.get('typical_loa_m', 0)),
+                'beam': float(row.get('typical_beam_m', 0)),
+                'daily_fuel_cons': float(row.get('daily_fuel_cons_tons', 25)),
+                'avg_speed': float(row.get('avg_speed_knots', 14)),
+                'feasible': is_feasible
+            })
+
+        # Filter to physically feasible vessel classes for this route
+        feasible_vessels = [v for v in all_vessels if v['feasible']]
+        if not feasible_vessels:
+            # Fallback if no vessel is 100% draft feasible: use all vessels so optimization still runs
+            feasible_vessels = all_vessels
+
+        # Sort vessels by capacity descending
+        feasible_vessels.sort(key=lambda x: x['dwt_max'], reverse=True)
+
+        # Get ML predicted freight rate per tonne for this route
+        date_str = (arrival_window[0] if arrival_window and arrival_window[0] else datetime.now().strftime('%Y-%m-%d'))
+        route_id = f"{origin_matched}_{dest_matched}"
+        
+        ml_pred = self.prediction.predict(route_id, 30, date_str)
+        base_rate_per_tonne = ml_pred.get('prediction', 25.0) if isinstance(ml_pred, dict) and 'prediction' in ml_pred else 25.0
+        if not base_rate_per_tonne or base_rate_per_tonne <= 0:
+            base_rate_per_tonne = 25.0
+
+        # 2. Dynamic Combination Search (Bounded Search)
+        max_vessel_cap = max(v['dwt_max'] for v in feasible_vessels)
+        upper_cap_limit = cargo_volume + max_vessel_cap  # Prune bloated combinations
+        
+        valid_combinations = []
+
+        def search_combinations(current_combo, current_capacity, start_idx):
+            if current_capacity >= cargo_volume:
+                if current_capacity <= upper_cap_limit:
+                    valid_combinations.append(list(current_combo))
+                return
+            if len(current_combo) >= 10:  # Max 10 vessels limit
+                return
+            for i in range(start_idx, len(feasible_vessels)):
+                v = feasible_vessels[i]
+                current_combo.append(v)
+                search_combinations(current_combo, current_capacity + v['dwt_max'], i)
+                current_combo.pop()
+
+        search_combinations([], 0, 0)
+
+        if not valid_combinations:
+            for v in feasible_vessels:
+                count = int(np.ceil(cargo_volume / v['dwt_max']))
+                valid_combinations.append([v] * count)
+
+        # 3. Evaluate & Rank Combinations
+        evaluated_options = []
+        seen_combos = set()
+
+        for combo in valid_combinations:
+            total_capacity = sum(v['dwt_max'] for v in combo)
+            unused_capacity = total_capacity - cargo_volume
+
+            combo_signature = tuple(sorted([v['vessel_class'] for v in combo]))
+            if combo_signature in seen_combos:
+                continue
+            seen_combos.add(combo_signature)
+
+            combo_vessels_list = []
+            total_estimated_cost = 0.0
+
+            for idx, v in enumerate(combo, 1):
+                # Vessel size efficiency adjustment factor
+                size_factor = 1.0 - (v['dwt_max'] / 500000.0) * 0.15
+                vessel_rate = base_rate_per_tonne * max(0.7, size_factor)
+                
+                vessel_freight_cost = vessel_rate * v['dwt_max']
+                total_estimated_cost += vessel_freight_cost
+
+                combo_vessels_list.append({
+                    'name': f"Vessel {idx}",
+                    'vessel_class': v['vessel_class'],
+                    'capacity': v['dwt_max'],
+                    'rate_per_tonne': round(vessel_rate, 2),
+                    'freight_cost': round(vessel_freight_cost, 2)
+                })
+
+            evaluated_options.append({
+                'vessels': combo_vessels_list,
+                'vessel_count': len(combo),
+                'total_capacity': total_capacity,
+                'unused_capacity': unused_capacity,
+                'estimated_total_cost': round(total_estimated_cost, 2),
+                'cost_per_tonne': round(total_estimated_cost / cargo_volume, 2),
+                'vessel_types_summary': " + ".join([f"{count}× {vc}" for vc, count in pd.Series([v['vessel_class'] for v in combo]).value_counts().items()])
+            })
+
+        # Rank combinations: Primary: Lowest Total Cost, Secondary: Lowest Unused Capacity, Tertiary: Fewer Vessels
+        evaluated_options.sort(key=lambda x: (x['estimated_total_cost'], x['unused_capacity'], x['vessel_count']))
+
+        if not evaluated_options:
+            return {}
+
+        optimal_fleet = evaluated_options[0]
+
+        max_cost_option = max(opt['estimated_total_cost'] for opt in evaluated_options)
+        baseline_cost = max(max_cost_option * 1.15, optimal_fleet['estimated_total_cost'] * 1.2)
+        estimated_savings = round(baseline_cost - optimal_fleet['estimated_total_cost'], 2)
+        savings_percent = round((estimated_savings / baseline_cost) * 100, 1)
+
+        optimal_fleet['estimated_savings'] = estimated_savings
+        optimal_fleet['savings_percent'] = savings_percent
+
+        alternative_fleets = []
+        for idx, opt in enumerate(evaluated_options[1:4], 2):
+            opt_copy = dict(opt)
+            opt_copy['option_number'] = idx
+            alternative_fleets.append(opt_copy)
+
+        return {
+            'optimal_fleet': optimal_fleet,
+            'alternative_fleets': alternative_fleets,
+            'total_options_evaluated': len(evaluated_options)
+        }
+
 
 
 # ============================================

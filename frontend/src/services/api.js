@@ -94,6 +94,12 @@ export const runScenario = async (data) => {
   return response.data;
 };
 
+export const getModelPerformance = async () => {
+  const response = await api.get('/analytics/model-performance');
+  return response.data;
+};
+
+
 export const getAdminStats = async () => {
   const response = await api.get('/admin/stats');
   return response.data;

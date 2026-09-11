@@ -1,0 +1,13 @@
+{
+  "watch": ["server.js", "controllers", "routes", "services", "models", "config"],
+  "ext": "js,json",
+  "ignore": [
+    "node_modules",
+    "../node_modules",
+    "../frontend",
+    "../data",
+    "../models",
+    "../catboost_info",
+    "*.log"
+  ]
+}
