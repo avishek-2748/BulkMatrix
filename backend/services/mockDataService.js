@@ -131,47 +131,75 @@ export const generateRecommendation = async (params) => {
     };
   }
 
-  return {
-    forecast: {
-      currentRate: 18.5,
-      forecast15: 19.2,
-      forecast30: 21.0,
-      forecast90: 17.5,
-      trend: "up"
-    },
-    vesselRecommendation: {
-      class: vesselClass,
-      draftCompatible: true,
-      loaCompatible: true,
-      beamCompatible: true,
-      reason: `${vesselClass} is recommended because it matches the cargo volume and destination port constraints.`
-    },
-    multi_vessel_required: multiReq,
-    single_vessel_capacity: singleCap,
-    capacity_shortfall: shortfall,
-    optimal_fleet: optimalFleet,
-    alternative_fleets: alternativeFleets,
-    marketSignal: {
-      signal: "BUY NOW",
-      confidence: 87,
-      reason: "Freight rates are expected to increase during the next 30 days."
-    },
-    portTimeEstimates: (params.destination_ports || []).map(port => ({
+    const portRates = {
+      'Paradip': 21.0,
+      'Vizag': 20.0,
+      'Gangavaram': 20.5,
+      'Dhamra': 21.2,
+      'Gopalpur': 21.8,
+      'Haldia': 23.0,
+      'Sagar–Sandheads': 22.4
+    };
+
+    const destList = Array.isArray(params.destination_ports) ? params.destination_ports : [params.destination_ports || 'Paradip'];
+    const destinationRates = destList.map(port => ({
       port,
-      waitingDays: Math.floor(Math.random() * 4) + 1,
-      dischargeDays: Math.floor(Math.random() * 3) + 2,
-      get total() { return this.waitingDays + this.dischargeDays; }
-    })),
-    riskAlerts: [
-      { type: "Weather", severity: "HIGH", message: "High Cyclone Risk on East Coast" },
-      { type: "Congestion", severity: "MEDIUM", message: "Paradip queue building up" }
-    ],
-    alternatePort: {
-      port: "Dhamra",
-      reason: "Lower congestion and better weather conditions"
-    }
+      freightRate: portRates[port] || 21.0
+    }));
+
+    const primaryRate = destinationRates[0]?.freightRate || 21.0;
+    const alternativeRate = Math.round((primaryRate + 2.0) * 10) / 10;
+
+    return {
+      forecast: {
+        currentRate: 18.5,
+        forecast15: 19.2,
+        forecast30: primaryRate,
+        forecast90: 17.5,
+        recommendedRate: primaryRate,
+        trend: "up"
+      },
+      vesselRecommendation: {
+        class: vesselClass,
+        draftCompatible: true,
+        loaCompatible: true,
+        beamCompatible: true,
+        reason: `${vesselClass} is recommended because it matches the cargo volume and destination port constraints.`
+      },
+      multi_vessel_required: multiReq,
+      single_vessel_capacity: singleCap,
+      capacity_shortfall: shortfall,
+      optimal_fleet: optimalFleet,
+      alternative_fleets: alternativeFleets,
+      destinationRates,
+      alternativeOption: {
+        name: 'Alternative Vessel / Route Option',
+        vesselClass: vesselClass === 'CAPESIZE' ? 'PANAMAX' : 'SUPRAMAX',
+        freightRate: alternativeRate,
+        estimatedTotalCost: Math.round(cargo * alternativeRate)
+      },
+      marketSignal: {
+        signal: "BUY NOW",
+        confidence: 87,
+        reason: "Freight rates are expected to increase during the next 30 days."
+      },
+      portTimeEstimates: destList.map(port => ({
+        port,
+        freightRate: portRates[port] || primaryRate,
+        waitingDays: Math.floor(Math.random() * 4) + 1,
+        dischargeDays: Math.floor(Math.random() * 3) + 2,
+        get total() { return this.waitingDays + this.dischargeDays; }
+      })),
+      riskAlerts: [
+        { type: "Weather", severity: "HIGH", message: "High Cyclone Risk on East Coast" },
+        { type: "Congestion", severity: "MEDIUM", message: "Paradip queue building up" }
+      ],
+      alternatePort: {
+        port: "Dhamra",
+        reason: "Lower congestion and better weather conditions"
+      }
+    };
   };
-};
 
 export const runScenario = async (params) => {
   return {

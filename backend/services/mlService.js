@@ -66,12 +66,40 @@ const normalizeRecommendation = (data, params) => {
     ? params.destination_ports
     : [params.destination_ports || "Paradip"];
 
+  // Destination rates resolution
+  const portRateMap = { 'Paradip': 21.0, 'Vizag': 20.0, 'Gangavaram': 20.5, 'Dhamra': 21.2, 'Gopalpur': 21.8, 'Haldia': 23.0, 'Sagar–Sandheads': 22.4 };
+  const destinationRates = portsList.map(portName => {
+    let portRate = null;
+    if (data.destinationRates && Array.isArray(data.destinationRates)) {
+      const found = data.destinationRates.find(d => (d.port || '').toLowerCase() === String(portName).toLowerCase());
+      if (found?.freightRate) portRate = found.freightRate;
+    }
+    if (!portRate && data.forecasts && Array.isArray(data.forecasts)) {
+      const match = data.forecasts.find(f => 
+        f.horizon === 30 && (f.route_id || '').toLowerCase().includes(String(portName).toLowerCase())
+      );
+      if (match?.prediction) portRate = match.prediction;
+    }
+    if (!portRate) {
+      portRate = portRateMap[portName] || forecast30;
+    }
+    return {
+      port: String(portName),
+      freightRate: Number(portRate)
+    };
+  });
+
+  const primaryForecastRate = destinationRates[0]?.freightRate || forecast30;
+  const alternativeFreightRate = data.alternativeOption?.freightRate || Math.round((primaryForecastRate + 2.0) * 10) / 10;
+
   const portTimeEstimates = portsList.map(portName => {
     const found = rawPorts.find(p => (p.port || p.port_name || '').toLowerCase().includes(String(portName).toLowerCase()));
     const waitingDays = found ? (found.waiting_days || found.waitingDays || 2) : 2;
     const dischargeDays = found ? (found.discharge_days || found.dischargeDays || 3) : 3;
+    const rateItem = destinationRates.find(d => d.port.toLowerCase() === String(portName).toLowerCase());
     return {
       port: String(portName),
+      freightRate: rateItem ? rateItem.freightRate : primaryForecastRate,
       waitingDays,
       dischargeDays,
       total: waitingDays + dischargeDays
@@ -104,9 +132,10 @@ const normalizeRecommendation = (data, params) => {
     forecast: {
       currentRate,
       forecast15,
-      forecast30,
+      forecast30: primaryForecastRate,
       forecast90,
-      trend: forecast30 > currentRate ? 'up' : 'down'
+      recommendedRate: primaryForecastRate,
+      trend: primaryForecastRate > currentRate ? 'up' : 'down'
     },
     vesselRecommendation: {
       class: vesselClass,
@@ -120,6 +149,13 @@ const normalizeRecommendation = (data, params) => {
     capacityShortfall: capShortfall,
     optimalFleet: data.optimal_fleet || data.optimalFleet || null,
     alternativeFleets: data.alternative_fleets || data.alternativeFleets || [],
+    destinationRates,
+    alternativeOption: data.alternativeOption || {
+      name: 'Alternative Vessel / Route Option',
+      vesselClass: vesselClass === 'CAPESIZE' ? 'PANAMAX' : 'SUPRAMAX',
+      freightRate: alternativeFreightRate,
+      estimatedTotalCost: Math.round(reqCargo * alternativeFreightRate)
+    },
     marketSignal: {
       signal: signalText,
       confidence: confidenceVal,

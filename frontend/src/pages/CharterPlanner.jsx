@@ -3,6 +3,7 @@ import { generateCharterRecommendation } from '../services/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Anchor, ShieldCheck, TrendingUp, AlertTriangle, Ship, Calendar, MapPin, Package, Clock, Info, Sparkles, CheckCircle, XCircle, Layers, Award } from 'lucide-react';
 import { formatCurrency, formatNumber } from '../utils/formatters';
+import EstimatedFreightCost from '../components/EstimatedFreightCost';
 
 const DESTINATION_PORTS = ['Paradip', 'Vizag', 'Gangavaram', 'Gopalpur', 'Dhamra', 'Sagar–Sandheads', 'Haldia'];
 const ORIGIN_PORTS = ['Hay Point', 'Newcastle', 'Gladstone', 'Port Hedland', 'Baltimore', 'Norfolk', 'Maputo', 'Russia', 'Indonesia'];
@@ -331,6 +332,14 @@ const CharterPlanner = () => {
               </div>
             </div>
           )}
+
+          {/* Estimated Freight Cost Section */}
+          <EstimatedFreightCost
+            cargoVolumeTonnes={formData.cargo_volume_tonnes}
+            recommendationResult={result}
+            selectedDestinations={formData.destination_ports}
+            originPort={formData.origin_port}
+          />
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
             {/* Freight Forecast Chart */}

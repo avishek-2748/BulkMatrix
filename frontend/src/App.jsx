@@ -36,9 +36,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 
-            {/* Protected Dashboard Routes */}
+            {/* Protected Dashboard Routes - Root is protected and opens Login for unauthenticated users */}
             <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Home />} />
               <Route path="/planner" element={<CharterPlanner />} />
               <Route path="/live" element={<LiveOps />} />
               <Route path="/weather" element={<WeatherIntelligence />} />

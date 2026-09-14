@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Anchor, Lock, Mail, AlertTriangle, Loader2, TrendingUp, Ship, BarChart2 } from 'lucide-react';
@@ -16,8 +16,14 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,12 +96,15 @@ const Login = () => {
 
       {/* Right Panel — Form */}
       <div style={{ width: '480px', flexShrink: 0, background: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 48px' }}>
-        {/* Mobile logo */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }} className="flex lg:hidden">
-          <div style={{ width: '36px', height: '36px', background: 'var(--brand-blue)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '10px' }}>
-            <Anchor size={18} color="white" />
+        {/* BulkMatrix Logo on Form Panel */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '32px' }}>
+          <div style={{ width: '38px', height: '38px', background: 'var(--brand-blue)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '12px', flexShrink: 0 }}>
+            <Anchor size={20} color="white" />
           </div>
-          <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>BULKMATRIX</div>
+          <div>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>BULKMATRIX</div>
+            <div style={{ fontSize: '9px', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.08em', marginTop: '2px' }}>MARITIME INTELLIGENCE</div>
+          </div>
         </div>
 
         <div style={{ marginBottom: '32px' }}>
