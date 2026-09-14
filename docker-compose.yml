@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # MongoDB Service
+  mongodb:
+    image: mongo:latest
+    container_name: bulkmatrix_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: bulkmatrix
+    volumes:
+      - mongo_data:/data/db
+
+  # Python FastAPI ML Engine
+  ml-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml
+    container_name: bulkmatrix_ml_api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./src:/app/src
+
+  # Node.js API Gateway Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bulkmatrix_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/bulkmatrix
+      - JWT_SECRET=bulkmatrix_production_secret_key_2026
+      - ML_API_URL=http://ml-service:8000
+      - FRONTEND_URL=http://localhost:5173
+    depends_on:
+      - mongodb
+      - ml-service
+
+  # React Frontend (Vite)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bulkmatrix_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5000/api
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

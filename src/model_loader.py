@@ -40,7 +40,8 @@ class ModelLoader:
     
     def _load_all_models(self):
         """Load all models from models/regularized/ into cache"""
-        self._model_path = Path("models/regularized")
+        project_root = Path(__file__).resolve().parent.parent
+        self._model_path = project_root / "models" / "regularized"
         if not self._model_path.exists():
             logger.warning(f"Model path not found: {self._model_path}")
             return
