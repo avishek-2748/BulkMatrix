@@ -21,3 +21,5 @@ data/features/*.parquet
 data/processed/*.csv
 
 models/archived
+
+backend/.env
