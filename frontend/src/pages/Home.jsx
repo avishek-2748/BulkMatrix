@@ -159,9 +159,9 @@ const Home = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <QuickAction to="/planner" icon={Anchor} title="New Charter Plan" description="Generate AI-powered vessel and freight recommendations" color="#FF7426" bg="#FFF1E8" />
             <QuickAction to="/contracts" icon={FileCheck} title="Charter Bookings & Fixtures" description="Track confirmed voyages, owner responses, and fixture note recaps" color="#16A34A" bg="#E8F8EF" />
+            <QuickAction to="/analytics" icon={BarChart2} title="Voyage Analytics" description="Cargo volume trends, contract funnel, and route distribution insights" color="#0B82C9" bg="#EAF6FC" />
             <QuickAction to="/chat" icon={MessageSquare} title="Charter Messages" description="Negotiate charter terms and coordinate with vessel owners" color="#7C3AED" bg="#EDE9FE" />
-            <QuickAction to="/live-tracker" icon={Ship} title="Live Fleet AIS Tracker" description="Track active vessels, positions, and live AIS movement" color="#0B82C9" bg="#EAF6FC" />
-            <QuickAction to="/market-analysis" icon={BarChart2} title="Market Analysis" description="Live BDI, fuel, FX, coal and iron ore market indicators" color="#122F55" bg="#F4FAFD" />
+            <QuickAction to="/live-tracker" icon={Ship} title="Live Fleet AIS Tracker" description="Track active vessels, positions, and live AIS movement" color="#122F55" bg="#F4FAFD" />
             <QuickAction to="/weather" icon={Cloud} title="Weather Intelligence" description="Live marine weather conditions and risk alerts" color="#0B82C9" bg="#EAF6FC" />
           </div>
         </div>

@@ -13,7 +13,8 @@ import {
   Menu,
   Inbox,
   FileCheck,
-  MessageSquare
+  MessageSquare,
+  BarChart2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from '../NotificationBell';
@@ -34,9 +35,10 @@ const getNavItems = (role) => {
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/planner', label: 'Charter Planner', icon: Anchor },
     { path: '/contracts', label: 'Bookings', icon: FileCheck },
+    { path: '/analytics', label: 'Voyage Analytics', icon: BarChart2 },
     { path: '/live-tracker', label: 'Live Fleet AIS', icon: Map },
-    { path: '/weather', label: 'Weather Intelligence', icon: CloudRain },
-    { path: '/market-analysis', label: 'Market Analysis', icon: TrendingUp },
+    { path: '/weather', label: 'Weather', icon: CloudRain },
+    { path: '/market-analysis', label: 'Markets', icon: TrendingUp },
     { path: '/chat', label: 'Messages', icon: MessageSquare },
   ];
 };

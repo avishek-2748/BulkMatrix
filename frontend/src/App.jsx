@@ -21,6 +21,7 @@ import VesselDetail from './pages/owner/VesselDetail';
 import CharterContracts from './pages/CharterContracts';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
+import VoyageAnalytics from './pages/VoyageAnalytics';
 import { DataProvider } from './context/DataContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -60,6 +61,7 @@ function App() {
               <Route path="/dashboard" element={<Home />} />
               <Route path="/planner" element={<CharterPlanner />} />
               <Route path="/contracts" element={<CharterContracts />} />
+              <Route path="/analytics" element={<VoyageAnalytics />} />
               <Route path="/live" element={<LiveOps />} />
               <Route path="/live-tracker" element={<LiveOperations />} />
               <Route path="/weather" element={<WeatherIntelligence />} />
