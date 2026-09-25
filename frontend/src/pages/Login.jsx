@@ -21,7 +21,11 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard', { replace: true });
+      if (user.role === 'VESSEL_OWNER') {
+        navigate('/owner/dashboard', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     }
   }, [user, navigate]);
 
@@ -30,8 +34,12 @@ const Login = () => {
     setError('');
     setLoading(true);
     try {
-      await login({ email, password });
-      navigate('/dashboard');
+      const userData = await login({ email, password });
+      if (userData.role === 'VESSEL_OWNER') {
+        navigate('/owner/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please verify your credentials.');
     } finally {

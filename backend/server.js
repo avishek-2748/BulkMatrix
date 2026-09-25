@@ -11,6 +11,13 @@ import analyticsRoutes from './routes/analyticsRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import marketAnalysisRoutes from './routes/marketAnalysisRoutes.js';
+import ownerRoutes from './routes/ownerRoutes.js';
+import vesselRoutes from './routes/vesselRoutes.js';
+import contractRoutes from './routes/contractRoutes.js';
+import chatRoutes from './routes/chatRoutes.js';
+import availabilityRoutes from './routes/availabilityRoutes.js';
+import aisRoutes from './routes/aisRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 // Connect Database
 connectDB();
@@ -67,6 +74,13 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/market-analysis', marketAnalysisRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/weather', weatherRoutes);
+app.use('/api/owner', ownerRoutes);
+app.use('/api/vessels', vesselRoutes);
+app.use('/api/contracts', contractRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/availability', availabilityRoutes);
+app.use('/api/ais', aisRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // ===============================
 // 404 HANDLER

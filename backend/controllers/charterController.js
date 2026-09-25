@@ -1,5 +1,6 @@
 import * as mlService from '../services/mlService.js';
 import Charter from '../models/Charter.js';
+import { findBestOwners } from '../services/matchingService.js';
 
 export const generateRecommendation = async (req, res) => {
   try {
@@ -27,9 +28,17 @@ export const generateRecommendation = async (req, res) => {
       status: 'recommended'
     });
 
+    // Call matching engine to find the best vessel owners
+    const rankedOwners = await findBestOwners(
+      { vessel_class: recommendation.vesselRecommendation?.class || 'Supramax', route: { origin: params.origin_port, destination: params.destination_ports[0] } },
+      params.arrival_window_start,
+      params.arrival_window_end
+    );
+
     res.status(201).json({
       ...recommendation,
-      charterId: charter._id
+      charterId: charter._id,
+      suitableOwners: rankedOwners
     });
   } catch (error) {
     res.status(500).json({ message: "Error generating recommendation", error: error.message });

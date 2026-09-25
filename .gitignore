@@ -23,7 +23,7 @@ data/processed/*.csv
 
 models/archived
 
-backend/.envnode_modules/
+backend/.env
 frontend/node_modules/
 backend/node_modules/
 .vite/

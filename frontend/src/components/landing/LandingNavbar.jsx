@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { gsap } from 'gsap';
 
 const NAV_LINKS = [
@@ -9,6 +11,7 @@ const NAV_LINKS = [
 ];
 
 const LandingNavbar = ({ onLoginClick }) => {
+  const { user } = useAuth();
   const navRef = useRef(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -151,41 +154,74 @@ const LandingNavbar = ({ onLoginClick }) => {
 
         {/* Right CTA */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button
-            id="navbar-login-btn"
-            onClick={onLoginClick}
-            style={{
-              padding: '10px 24px',
-              background: '#FF7426',
-              border: 'none',
-              borderRadius: '11px',
-              color: '#FFFFFF',
-              fontSize: '14px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 200ms ease',
-              letterSpacing: '0.01em',
-              boxShadow: '0 2px 8px rgba(255, 116, 38, 0.28)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#F5661F';
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 116, 38, 0.38)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#FF7426';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)';
-              e.currentTarget.style.transform = 'none';
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'scale(0.98)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-          >
-            Login
-          </button>
+          {user ? (
+            <Link
+              to={user.role === 'VESSEL_OWNER' ? '/owner/dashboard' : '/dashboard'}
+              style={{
+                padding: '10px 22px',
+                background: '#0B82C9',
+                border: 'none',
+                borderRadius: '11px',
+                color: '#FFFFFF',
+                fontSize: '14px',
+                fontWeight: 700,
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                transition: 'all 200ms ease',
+                letterSpacing: '0.01em',
+                boxShadow: '0 2px 8px rgba(11, 130, 201, 0.28)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#0969A1';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#0B82C9';
+                e.currentTarget.style.transform = 'none';
+              }}
+            >
+              Dashboard →
+            </Link>
+          ) : (
+            <button
+              id="navbar-login-btn"
+              onClick={onLoginClick}
+              style={{
+                padding: '10px 24px',
+                background: '#FF7426',
+                border: 'none',
+                borderRadius: '11px',
+                color: '#FFFFFF',
+                fontSize: '14px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 200ms ease',
+                letterSpacing: '0.01em',
+                boxShadow: '0 2px 8px rgba(255, 116, 38, 0.28)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#F5661F';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 116, 38, 0.38)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#FF7426';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)';
+                e.currentTarget.style.transform = 'none';
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+            >
+              Login
+            </button>
+          )}
 
           {/* Mobile menu toggle */}
           <button

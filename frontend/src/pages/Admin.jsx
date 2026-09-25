@@ -26,7 +26,12 @@ const Admin = () => {
     Promise.all([getAllFleet(), getAdminStats()]).then(([fleetData, statsData]) => {
       setFleet(fleetData);
       setStats(statsData);
-      if (fleetData.length > 0) { setSelectedVessel(fleetData[0].id); setNewLat(fleetData[0].latitude); setNewLng(fleetData[0].longitude); }
+      if (fleetData.length > 0) { 
+        const first = fleetData[0];
+        setSelectedVessel(first.id || first._id); 
+        setNewLat(first.latitude); 
+        setNewLng(first.longitude); 
+      }
     }).catch(console.error).finally(() => setLoading(false));
   }, []);
 
@@ -118,8 +123,8 @@ const Admin = () => {
           <form onSubmit={handleUpdateAIS} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Select Active Vessel</label>
-              <select value={selectedVessel} onChange={e => { setSelectedVessel(e.target.value); const v = fleet.find(f => f.id === e.target.value); if (v) { setNewLat(v.latitude); setNewLng(v.longitude); }}} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
-                {fleet.map(v => <option key={v.id} value={v.id}>{v.vesselName}</option>)}
+              <select value={selectedVessel} onChange={e => { setSelectedVessel(e.target.value); const v = fleet.find(f => (f.id || f._id) === e.target.value); if (v) { setNewLat(v.latitude); setNewLng(v.longitude); }}} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
+                {fleet.map(v => <option key={v.id || v._id} value={v.id || v._id}>{v.vesselName}</option>)}
               </select>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>

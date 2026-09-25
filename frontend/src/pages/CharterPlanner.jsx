@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { generateCharterRecommendation } from '../services/api';
+import { generateCharterRecommendation, createContractRequest } from '../services/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Anchor, ShieldCheck, TrendingUp, AlertTriangle, Ship, Calendar, MapPin, Package, Clock, Info, Sparkles, CheckCircle, XCircle, Layers, Award } from 'lucide-react';
+import { Anchor, ShieldCheck, TrendingUp, AlertTriangle, Ship, Calendar, MapPin, Package, Clock, Info, Sparkles, CheckCircle, XCircle, Layers, Award, Loader2 } from 'lucide-react';
 import { formatCurrency, formatNumber } from '../utils/formatters';
 import EstimatedFreightCost from '../components/EstimatedFreightCost';
 
@@ -58,6 +58,9 @@ const CharterPlanner = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+  const [requestingOwnerId, setRequestingOwnerId] = useState(null);
+  const [requestedOwners, setRequestedOwners] = useState(new Set());
+  const [requestStatus, setRequestStatus] = useState(null);
 
   const handleCheckboxChange = (port) => {
     setFormData(prev => ({
@@ -73,6 +76,7 @@ const CharterPlanner = () => {
     if (formData.destination_ports.length === 0) { setError('Please select at least one destination port.'); return; }
     setLoading(true);
     setError(null);
+    setRequestStatus(null);
     try {
       const data = await generateCharterRecommendation({ ...formData, cargo_volume_tonnes: Number(formData.cargo_volume_tonnes) });
       setResult(data);
@@ -91,6 +95,36 @@ const CharterPlanner = () => {
   ] : [];
 
   const isBuyNow = result?.marketSignal?.signal === 'BUY NOW';
+
+  const handleRequestContract = async (owner) => {
+    setRequestingOwnerId(owner.ownerId);
+    setRequestStatus(null);
+    try {
+      await createContractRequest({
+        vesselOwnerId: owner.ownerId,
+        cargoType: formData.commodity,
+        volume: Number(formData.cargo_volume_tonnes),
+        originPort: formData.origin_port,
+        destinationPort: formData.destination_ports[0],
+        arrivalWindowStart: formData.arrival_window_start,
+        arrivalWindowEnd: formData.arrival_window_end,
+        contractType: formData.contract_type
+      });
+      setRequestedOwners(prev => new Set([...prev, owner.ownerId]));
+      setRequestStatus({
+        type: 'success',
+        message: `Charter request sent to ${owner.company || owner.name}! They have been alerted in their owner portal.`
+      });
+    } catch (error) {
+      setRequestStatus({
+        type: 'error',
+        message: 'Failed to send contract request. Please try again.'
+      });
+      console.error(error);
+    } finally {
+      setRequestingOwnerId(null);
+    }
+  };
 
 
   return (
@@ -467,6 +501,99 @@ const CharterPlanner = () => {
             </div>
 
           </div>
+
+          {/* Matched Owners Section */}
+          {result.suitableOwners && result.suitableOwners.length > 0 && (
+            <div style={{ marginTop: '24px', background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#122F55', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Anchor size={18} color="#0B82C9" /> Top Matched Vessel Owners
+                </h3>
+                <span style={{ fontSize: '12px', color: '#5F7894', fontWeight: 600 }}>AI Match Algorithm Ranking</span>
+              </div>
+
+              {requestStatus && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  marginBottom: '16px',
+                  fontSize: '13.5px',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: requestStatus.type === 'success' ? '#DCFCE7' : '#FEE2E2',
+                  color: requestStatus.type === 'success' ? '#166534' : '#991B1B',
+                  border: `1px solid ${requestStatus.type === 'success' ? '#BBF7D0' : '#FECACA'}`
+                }}>
+                  {requestStatus.type === 'success' ? <CheckCircle size={18} color="#16A34A" /> : <AlertTriangle size={18} color="#DC2626" />}
+                  <span>{requestStatus.message}</span>
+                </div>
+              )}
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+                {result.suitableOwners.map((owner, idx) => {
+                  const isRequested = requestedOwners.has(owner.ownerId);
+                  const isCurrentRequesting = requestingOwnerId === owner.ownerId;
+
+                  return (
+                    <div key={owner.ownerId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', border: '1px solid #D9E6EF', borderRadius: '12px', background: idx === 0 ? '#F8FAFC' : '#FFFFFF' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#EAF6FC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#0B82C9', fontSize: '18px' }}>
+                          {owner.company ? owner.company.charAt(0) : owner.name.charAt(0)}
+                        </div>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#122F55', margin: 0 }}>{owner.company || owner.name}</h4>
+                            {idx === 0 && <span style={{ padding: '2px 8px', background: '#DCFCE7', color: '#166534', borderRadius: '999px', fontSize: '10px', fontWeight: 800 }}>BEST MATCH</span>}
+                          </div>
+                          <p style={{ fontSize: '13px', color: '#5F7894', margin: '4px 0 0 0' }}>
+                            Match Score: <strong style={{ color: '#0B82C9' }}>{owner.score} / 100</strong> • {owner.fleetAvailable} Available {result.vesselRecommendation?.class}s
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {isRequested ? (
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', background: '#DCFCE7', color: '#166534', borderRadius: '8px', fontSize: '13px', fontWeight: 700, border: '1px solid #BBF7D0' }}>
+                          <CheckCircle size={16} /> Request Sent
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => handleRequestContract(owner)}
+                          disabled={isCurrentRequesting || requestingOwnerId !== null}
+                          style={{
+                            padding: '10px 20px',
+                            background: isCurrentRequesting ? '#93C5FD' : '#0B82C9',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            cursor: isCurrentRequesting ? 'not-allowed' : 'pointer',
+                            transition: 'all 0.2s',
+                            boxShadow: '0 2px 8px rgba(11, 130, 201, 0.2)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                          onMouseEnter={(e) => { if (!isCurrentRequesting) e.target.style.background = '#0969A1'; }}
+                          onMouseLeave={(e) => { if (!isCurrentRequesting) e.target.style.background = '#0B82C9'; }}
+                        >
+                          {isCurrentRequesting ? (
+                            <>
+                              <Loader2 size={16} className="animate-spin" /> Sending...
+                            </>
+                          ) : (
+                            'Request Charter'
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -11,17 +11,35 @@ import {
   User,
   LogOut,
   Menu,
-  X,
+  Inbox,
+  FileCheck,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import NotificationBell from '../NotificationBell';
 
-const existingNavItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/planner', label: 'Charter Planner', icon: Anchor },
-  { path: '/live', label: 'Live Operations', icon: Map },
-  { path: '/weather', label: 'Weather Intelligence', icon: CloudRain },
-  { path: '/market-analysis', label: 'Market Analysis', icon: TrendingUp },
-];
+const getNavItems = (role) => {
+  if (role === 'VESSEL_OWNER') {
+    return [
+      { path: '/owner/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/owner/fleet', label: 'My Fleet', icon: Anchor },
+      { path: '/owner/requests', label: 'Contract Requests', icon: Inbox },
+      { path: '/owner/contracts', label: 'Active Contracts', icon: FileCheck },
+      { path: '/live-tracker', label: 'Live Fleet AIS', icon: Map },
+      { path: '/chat', label: 'Messages', icon: MessageSquare },
+    ];
+  }
+
+  return [
+    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/planner', label: 'Charter Planner', icon: Anchor },
+    { path: '/contracts', label: 'Bookings', icon: FileCheck },
+    { path: '/live', label: 'Live Operations', icon: Map },
+    { path: '/weather', label: 'Weather Intelligence', icon: CloudRain },
+    { path: '/market-analysis', label: 'Market Analysis', icon: TrendingUp },
+    { path: '/chat', label: 'Messages', icon: MessageSquare },
+  ];
+};
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -48,10 +66,12 @@ const Navbar = () => {
     setDropdownOpen(false);
   }, [location.pathname]);
 
-  const allItems = [...existingNavItems];
+  const allItems = [...getNavItems(user?.role)];
   if (user?.role === 'admin') {
     allItems.push({ path: '/admin', label: 'System Admin', icon: Settings });
   }
+
+  const homePath = user?.role === 'VESSEL_OWNER' ? '/owner/dashboard' : '/dashboard';
 
   const handleLogout = async () => {
     await logout();
@@ -101,7 +121,7 @@ const Navbar = () => {
       >
         {/* LEFT: BulkMatrix Logo & Branding */}
         <Link
-          to="/dashboard"
+          to={homePath}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -227,8 +247,10 @@ const Navbar = () => {
           })}
         </nav>
 
-        {/* RIGHT: User Profile Control & Mobile Menu Toggle */}
+        {/* RIGHT: Notifications + User Profile Control + Mobile Menu Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+          {/* Notification Bell */}
+          <NotificationBell />
           {/* User Dropdown */}
           <div style={{ position: 'relative' }} ref={dropdownRef}>
             <button
@@ -327,8 +349,8 @@ const Navbar = () => {
 
                 <div style={{ padding: '6px 0' }}>
                   {[
-                    { icon: User, label: 'Profile', action: () => setDropdownOpen(false) },
-                    { icon: Settings, label: 'Settings', action: () => setDropdownOpen(false) },
+                    { icon: User, label: 'Profile', action: () => { setDropdownOpen(false); navigate('/profile'); } },
+                    { icon: Settings, label: 'Settings', action: () => { setDropdownOpen(false); navigate('/profile'); } },
                   ].map((item) => {
                     const ItemIcon = item.icon;
                     return (

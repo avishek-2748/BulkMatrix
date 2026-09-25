@@ -54,7 +54,10 @@ const Signup = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    company: ''
+    company: '',
+    role: 'LOGISTIC_MANAGER',
+    phoneNumber: '',
+    address: ''
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -122,9 +125,14 @@ const Signup = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        company: formData.company
+        company: formData.company,
+        role: formData.role,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address
       });
 
+      // If VESSEL_OWNER, they might need to verify email, but we'll navigate them to dashboard or a verification pending page. 
+      // For now, redirect to dashboard.
       navigate('/dashboard');
     } catch (err) {
       setError(
@@ -383,6 +391,41 @@ const Signup = () => {
           }}
         >
 
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+            <button
+              type="button"
+              onClick={() => setFormData({ ...formData, role: 'LOGISTIC_MANAGER' })}
+              style={{
+                flex: 1,
+                padding: '10px',
+                borderRadius: '8px',
+                border: formData.role === 'LOGISTIC_MANAGER' ? '2px solid #0B82C9' : '1px solid #D9E6EF',
+                background: formData.role === 'LOGISTIC_MANAGER' ? 'rgba(11, 130, 201, 0.05)' : '#FFF',
+                color: formData.role === 'LOGISTIC_MANAGER' ? '#0B82C9' : '#64748B',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              Logistic Manager
+            </button>
+            <button
+              type="button"
+              onClick={() => setFormData({ ...formData, role: 'VESSEL_OWNER' })}
+              style={{
+                flex: 1,
+                padding: '10px',
+                borderRadius: '8px',
+                border: formData.role === 'VESSEL_OWNER' ? '2px solid #16A34A' : '1px solid #D9E6EF',
+                background: formData.role === 'VESSEL_OWNER' ? 'rgba(22, 163, 74, 0.05)' : '#FFF',
+                color: formData.role === 'VESSEL_OWNER' ? '#16A34A' : '#64748B',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              Vessel Owner
+            </button>
+          </div>
+
           <div
             style={{
               display: 'grid',
@@ -448,6 +491,38 @@ const Signup = () => {
             />
           </Field>
 
+          {formData.role === 'VESSEL_OWNER' && (
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <div style={{ flex: 1 }}>
+                <Field label="Phone Number" icon={User}>
+                  <input
+                    type="tel"
+                    required
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    placeholder="+1 234 567 8900"
+                    style={inputStyle}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  />
+                </Field>
+              </div>
+              <div style={{ flex: 1 }}>
+                <Field label="Address" icon={Building2}>
+                  <input
+                    type="text"
+                    required
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    placeholder="HQ City, Country"
+                    style={inputStyle}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                  />
+                </Field>
+              </div>
+            </div>
+          )}
 
           <Field label="Password" icon={Lock}>
 

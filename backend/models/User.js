@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: ["user", "admin", "LOGISTIC_MANAGER", "VESSEL_OWNER"],
+      default: "LOGISTIC_MANAGER",
     },
 
     company: {
@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+
+    phoneNumber: { type: String },
+    address: { type: String },
+    isEmailVerified: { type: Boolean, default: false },
+    rating: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
   },
   {
     timestamps: true,

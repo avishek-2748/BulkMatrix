@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const vesselSchema = new mongoose.Schema({
+  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Optional for backward compatibility with existing data
   vesselName: { type: String, required: true },
   imoNumber: { type: String, required: true, unique: true },
   vesselClass: { 
@@ -12,6 +13,9 @@ const vesselSchema = new mongoose.Schema({
   draft: { type: Number },
   loa: { type: Number },
   beam: { type: Number },
+  yearBuilt: { type: Number },
+  flag: { type: String },
+  fuelType: { type: String, enum: ['VLSFO', 'HSFO'] },
   speed: { type: Number },
   fuelConsumption: { type: Number },
   latitude: { type: Number },
@@ -20,8 +24,8 @@ const vesselSchema = new mongoose.Schema({
   eta: { type: Date },
   status: { 
     type: String, 
-    enum: ['available', 'sailing', 'waiting', 'berthed', 'delayed'],
-    default: 'available'
+    enum: ['AVAILABLE', 'ON_CHARTER', 'MAINTENANCE', 'available', 'sailing', 'waiting', 'berthed', 'delayed'],
+    default: 'AVAILABLE'
   }
 }, {
   timestamps: true

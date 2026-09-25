@@ -43,6 +43,11 @@ export const getMe = async () => {
   return response.data;
 };
 
+export const updateUserProfile = async (data) => {
+  const response = await api.put('/auth/profile', data);
+  return response.data;
+};
+
 // BUSINESS APIs
 export const getKPIs = async () => {
   const response = await api.get('/dashboard/kpis');
@@ -87,6 +92,86 @@ export const getAdminStats = async () => {
 
 export const updateAisPosition = async (data) => {
   const response = await api.post('/admin/ais', data);
+  return response.data;
+};
+
+// OWNER / VESSEL APIs
+export const addVessel = async (data) => {
+  const response = await api.post('/vessels', data);
+  return response.data;
+};
+
+export const getMyVessels = async () => {
+  const response = await api.get('/vessels');
+  return response.data;
+};
+
+export const getVesselById = async (id) => {
+  const response = await api.get(`/vessels/${id}`);
+  return response.data;
+};
+
+// CONTRACT APIs (Owner)
+export const createContractRequest = async (data) => {
+  const response = await api.post('/contracts', data);
+  return response.data;
+};
+
+export const getIncomingRequests = async () => {
+  const response = await api.get('/contracts/requests');
+  return response.data;
+};
+
+export const getActiveContracts = async () => {
+  const response = await api.get('/contracts/active');
+  return response.data;
+};
+
+export const updateContractStatus = async (contractId, status, vesselId = null) => {
+  const response = await api.put(`/contracts/${contractId}/status`, { status, vesselId });
+  return response.data;
+};
+
+export const getMyCharterContracts = async () => {
+  const response = await api.get('/contracts/my-contracts');
+  return response.data;
+};
+
+export const submitHandoverDetails = async (contractId, data) => {
+  const response = await api.put(`/contracts/${contractId}/handover`, data);
+  return response.data;
+};
+
+// CHAT APIs
+export const getChatThreads = async () => {
+  const response = await api.get('/chat/threads/all');
+  return response.data;
+};
+
+export const getChatMessages = async (contractId) => {
+  const response = await api.get(`/chat/${contractId}`);
+  return response.data;
+};
+
+export const sendMessage = async (data) => {
+  const response = await api.post('/chat', data);
+  return response.data;
+};
+
+// AVAILABILITY APIs
+export const addAvailability = async (data) => {
+  const response = await api.post('/availability', data);
+  return response.data;
+};
+
+export const getAvailability = async (vesselId) => {
+  const response = await api.get(`/availability/${vesselId}`);
+  return response.data;
+};
+
+// AIS LIVE TRACKER API
+export const getLiveFleet = async () => {
+  const response = await api.get('/ais/live');
   return response.data;
 };
 
