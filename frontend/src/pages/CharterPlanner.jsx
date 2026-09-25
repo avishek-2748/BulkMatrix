@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { generateCharterRecommendation, createContractRequest } from '../services/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Anchor, ShieldCheck, TrendingUp, AlertTriangle, Ship, Calendar, MapPin, Package, Clock, Info, Sparkles, CheckCircle, XCircle, Layers, Award, Loader2 } from 'lucide-react';
+import { Anchor, ShieldCheck, TrendingUp, AlertTriangle, Ship, Calendar, MapPin, Package, Clock, Info, Sparkles, CheckCircle, XCircle, Layers, Award, Loader2, ArrowRight } from 'lucide-react';
 import { formatCurrency, formatNumber } from '../utils/formatters';
 import EstimatedFreightCost from '../components/EstimatedFreightCost';
 
@@ -514,20 +515,63 @@ const CharterPlanner = () => {
 
               {requestStatus && (
                 <div style={{
-                  padding: '12px 16px',
-                  borderRadius: '10px',
+                  padding: '14px 18px',
+                  borderRadius: '12px',
                   marginBottom: '16px',
                   fontSize: '13.5px',
                   fontWeight: 600,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '12px',
                   background: requestStatus.type === 'success' ? '#DCFCE7' : '#FEE2E2',
                   color: requestStatus.type === 'success' ? '#166534' : '#991B1B',
                   border: `1px solid ${requestStatus.type === 'success' ? '#BBF7D0' : '#FECACA'}`
                 }}>
-                  {requestStatus.type === 'success' ? <CheckCircle size={18} color="#16A34A" /> : <AlertTriangle size={18} color="#DC2626" />}
-                  <span>{requestStatus.message}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {requestStatus.type === 'success' ? <CheckCircle size={18} color="#16A34A" /> : <AlertTriangle size={18} color="#DC2626" />}
+                    <span>{requestStatus.message}</span>
+                  </div>
+                  {requestStatus.type === 'success' && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Link
+                        to="/contracts"
+                        style={{
+                          padding: '6px 14px',
+                          background: '#166534',
+                          color: '#FFFFFF',
+                          borderRadius: '8px',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          textDecoration: 'none',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}
+                      >
+                        Track in Bookings <ArrowRight size={14} />
+                      </Link>
+                      <Link
+                        to="/chat"
+                        style={{
+                          padding: '6px 14px',
+                          background: '#FFFFFF',
+                          color: '#166534',
+                          border: '1px solid #BBF7D0',
+                          borderRadius: '8px',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          textDecoration: 'none',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}
+                      >
+                        Open Chat
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
               
