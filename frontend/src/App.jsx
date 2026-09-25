@@ -22,6 +22,7 @@ import CharterContracts from './pages/CharterContracts';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import VoyageAnalytics from './pages/VoyageAnalytics';
+import VoyageCalculator from './pages/VoyageCalculator';
 import { DataProvider } from './context/DataContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -62,6 +63,7 @@ function App() {
               <Route path="/planner" element={<CharterPlanner />} />
               <Route path="/contracts" element={<CharterContracts />} />
               <Route path="/analytics" element={<VoyageAnalytics />} />
+              <Route path="/calculator" element={<VoyageCalculator />} />
               <Route path="/live" element={<LiveOps />} />
               <Route path="/live-tracker" element={<LiveOperations />} />
               <Route path="/weather" element={<WeatherIntelligence />} />

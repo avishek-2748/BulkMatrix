@@ -14,7 +14,9 @@ import {
   Plus, 
   ArrowRight,
   TrendingUp,
-  Package
+  Package,
+  FileSpreadsheet,
+  Calculator
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import FixtureNoteModal from '../components/FixtureNoteModal';
@@ -64,6 +66,30 @@ const CharterContracts = () => {
   const pendingCount = contracts.filter(c => c.status === 'PENDING').length;
   const confirmedCount = contracts.filter(c => c.status === 'ACCEPTED' || c.status === 'ACTIVE').length;
 
+  const exportContractsCSV = () => {
+    if (!contracts || contracts.length === 0) return;
+    const headers = ['Contract ID', 'Status', 'Cargo Type', 'Volume (MT)', 'Origin Port', 'Destination Port', 'Target Freight Rate ($/MT)', 'Owner', 'Assigned Vessel', 'Created Date'];
+    const rows = contracts.map(c => [
+      c._id,
+      c.status,
+      `"${c.cargoType || ''}"`,
+      c.volume || 0,
+      `"${c.originPort || ''}"`,
+      `"${c.destinationPort || ''}"`,
+      c.targetFreightRate || '',
+      `"${c.vesselOwnerId?.company || c.vesselOwnerId?.name || ''}"`,
+      `"${c.vesselId?.vesselName || 'Unassigned'}"`,
+      c.createdAt ? new Date(c.createdAt).toLocaleDateString() : ''
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `BulkMatrix_Contracts_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 pb-12">
       {/* Header */}
@@ -77,12 +103,27 @@ const CharterContracts = () => {
             Track your charter requests, owner confirmations, and assigned fleet vessels
           </p>
         </div>
-        <Link
-          to="/planner"
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md shadow-blue-500/20 hover:-translate-y-0.5 self-start sm:self-auto"
-        >
-          <Plus size={18} /> New Charter Request
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={exportContractsCSV}
+            disabled={contracts.length === 0}
+            className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <FileSpreadsheet size={16} className="text-blue-600" /> Export CSV
+          </button>
+          <Link
+            to="/calculator"
+            className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm hover:border-blue-400"
+          >
+            <Calculator size={16} className="text-blue-600" /> TCE Calculator
+          </Link>
+          <Link
+            to="/planner"
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md shadow-blue-500/20 hover:-translate-y-0.5"
+          >
+            <Plus size={18} /> New Charter Request
+          </Link>
+        </div>
       </div>
 
       {/* KPI Overview */}

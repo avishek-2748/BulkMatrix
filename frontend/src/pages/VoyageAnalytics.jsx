@@ -6,7 +6,8 @@ import {
 } from "recharts";
 import {
   Ship, Package, TrendingUp, Activity,
-  CheckCircle, Anchor, ArrowRight, BarChart2
+  CheckCircle, Anchor, ArrowRight, BarChart2,
+  FileSpreadsheet, Calculator
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -129,6 +130,30 @@ const VoyageAnalytics = () => {
 
   const sk = { background: "linear-gradient(90deg,#EAF3F8 25%,#D9EEF6 50%,#EAF3F8 75%)", borderRadius: "10px" };
 
+  const exportAnalyticsCSV = () => {
+    if (!contracts || contracts.length === 0) return;
+    const headers = ['Voyage ID', 'Status', 'Commodity', 'Tonnage (MT)', 'Load Port', 'Discharge Port', 'Rate ($/MT)', 'Owner', 'Vessel', 'Date'];
+    const rows = contracts.map(c => [
+      c._id,
+      c.status,
+      `"${c.cargoType || 'Bulk'}"`,
+      c.volume || 0,
+      `"${c.originPort || ''}"`,
+      `"${c.destinationPort || ''}"`,
+      c.targetFreightRate || '',
+      `"${c.vesselOwnerId?.company || c.vesselOwnerId?.name || ''}"`,
+      `"${c.vesselId?.vesselName || 'Unassigned'}"`,
+      c.createdAt ? new Date(c.createdAt).toLocaleDateString() : ''
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `BulkMatrix_Voyage_Analytics_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+  };
+
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", paddingBottom: "56px" }}>
       {/* Header */}
@@ -139,9 +164,51 @@ const VoyageAnalytics = () => {
           </h1>
           <p style={{ fontSize: "14px", color: "#5F7894" }}>Cargo volume trends, contract funnel, and route distribution across all your voyages</p>
         </div>
-        <Link to="/contracts" style={{ display: "inline-flex", alignItems: "center", gap: "7px", background: "#0B82C9", color: "#FFFFFF", padding: "10px 20px", borderRadius: "12px", fontSize: "13px", fontWeight: 700, textDecoration: "none", boxShadow: "0 4px 14px rgba(11,130,201,0.25)" }}>
-          View All Bookings <ArrowRight size={16} />
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <button
+            onClick={exportAnalyticsCSV}
+            disabled={contracts.length === 0}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "7px",
+              background: "#FFFFFF",
+              color: "#122F55",
+              border: "1px solid #D9E6EF",
+              padding: "10px 18px",
+              borderRadius: "12px",
+              fontSize: "13px",
+              fontWeight: 700,
+              cursor: contracts.length === 0 ? "not-allowed" : "pointer",
+              boxShadow: "0 2px 8px rgba(18,47,85,0.04)",
+              opacity: contracts.length === 0 ? 0.5 : 1
+            }}
+          >
+            <FileSpreadsheet size={16} color="#0B82C9" /> Export CSV
+          </button>
+          <Link
+            to="/calculator"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "7px",
+              background: "#FFFFFF",
+              color: "#122F55",
+              border: "1px solid #D9E6EF",
+              padding: "10px 18px",
+              borderRadius: "12px",
+              fontSize: "13px",
+              fontWeight: 700,
+              textDecoration: "none",
+              boxShadow: "0 2px 8px rgba(18,47,85,0.04)"
+            }}
+          >
+            <Calculator size={16} color="#FF7426" /> TCE & Laytime
+          </Link>
+          <Link to="/contracts" style={{ display: "inline-flex", alignItems: "center", gap: "7px", background: "#0B82C9", color: "#FFFFFF", padding: "10px 20px", borderRadius: "12px", fontSize: "13px", fontWeight: 700, textDecoration: "none", boxShadow: "0 4px 14px rgba(11,130,201,0.25)" }}>
+            View All Bookings <ArrowRight size={16} />
+          </Link>
+        </div>
       </div>
 
       {/* KPI Cards */}

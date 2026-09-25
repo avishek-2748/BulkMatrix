@@ -14,7 +14,8 @@ import {
   Inbox,
   FileCheck,
   MessageSquare,
-  BarChart2
+  BarChart2,
+  Calculator
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from '../NotificationBell';
@@ -26,6 +27,7 @@ const getNavItems = (role) => {
       { path: '/owner/fleet', label: 'My Fleet', icon: Anchor },
       { path: '/owner/requests', label: 'Contract Requests', icon: Inbox },
       { path: '/owner/contracts', label: 'Active Contracts', icon: FileCheck },
+      { path: '/calculator', label: 'TCE Calculator', icon: Calculator },
       { path: '/live-tracker', label: 'Live Fleet AIS', icon: Map },
       { path: '/chat', label: 'Messages', icon: MessageSquare },
     ];
@@ -36,6 +38,7 @@ const getNavItems = (role) => {
     { path: '/planner', label: 'Charter Planner', icon: Anchor },
     { path: '/contracts', label: 'Bookings', icon: FileCheck },
     { path: '/analytics', label: 'Voyage Analytics', icon: BarChart2 },
+    { path: '/calculator', label: 'TCE & Laytime', icon: Calculator },
     { path: '/live-tracker', label: 'Live Fleet AIS', icon: Map },
     { path: '/weather', label: 'Weather', icon: CloudRain },
     { path: '/market-analysis', label: 'Markets', icon: TrendingUp },
