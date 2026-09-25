@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getIncomingRequests, updateContractStatus, getMyVessels } from '../../services/api';
-import { Check, X, Loader2, Package, MapPin, Calendar, Ship, MessageSquare } from 'lucide-react';
+import { Check, X, Loader2, Package, MapPin, Calendar, Ship, MessageSquare, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ContractRequests = () => {
@@ -74,11 +74,21 @@ const ContractRequests = () => {
       </div>
 
       {actionMsg && (
-        <div className={`p-4 rounded-xl text-sm font-semibold flex items-center gap-2 ${
+        <div className={`p-4 rounded-xl text-sm font-semibold flex items-center justify-between flex-wrap gap-3 ${
           actionMsg.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
         }`}>
-          {actionMsg.type === 'success' ? <Check size={16} /> : <X size={16} />}
-          {actionMsg.text}
+          <div className="flex items-center gap-2">
+            {actionMsg.type === 'success' ? <Check size={16} /> : <X size={16} />}
+            <span>{actionMsg.text}</span>
+          </div>
+          {actionMsg.type === 'success' && (
+            <Link
+              to="/owner/contracts"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-green-700 hover:bg-green-800 text-white rounded-lg text-xs font-bold transition-colors"
+            >
+              Go to Active Contracts & Handover <ArrowRight size={13} />
+            </Link>
+          )}
         </div>
       )}
       

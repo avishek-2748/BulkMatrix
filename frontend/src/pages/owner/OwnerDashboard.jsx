@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { getMyVessels, getIncomingRequests, getActiveContracts } from '../../services/api';
-import { Anchor, Activity, Clock, Plus, Ship, TrendingUp, Navigation, ChevronRight, Map, MessageSquare } from 'lucide-react';
+import { Anchor, Activity, Clock, Plus, Ship, TrendingUp, Navigation, ChevronRight, Map, MessageSquare, FileCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const StatCard = ({ title, value, icon: Icon, color, bg, delta }) => (
@@ -152,13 +152,13 @@ const OwnerDashboard = () => {
       </div>
 
       {/* Quick Access Portals */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link
           to="/live-tracker"
           className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all flex items-center justify-between group text-inherit no-underline"
         >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
               <Map size={24} />
             </div>
             <div>
@@ -166,7 +166,23 @@ const OwnerDashboard = () => {
               <p className="text-xs text-gray-500 mt-0.5">Track your vessels in real-time with simulated coordinates and speed</p>
             </div>
           </div>
-          <ChevronRight size={20} className="text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+          <ChevronRight size={20} className="text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all flex-shrink-0" />
+        </Link>
+
+        <Link
+          to="/owner/contracts"
+          className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-green-200 transition-all flex items-center justify-between group text-inherit no-underline"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
+              <FileCheck size={24} />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-900 group-hover:text-green-600 transition-colors">Active Contracts & Handover</h3>
+              <p className="text-xs text-gray-500 mt-0.5">Tender voyage readiness, handover master details, and view fixture note recaps</p>
+            </div>
+          </div>
+          <ChevronRight size={20} className="text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all flex-shrink-0" />
         </Link>
 
         <Link
@@ -174,7 +190,7 @@ const OwnerDashboard = () => {
           className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-purple-200 transition-all flex items-center justify-between group text-inherit no-underline"
         >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
               <MessageSquare size={24} />
             </div>
             <div>
@@ -182,7 +198,7 @@ const OwnerDashboard = () => {
               <p className="text-xs text-gray-500 mt-0.5">Direct chat with logistics managers for rate negotiations & voyage terms</p>
             </div>
           </div>
-          <ChevronRight size={20} className="text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
+          <ChevronRight size={20} className="text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all flex-shrink-0" />
         </Link>
       </div>
 
