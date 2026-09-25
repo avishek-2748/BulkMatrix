@@ -76,181 +76,188 @@ const Profile = () => {
   }[user?.role] || user?.role;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-12">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2.5">
-          <User size={24} className="text-blue-600" />
-          Company & User Profile
-        </h1>
-        <p className="text-gray-500 text-sm mt-1">
-          Manage your identity, corporate entity, contact coordinates, and system preferences
-        </p>
+    <div className="space-y-6 pb-12 max-w-4xl mx-auto">
+      {/* SaaS Page Header */}
+      <div className="saas-page-header">
+        <div>
+          <h1 className="saas-title flex items-center gap-2.5">
+            <User className="text-blue-600" size={24} /> Company & User Profile
+          </h1>
+          <p className="saas-subtitle">
+            Manage your verified commercial identity, company registration, contact points, and notification preferences.
+          </p>
+        </div>
       </div>
 
       {saveSuccess && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm font-semibold flex items-center gap-2">
-          <CheckCircle size={18} className="text-green-600" />
-          Profile updated successfully!
+        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-sm font-semibold flex items-center gap-2.5 shadow-sm">
+          <CheckCircle size={18} className="text-emerald-600 shrink-0" />
+          <span>Profile configuration saved successfully to enterprise registry.</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm font-semibold flex items-center gap-2">
-          <AlertTriangle size={18} className="text-red-600" />
-          {error}
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-sm font-semibold flex items-center gap-2.5 shadow-sm">
+          <AlertTriangle size={18} className="text-rose-600 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
       {/* Account Overview Card */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div className="saas-card p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-2xl bg-blue-50 border-2 border-blue-200 flex items-center justify-center text-blue-700 font-black text-2xl shadow-sm">
+          <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 font-black text-2xl shadow-sm">
             {user?.name ? user.name.slice(0, 2).toUpperCase() : 'BM'}
           </div>
           <div>
             <div className="flex items-center gap-2.5">
-              <h2 className="text-xl font-bold text-gray-900">{user?.name}</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+              <h2 className="text-xl font-bold text-slate-900">{user?.name}</h2>
+              <span className="saas-badge saas-badge-info">
                 {user?.role}
               </span>
             </div>
-            <p className="text-sm text-gray-500 font-medium mt-0.5">{roleLabel}</p>
-            <p className="text-xs text-gray-400 mt-1 flex items-center gap-1.5">
+            <p className="text-sm text-slate-500 font-medium mt-0.5">{roleLabel}</p>
+            <p className="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
               <Mail size={13} /> {user?.email}
             </p>
           </div>
         </div>
 
         {user?.role === 'VESSEL_OWNER' && (
-          <div className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-xl border border-gray-100">
+          <div className="flex items-center gap-4 bg-slate-50 px-4 py-3 rounded-xl border border-slate-200">
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 text-amber-500 font-black text-lg">
                 <Star size={16} className="fill-amber-400 text-amber-400" />
                 {user?.rating ? user.rating.toFixed(1) : '5.0'}
               </div>
-              <span className="text-[10px] font-bold text-gray-400 uppercase">Rating</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rating</span>
             </div>
-            <div className="h-8 w-px bg-gray-200" />
+            <div className="h-8 w-px bg-slate-200" />
             <div className="text-center">
-              <div className="font-black text-lg text-gray-800">Verified</div>
-              <span className="text-[10px] font-bold text-green-600 uppercase">Operator</span>
+              <div className="font-black text-lg text-emerald-600">Verified</div>
+              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Operator</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Main Settings Form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 space-y-6">
-        <h3 className="text-base font-extrabold text-gray-900 border-b border-gray-100 pb-3 flex items-center gap-2">
-          <Building2 size={18} className="text-blue-600" /> Organization & Contact Details
-        </h3>
+      <form onSubmit={handleSubmit} className="saas-card p-6 sm:p-8 space-y-6">
+        <div className="border-b border-slate-100 pb-4">
+          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <Building2 size={18} className="text-blue-600" /> Organization & Commercial Coordinates
+          </h3>
+          <p className="text-xs text-slate-500 mt-1">These details are shown on fixture notes and charter party contracts.</p>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-              Full Name
+            <label className="saas-label">
+              Full Representative Name
             </label>
             <div className="relative">
-              <User size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
+              <User size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
-                placeholder="e.g. Captain Alexander"
+                className="saas-input pl-10"
+                placeholder="e.g. Captain Alexander Vance"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-              Company / Fleet Operator
+            <label className="saas-label">
+              Company / Fleet Operator Entity
             </label>
             <div className="relative">
-              <Building2 size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
+              <Building2 size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
               <input
                 type="text"
                 value={formData.company}
                 onChange={e => setFormData({ ...formData, company: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
-                placeholder="e.g. Evergreen Marine Corp"
+                className="saas-input pl-10"
+                placeholder="e.g. Pacific Bulk Shipping Pte Ltd"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-              Email Address (Account ID)
+            <label className="saas-label">
+              Corporate Email (Login ID)
             </label>
             <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
+              <Mail size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
               <input
                 type="email"
                 disabled
                 value={user?.email || ''}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-100 border border-gray-200 rounded-xl text-sm font-semibold text-gray-500 cursor-not-allowed"
+                className="saas-input pl-10 bg-slate-100 text-slate-500 cursor-not-allowed border-slate-200"
               />
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">Contact system admin to change verified email.</p>
+            <p className="text-[11px] text-slate-400 mt-1.5">Registered account address. Admin support required to modify.</p>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-              Direct Phone / WhatsApp
+            <label className="saas-label">
+              Operations Hotline / WhatsApp
             </label>
             <div className="relative">
-              <Phone size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
+              <Phone size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
               <input
                 type="tel"
                 value={formData.phoneNumber}
                 onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
-                placeholder="+1 (555) 019-2834"
+                className="saas-input pl-10"
+                placeholder="+65 6789 0123"
               />
             </div>
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+            <label className="saas-label">
               Corporate Headquarters Address
             </label>
             <div className="relative">
-              <MapPin size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
+              <MapPin size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
               <input
                 type="text"
                 value={formData.address}
                 onChange={e => setFormData({ ...formData, address: e.target.value })}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
-                placeholder="e.g. Marina Bay Financial Centre, Singapore"
+                className="saas-input pl-10"
+                placeholder="e.g. 10 Marina Boulevard, Marina Bay Financial Centre, Singapore 018983"
               />
             </div>
           </div>
         </div>
 
         {/* Notifications Section */}
-        <div className="pt-6 border-t border-gray-100 space-y-4">
-          <h3 className="text-base font-extrabold text-gray-900 flex items-center gap-2">
-            <Bell size={18} className="text-blue-600" /> Operational Notifications & Dispatch
-          </h3>
+        <div className="pt-6 border-t border-slate-100 space-y-4">
+          <div>
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Bell size={18} className="text-blue-600" /> Operational Notifications & Dispatch
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">Control operational push alerts and voyage event notifications.</p>
+          </div>
 
           <div className="space-y-3">
             {[
-              { key: 'contractAlerts', label: 'Contract status updates', desc: 'Instant alert when a charter request is accepted or updated' },
-              { key: 'chatMessages', label: 'Charter negotiation messages', desc: 'Receive real-time alerts for incoming direct messages' },
-              { key: 'weatherRisks', label: 'Severe weather & route hazards', desc: 'Notify when cyclones or port congestion exceed safe limits' },
+              { key: 'contractAlerts', label: 'Contract status updates', desc: 'Instant alert when a charter request is confirmed, counter-offered, or fulfilled' },
+              { key: 'chatMessages', label: 'Charter negotiation messages', desc: 'Receive real-time alerts for incoming counterparty inquiries and rate quotes' },
+              { key: 'weatherRisks', label: 'Severe weather & route hazards', desc: 'Notify when cyclones or port congestion exceed safe operational margins' },
             ].map(item => (
-              <label key={item.key} className="flex items-start gap-3 p-3.5 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+              <label key={item.key} className="flex items-start gap-3.5 p-4 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors bg-white">
                 <input
                   type="checkbox"
                   checked={notifications[item.key]}
                   onChange={e => setNotifications({ ...notifications, [item.key]: e.target.checked })}
-                  className="mt-0.5 rounded text-blue-600 focus:ring-blue-500 h-4 w-4"
+                  className="mt-0.5 rounded text-blue-600 focus:ring-blue-500 h-4 w-4 border-slate-300"
                 />
                 <div className="flex-1">
-                  <div className="text-sm font-bold text-gray-800">{item.label}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                  <div className="text-sm font-bold text-slate-800">{item.label}</div>
+                  <div className="text-xs text-slate-500 mt-0.5">{item.desc}</div>
                 </div>
               </label>
             ))}
@@ -258,14 +265,14 @@ const Profile = () => {
         </div>
 
         {/* Submit */}
-        <div className="pt-4 border-t border-gray-100 flex justify-end">
+        <div className="pt-4 border-t border-slate-100 flex justify-end">
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md shadow-blue-500/20 disabled:opacity-50"
+            className="saas-btn-primary"
           >
             {loading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-            Save Changes
+            <span>Save Profile Configuration</span>
           </button>
         </div>
       </form>

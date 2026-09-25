@@ -31,21 +31,23 @@ const LiveOps = () => {
   const getColor = v => v.alerts.length > 0 ? statusColors.HIGH_RISK : statusColors[v.status] || '#7890A8';
 
   return (
-    <div style={{ height: 'calc(100vh - 64px - 48px)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="space-y-6 pb-12 max-w-[1600px] mx-auto">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+      <div className="saas-page-header">
         <div>
-          <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#122F55', letterSpacing: '-0.02em', marginBottom: '3px' }}>Live Operations</h1>
-          <p style={{ fontSize: '14px', color: '#5F7894' }}>Real-time fleet tracking and port congestion monitoring</p>
+          <h1 className="saas-title flex items-center gap-2.5">
+            <Ship className="text-blue-600" size={24} /> Live Fleet & Port Operations
+          </h1>
+          <p className="saas-subtitle">Real-time AIS positioning, transit velocity, and port congestion telemetry.</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
           {[
-            { color: '#0B82C9', label: 'At Sea' },
+            { color: '#0B82C9', label: 'Underway' },
             { color: '#FF7426', label: 'At Port' },
-            { color: '#DC2626', label: 'Alert' },
+            { color: '#DC2626', label: 'Congestion / Risk' },
           ].map(l => (
-            <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12.5px', color: '#5F7894', fontWeight: 600 }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: l.color, border: '2px solid white', boxShadow: '0 0 0 1px rgba(18,47,85,0.1)' }}></span>
+            <div key={l.label} className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }}></span>
               {l.label}
             </div>
           ))}
@@ -53,18 +55,18 @@ const LiveOps = () => {
       </div>
 
       {error && (
-        <div style={{ padding: '12px 16px', background: 'var(--danger-bg)', border: '1px solid var(--danger-border)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-          <AlertTriangle size={16} color="var(--danger)" />
-          <span style={{ fontSize: '13.5px', color: 'var(--danger)' }}>{error}</span>
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-rose-700 text-sm font-semibold">
+          <AlertTriangle size={18} className="text-rose-600 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
-      {/* Map */}
-      <div style={{ flex: 1, borderRadius: '14px', overflow: 'hidden', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)', position: 'relative', minHeight: '300px' }}>
+      {/* Map Container */}
+      <div className="saas-card p-0 overflow-hidden relative border border-slate-200 shadow-sm h-[520px]">
         {loading && (
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.9)', zIndex: 2000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', backdropFilter: 'blur(4px)' }}>
-            <Loader2 size={32} color="var(--brand-blue)" style={{ animation: 'spin 1s linear infinite' }} />
-            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)' }}>Establishing Satellite Uplink...</p>
+          <div className="absolute inset-0 bg-white/80 z-[2000] flex flex-col items-center justify-center gap-3 backdrop-blur-sm">
+            <Loader2 size={32} className="animate-spin text-blue-600" />
+            <p className="text-sm font-semibold text-slate-600">Establishing Satellite Uplink...</p>
           </div>
         )}
         <MapContainer center={[18.5, 85.0]} zoom={5} zoomControl={false} style={{ width: '100%', height: '100%' }}>
@@ -83,9 +85,9 @@ const LiveOps = () => {
             >
               <Popup>
                 <div style={{ fontFamily: "'Inter', sans-serif", minWidth: '160px' }}>
-                  <p style={{ fontWeight: 700, fontSize: '14px', color: 'var(--text-primary)', marginBottom: '4px' }}>{vessel.vesselName}</p>
-                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{vessel.vesselClass} · {vessel.cargo}</p>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Click for full details</p>
+                  <p style={{ fontWeight: 700, fontSize: '14px', color: '#0F172A', marginBottom: '4px' }}>{vessel.vesselName}</p>
+                  <p style={{ fontSize: '12px', color: '#64748B' }}>{vessel.vesselClass} · {vessel.cargo}</p>
+                  <p style={{ fontSize: '11px', color: '#0B82C9', marginTop: '6px', fontWeight: 600 }}>Click marker to inspect vessel details →</p>
                 </div>
               </Popup>
             </Marker>
@@ -99,39 +101,45 @@ const LiveOps = () => {
 
       {/* Fleet Table */}
       {!loading && fleet.length > 0 && (
-        <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '14px', boxShadow: '0 1px 3px rgba(16, 47, 80, 0.04)', overflow: 'hidden', flexShrink: 0 }}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Ship size={15} color="#168FD0" />
-            <span style={{ fontSize: '14px', fontWeight: 800, color: '#102F50' }}>Active Fleet ({fleet.length})</span>
+        <div className="saas-card p-0 overflow-hidden border border-slate-200 shadow-sm">
+          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Ship size={16} className="text-blue-600" />
+              <span className="font-bold text-slate-900 text-sm">Active Tracked Fleet ({fleet.length} Vessels)</span>
+            </div>
+            <span className="text-xs text-slate-400">Click row to focus vessel telemetry</span>
           </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <div className="overflow-x-auto">
+            <table className="saas-table">
               <thead>
-                <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
-                  {['Vessel', 'Class', 'Cargo', 'Destination', 'ETA', 'Status', 'Alerts'].map(h => (
-                    <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontWeight: 700, color: '#64748B', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
+                <tr>
+                  {['Vessel Name', 'Class', 'Cargo', 'Destination', 'ETA', 'Operational Status', 'Risk & Alerts'].map(h => (
+                    <th key={h}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {fleet.map(v => (
-                  <tr key={v.id} onClick={() => setActiveVessel(v)} style={{ borderBottom: '1px solid #E2E8F0', cursor: 'pointer', transition: 'background 0.15s' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#F1F8FC'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: '#102F50' }}>{v.vesselName}</td>
-                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{v.vesselClass}</td>
-                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{v.cargo}</td>
-                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{v.destination}</td>
-                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{new Date(v.eta).toLocaleDateString('en-IN', { day:'numeric', month:'short' })}</td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '20px', fontSize: '11.5px', fontWeight: 700, background: v.alerts.length > 0 ? '#FEF2F2' : statusBg[v.status], color: v.alerts.length > 0 ? '#DC2626' : statusText[v.status] }}>
-                        <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'currentColor' }}></span>
-                        {v.alerts.length > 0 ? 'Alert' : statusLabels[v.status]}
+                  <tr key={v.id} onClick={() => setActiveVessel(v)} className="cursor-pointer hover:bg-slate-50 transition-colors">
+                    <td className="font-bold text-slate-900">{v.vesselName}</td>
+                    <td className="text-slate-600">{v.vesselClass}</td>
+                    <td className="text-slate-600 font-medium">{v.cargo}</td>
+                    <td className="text-slate-600 font-medium">{v.destination}</td>
+                    <td className="text-slate-600">{new Date(v.eta).toLocaleDateString('en-IN', { day:'numeric', month:'short' })}</td>
+                    <td>
+                      <span className={`saas-badge ${v.alerts.length > 0 ? 'saas-badge-danger' : v.status === 'AT_SEA' ? 'saas-badge-info' : 'saas-badge-warning'}`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                        {v.alerts.length > 0 ? 'Alert' : statusLabels[v.status] || v.status}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px', color: v.alerts.length > 0 ? '#DC2626' : '#94A3B8', fontSize: '12px' }}>
-                      {v.alerts.length > 0 ? v.alerts[0] : '—'}
+                    <td className="text-xs font-semibold">
+                      {v.alerts.length > 0 ? (
+                        <span className="text-rose-600 flex items-center gap-1.5">
+                          <AlertTriangle size={13} /> {v.alerts[0]}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">Normal passage</span>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -7,62 +7,62 @@
 
 :root {
   /* BulkMatrix Official Primary Maritime Palette */
-  --navy-primary: #122F55;
-  --navy-dark: #0B2342;
-  --blue-primary: #0B82C9;
-  --blue-bright: #168FD0;
-  --blue-light: #EAF6FC;
-  --blue-very-light: #F4FAFD;
-  --blue-hover: #F0F8FC;
+  --navy-primary: #0F172A;
+  --navy-dark: #0A0F1D;
+  --blue-primary: #0284C7;
+  --blue-bright: #0369A1;
+  --blue-light: #F0F9FF;
+  --blue-very-light: #F8FAFC;
+  --blue-hover: #E0F2FE;
 
-  --orange-primary: #FF7426;
-  --orange-hover: #F5661F;
-  --orange-light: #FFF1E8;
+  --orange-primary: #F97316;
+  --orange-hover: #EA580C;
+  --orange-light: #FFF7ED;
 
-  --green: #16A34A;
-  --green-bg: #E8F8EF;
-  --green-border: #BBF7D0;
+  --green: #10B981;
+  --green-bg: #ECFDF5;
+  --green-border: #A7F3D0;
 
-  --red: #DC2626;
-  --red-bg: #FEECEC;
+  --red: #EF4444;
+  --red-bg: #FEF2F2;
   --red-border: #FECACA;
 
   --bg-white: #FFFFFF;
   --bg-offwhite: #F8FAFC;
-  --bg-very-light-blue: #F4FAFD;
+  --bg-very-light-blue: #F1F5F9;
 
-  --text-body: #23466B;
-  --text-primary: #122F55;
-  --text-secondary: #5F7894;
-  --text-muted: #7890A8;
+  --text-body: #334155;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
 
-  --brand-blue: #0B82C9;
-  --brand-navy: #122F55;
+  --brand-blue: #0284C7;
+  --brand-navy: #0F172A;
   --sidebar-bg: #FFFFFF;
   --card-bg: #FFFFFF;
-  --body-bg: #F4FAFD;
-  --light-blue-bg: #EAF6FC;
+  --body-bg: #F8FAFC;
+  --light-blue-bg: #F0F9FF;
 
-  --success: #16A34A;
-  --success-bg: #E8F8EF;
-  --success-border: #BBF7D0;
+  --success: #10B981;
+  --success-bg: #ECFDF5;
+  --success-border: #A7F3D0;
 
-  --danger: #DC2626;
-  --danger-bg: #FEECEC;
+  --danger: #EF4444;
+  --danger-bg: #FEF2F2;
   --danger-border: #FECACA;
 
-  --warning: #FF7426;
-  --warning-bg: #FFF1E8;
-  --warning-border: #FFD8C2;
+  --warning: #F59E0B;
+  --warning-bg: #FFFBEB;
+  --warning-border: #FDE68A;
 
-  --border: #D9E6EF;
-  --border-light: #E7EFF5;
+  --border: #E2E8F0;
+  --border-light: #F1F5F9;
 
-  --shadow-sm: 0 1px 3px rgba(18, 47, 85, 0.04);
-  --shadow-card: 0 4px 20px rgba(18, 47, 85, 0.06);
-  --shadow-hover: 0 8px 28px rgba(18, 47, 85, 0.10);
-  --shadow-orange: 0 4px 14px rgba(255, 116, 38, 0.28);
-  --shadow-blue: 0 4px 14px rgba(11, 130, 201, 0.22);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 4px 16px 0 rgba(15, 23, 42, 0.02);
+  --shadow-hover: 0 4px 12px 0 rgba(15, 23, 42, 0.06), 0 8px 24px 0 rgba(15, 23, 42, 0.03);
+  --shadow-orange: 0 4px 14px rgba(249, 115, 22, 0.25);
+  --shadow-blue: 0 4px 14px rgba(2, 132, 199, 0.22);
 }
 
 /* Base */
@@ -393,4 +393,193 @@ body {
 .leaflet-control-zoom a:hover {
   background: #EAF6FC !important;
   color: #0B82C9 !important;
+}
+
+/* ============================================
+   ENTERPRISE SAAS DESIGN SYSTEM UTILITIES
+   ============================================ */
+
+.saas-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.saas-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.saas-title {
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.saas-subtitle {
+  font-size: 0.875rem;
+  color: #64748B;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.saas-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 4px 16px 0 rgba(15, 23, 42, 0.02);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.saas-card-interactive {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.saas-card-interactive:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 14px 0 rgba(15, 23, 42, 0.07);
+  transform: translateY(-1px);
+}
+
+.saas-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.375rem;
+}
+
+.saas-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 0.875rem;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  color: #0F172A;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.saas-input::placeholder {
+  color: #94A3B8;
+}
+
+.saas-input:hover {
+  border-color: #94A3B8;
+}
+
+.saas-input:focus {
+  border-color: #0284C7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.saas-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.125rem;
+  background: #0284C7;
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px 0 rgba(2, 132, 199, 0.2);
+}
+
+.saas-btn-primary:hover:not(:disabled) {
+  background: #0369A1;
+  transform: translateY(-0.5px);
+}
+
+.saas-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.125rem;
+  background: #FFFFFF;
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+}
+
+.saas-btn-secondary:hover:not(:disabled) {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #0F172A;
+}
+
+.saas-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.saas-badge-success {
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+
+.saas-badge-warning {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
+.saas-badge-danger {
+  background: #FEF2F2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+}
+
+.saas-badge-info {
+  background: #F0F9FF;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
+}
+
+.saas-badge-neutral {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #E2E8F0;
 }

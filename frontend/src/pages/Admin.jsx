@@ -61,34 +61,45 @@ const Admin = () => {
   ] : [];
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '40px' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+    <div className="space-y-6 pb-12 max-w-7xl mx-auto">
+      {/* SaaS Page Header */}
+      <div className="saas-page-header">
         <div>
-          <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#122F55', letterSpacing: '-0.02em', marginBottom: '4px' }}>System Administration</h1>
-          <p style={{ fontSize: '14px', color: '#5F7894' }}>Data pipeline management and simulation controls</p>
+          <div className="flex items-center gap-3">
+            <h1 className="saas-title flex items-center gap-2.5">
+              <Shield className="text-blue-600" size={24} /> System Administration
+            </h1>
+            <span className="saas-badge saas-badge-success flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              SUPERUSER ACTIVE
+            </span>
+          </div>
+          <p className="saas-subtitle">
+            Telemetry ingestion pipelines, predictive model retraining, and AIS simulation controls.
+          </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', background: '#E8F8EF', border: '1px solid #BBF7D0', borderRadius: '999px' }}>
-          <Shield size={14} color="#16A34A" />
-          <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#16A34A' }}>Admin Privileges Active</span>
+
+        <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-bold">
+          <ShieldCheck size={15} className="text-emerald-600" />
+          <span>Root Privileges Granted</span>
         </div>
       </div>
 
       {/* Stat Cards */}
       {loading ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '20px' }}>
-          {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: '100px', borderRadius: '16px' }}></div>)}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <div key={i} className="saas-card h-28 animate-pulse bg-slate-100" />)}
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {statCards.map(c => (
-            <div key={c.label} style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div key={c.label} className="saas-card p-5">
+              <div className="flex justify-between items-start">
                 <div>
-                  <p style={{ fontSize: '11.5px', fontWeight: 600, color: '#7890A8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px' }}>{c.label}</p>
-                  <p style={{ fontSize: '22px', fontWeight: 800, color: '#122F55' }}>{c.value}</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">{c.label}</p>
+                  <p className="text-2xl font-black text-slate-900">{c.value}</p>
                 </div>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: c.bg }}>
                   <c.icon size={18} color={c.color} />
                 </div>
               </div>
@@ -97,104 +108,128 @@ const Admin = () => {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* AIS Simulation */}
-        <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#122F55', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Activity size={16} color="#0B82C9" /> Simulated AIS Controls
-          </h2>
-          <p style={{ fontSize: '13px', color: '#5F7894', marginBottom: '20px', lineHeight: 1.6 }}>
-            Manually override vessel positions to test the Live Operations map rendering and alert triggers.
-          </p>
+        <div className="saas-card p-6 sm:p-7 space-y-5">
+          <div className="border-b border-slate-100 pb-4">
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Activity size={18} className="text-blue-600" /> Simulated AIS Controls
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">
+              Manually override live vessel coordinates to test fleet tracking, ETA re-computation, and geofence alerts.
+            </p>
+          </div>
 
           {syncStatus === 'success' && (
-            <div style={{ background: '#E8F8EF', border: '1px solid #BBF7D0', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle size={15} color="#16A34A" />
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#16A34A' }}>AIS position updated successfully!</span>
+            <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-emerald-800 text-xs font-semibold">
+              <CheckCircle size={15} className="text-emerald-600 shrink-0" />
+              <span>AIS coordinate override broadcasted successfully to all active clients.</span>
             </div>
           )}
           {syncStatus === 'error' && (
-            <div style={{ background: '#FEECEC', border: '1px solid #FECACA', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertTriangle size={15} color="#DC2626" />
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#DC2626' }}>Failed to update AIS position.</span>
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-rose-800 text-xs font-semibold">
+              <AlertTriangle size={15} className="text-rose-600 shrink-0" />
+              <span>Failed to dispatch AIS position update. Verify server telemetry port.</span>
             </div>
           )}
 
-          <form onSubmit={handleUpdateAIS} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleUpdateAIS} className="space-y-4">
             <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Select Active Vessel</label>
-              <select value={selectedVessel} onChange={e => { setSelectedVessel(e.target.value); const v = fleet.find(f => (f.id || f._id) === e.target.value); if (v) { setNewLat(v.latitude); setNewLng(v.longitude); }}} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
-                {fleet.map(v => <option key={v.id || v._id} value={v.id || v._id}>{v.vesselName}</option>)}
+              <label className="saas-label">Target Vessel</label>
+              <select 
+                value={selectedVessel} 
+                onChange={e => { 
+                  setSelectedVessel(e.target.value); 
+                  const v = fleet.find(f => (f.id || f._id) === e.target.value); 
+                  if (v) { 
+                    setNewLat(v.latitude); 
+                    setNewLng(v.longitude); 
+                  }
+                }} 
+                className="saas-input"
+              >
+                {fleet.map(v => <option key={v.id || v._id} value={v.id || v._id}>{v.vesselName} ({v.vesselClass})</option>)}
               </select>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Latitude Override</label>
-                <input type="number" step="any" value={newLat} onChange={e => setNewLat(e.target.value)} placeholder="e.g. 20.1234" style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
+                <label className="saas-label">Latitude Override</label>
+                <input 
+                  type="number" 
+                  step="any" 
+                  value={newLat} 
+                  onChange={e => setNewLat(e.target.value)} 
+                  placeholder="e.g. 20.1234" 
+                  className="saas-input" 
+                />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Longitude Override</label>
-                <input type="number" step="any" value={newLng} onChange={e => setNewLng(e.target.value)} placeholder="e.g. 86.1234" style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
+                <label className="saas-label">Longitude Override</label>
+                <input 
+                  type="number" 
+                  step="any" 
+                  value={newLng} 
+                  onChange={e => setNewLng(e.target.value)} 
+                  placeholder="e.g. 86.1234" 
+                  className="saas-input" 
+                />
               </div>
             </div>
-            <button
-              type="submit"
-              disabled={isSyncing || !selectedVessel}
-              style={{
-                padding: '11px',
-                background: (isSyncing || !selectedVessel) ? '#D9E6EF' : '#FF7426',
-                color: (isSyncing || !selectedVessel) ? '#7890A8' : '#FFFFFF',
-                border: 'none',
-                borderRadius: '11px',
-                fontSize: '14px',
-                fontWeight: 700,
-                cursor: (isSyncing || !selectedVessel) ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                transition: 'all 0.2s ease',
-                boxShadow: (isSyncing || !selectedVessel) ? 'none' : '0 2px 8px rgba(255, 116, 38, 0.28)'
-              }}
-              onMouseEnter={e => {
-                if (!isSyncing && selectedVessel) {
-                  e.currentTarget.style.background = '#F5661F';
-                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 116, 38, 0.38)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }
-              }}
-              onMouseLeave={e => {
-                if (!isSyncing && selectedVessel) {
-                  e.currentTarget.style.background = '#FF7426';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)';
-                  e.currentTarget.style.transform = 'none';
-                }
-              }}
-            >
-              {isSyncing ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Syncing...</> : <><Send size={16} /> Force AIS Position Sync</>}
-            </button>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isSyncing || !selectedVessel}
+                className="saas-btn-primary w-full justify-center py-3"
+              >
+                {isSyncing ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    <span>Transmitting to Vessel Transponder...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send size={16} />
+                    <span>Force AIS Telemetry Sync</span>
+                  </>
+                )}
+              </button>
+            </div>
           </form>
         </div>
 
         {/* Pipeline Logs */}
-        <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Server size={16} color="var(--brand-blue)" /> Pipeline Logs
-          </h2>
-          <div style={{ background: '#0F172A', borderRadius: '10px', padding: '16px', fontFamily: "'Menlo', 'Courier New', monospace", fontSize: '12px', lineHeight: 1.8, overflowY: 'auto', maxHeight: '300px' }}>
+        <div className="saas-card p-6 sm:p-7 flex flex-col">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Server size={18} className="text-blue-600" /> Pipeline Logs & Event Stream
+            </h2>
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-100">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Tail -f active
+            </div>
+          </div>
+
+          <div className="bg-slate-950 rounded-xl p-4 font-mono text-xs leading-relaxed overflow-y-auto flex-1 max-h-[300px] border border-slate-800 shadow-inner">
             {LOGS.map((log, i) => (
-              <div key={i} style={{ color: log.type === 'warn' ? '#F59E0B' : log.type === 'system' ? '#22D3EE' : '#94A3B8', paddingBottom: '2px' }}>
+              <div key={i} className={`py-0.5 ${log.type === 'warn' ? 'text-amber-400' : log.type === 'system' ? 'text-cyan-400 font-semibold' : 'text-slate-400'}`}>
                 {log.text}
               </div>
             ))}
-            <div style={{ color: '#22D3EE', animation: 'pulse-dot 1.5s infinite' }}>▋</div>
+            <div className="text-cyan-400 animate-pulse mt-1">▋</div>
           </div>
-          <div style={{ display: 'flex', gap: '12px', marginTop: '14px' }}>
-            {[['#22D3EE', 'System'], ['#94A3B8', 'Info'], ['#F59E0B', 'Warning']].map(([c, l]) => (
-              <div key={l} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: c }}></span>{l}
-              </div>
-            ))}
+
+          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-cyan-400"></span> System
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-slate-400"></span> Info
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-400"></span> Warning
+            </div>
           </div>
         </div>
       </div>

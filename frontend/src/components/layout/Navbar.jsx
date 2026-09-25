@@ -11,72 +11,68 @@ import {
   User,
   LogOut,
   Menu,
+  X,
   Inbox,
   FileCheck,
   MessageSquare,
   BarChart2,
-  Calculator
+  Calculator,
+  Compass,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import NotificationBell from '../NotificationBell';
-
-const getNavItems = (role) => {
-  if (role === 'VESSEL_OWNER') {
-    return [
-      { path: '/owner/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { path: '/owner/fleet', label: 'My Fleet', icon: Anchor },
-      { path: '/owner/requests', label: 'Contract Requests', icon: Inbox },
-      { path: '/owner/contracts', label: 'Active Contracts', icon: FileCheck },
-      { path: '/calculator', label: 'TCE Calculator', icon: Calculator },
-      { path: '/live-tracker', label: 'Live Fleet AIS', icon: Map },
-      { path: '/chat', label: 'Messages', icon: MessageSquare },
-    ];
-  }
-
-  return [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/planner', label: 'Charter Planner', icon: Anchor },
-    { path: '/contracts', label: 'Bookings', icon: FileCheck },
-    { path: '/analytics', label: 'Voyage Analytics', icon: BarChart2 },
-    { path: '/calculator', label: 'TCE & Laytime', icon: Calculator },
-    { path: '/live-tracker', label: 'Live Fleet AIS', icon: Map },
-    { path: '/weather', label: 'Weather', icon: CloudRain },
-    { path: '/market-analysis', label: 'Markets', icon: TrendingUp },
-    { path: '/chat', label: 'Messages', icon: MessageSquare },
-  ];
-};
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const dropdownRef = useRef(null);
 
-  // Close dropdown on outside click
+  const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toolsRef = useRef(null);
+  const profileRef = useRef(null);
+
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
+      if (toolsRef.current && !toolsRef.current.contains(e.target)) {
+        setToolsDropdownOpen(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
-    setDropdownOpen(false);
+    setToolsDropdownOpen(false);
+    setProfileDropdownOpen(false);
   }, [location.pathname]);
 
-  const allItems = [...getNavItems(user?.role)];
-  if (user?.role === 'admin') {
-    allItems.push({ path: '/admin', label: 'System Admin', icon: Settings });
-  }
+  const isOwner = user?.role === 'VESSEL_OWNER';
+  const homePath = isOwner ? '/owner/dashboard' : '/dashboard';
 
-  const homePath = user?.role === 'VESSEL_OWNER' ? '/owner/dashboard' : '/dashboard';
+  const isPathActive = (path) => {
+    if (path === '/dashboard' || path === '/owner/dashboard') {
+      return location.pathname === path;
+    }
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
+
+  const isToolsActive = [
+    '/analytics',
+    '/calculator',
+    '/weather',
+    '/market-analysis'
+  ].some(p => location.pathname === p || location.pathname.startsWith(p + '/'));
 
   const handleLogout = async () => {
     await logout();
@@ -92,401 +88,400 @@ const Navbar = () => {
         .slice(0, 2)
     : 'BM';
 
-  const isItemActive = (path) => {
-    if (path === '/dashboard') {
-      return location.pathname === '/dashboard';
-    }
-    return location.pathname === path || location.pathname.startsWith(path + '/');
-  };
-
   return (
-    <header
-      style={{
-        height: '72px',
-        flexShrink: 0,
-        background: '#FFFFFF',
-        borderBottom: '1px solid #D9E6EF',
-        position: 'sticky',
-        top: 0,
-        zIndex: 40,
-        boxShadow: '0 2px 12px rgba(18, 47, 85, 0.04)',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: '1600px',
-          height: '100%',
-          margin: '0 auto',
-          padding: '0 32px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '24px',
-        }}
-      >
-        {/* LEFT: BulkMatrix Logo & Branding */}
-        <Link
-          to={homePath}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            textDecoration: 'none',
-            flexShrink: 0,
-          }}
-        >
-          <div
-            style={{
-              width: '38px',
-              height: '38px',
-              background: '#EAF6FC',
-              border: '1.5px solid #CFE7F5',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 2px 6px rgba(11, 130, 201, 0.08)',
-            }}
-          >
-            <Anchor size={20} color="#0B82C9" strokeWidth={2.4} />
-          </div>
-          <div>
-            <div
-              style={{
-                fontSize: '17px',
-                fontWeight: 800,
-                color: '#122F55',
-                letterSpacing: '-0.02em',
-                lineHeight: 1,
-              }}
-            >
-              BulkMatrix
+    <header className="sticky top-0 z-40 h-16 bg-white border-b border-slate-200 shadow-[0_1px_3px_0_rgba(15,23,42,0.03)] flex-shrink-0">
+      <div className="w-full max-w-[1440px] h-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        
+        {/* Brand / Logo */}
+        <div className="flex items-center gap-6 flex-shrink-0">
+          <Link to={homePath} className="flex items-center gap-2.5 group no-underline text-inherit">
+            <div className="w-8 h-8 rounded-lg bg-sky-500 text-white flex items-center justify-center shadow-sm shadow-sky-500/20 group-hover:bg-sky-600 transition-colors">
+              <Anchor size={18} strokeWidth={2.4} />
             </div>
-            <div
-              style={{
-                fontSize: '9.5px',
-                fontWeight: 700,
-                color: '#0B82C9',
-                letterSpacing: '0.09em',
-                marginTop: '3px',
-                lineHeight: 1,
-              }}
-            >
-              MARITIME INTELLIGENCE
+            <div>
+              <div className="text-[16px] font-bold tracking-tight text-slate-900 group-hover:text-sky-600 transition-colors leading-none">
+                BulkMatrix
+              </div>
+              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5 leading-none">
+                {isOwner ? 'Fleet Operations' : 'Maritime SaaS'}
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+        </div>
 
-        {/* CENTER: Horizontal Desktop Navigation */}
-        <nav
-          className="hidden lg:flex"
-          style={{
-            alignItems: 'center',
-            gap: '6px',
-            flex: 1,
-            justifyContent: 'center',
-            maxWidth: '920px',
-          }}
-        >
-          {allItems.map((item) => {
-            const active = isItemActive(item.path);
-            const Icon = item.icon;
-            return (
+        {/* Center Navigation: Desktop */}
+        <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center max-w-[800px]">
+          {isOwner ? (
+            /* Vessel Owner Nav Links */
+            <>
               <Link
-                key={item.path}
-                to={item.path}
-                style={{
-                  position: 'relative',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '9px 16px',
-                  borderRadius: '10px',
-                  textDecoration: 'none',
-                  fontSize: '13.5px',
-                  fontWeight: active ? 700 : 500,
-                  color: active ? '#122F55' : '#23466B',
-                  background: active ? '#EAF6FC' : 'transparent',
-                  border: active ? '1px solid #CFE7F5' : '1px solid transparent',
-                  boxShadow: active ? '0 1px 3px rgba(11, 130, 201, 0.08)' : 'none',
-                  transition: 'all 200ms ease',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                  if (!active) {
-                    e.currentTarget.style.background = '#F0F8FC';
-                    e.currentTarget.style.color = '#0B82C9';
-                    e.currentTarget.style.borderColor = '#E7EFF5';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!active) {
-                    e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = '#23466B';
-                    e.currentTarget.style.borderColor = 'transparent';
-                  }
-                }}
+                to="/owner/dashboard"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/owner/dashboard')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
               >
-                <Icon
-                  size={16}
-                  color={active ? '#0B82C9' : '#0B82C9'}
-                  strokeWidth={active ? 2.4 : 1.9}
-                  style={{ transition: 'color 200ms ease' }}
-                />
-                <span>{item.label}</span>
-                {active && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      bottom: '-1px',
-                      left: '20%',
-                      right: '20%',
-                      height: '2.5px',
-                      background: '#0B82C9',
-                      borderRadius: '2px',
-                    }}
-                  />
-                )}
+                <LayoutDashboard size={15} /> Dashboard
               </Link>
-            );
-          })}
+
+              <Link
+                to="/owner/fleet"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/owner/fleet')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Anchor size={15} /> My Fleet
+              </Link>
+
+              <Link
+                to="/owner/requests"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/owner/requests')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Inbox size={15} /> Requests
+              </Link>
+
+              <Link
+                to="/owner/contracts"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/owner/contracts')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <FileCheck size={15} /> Active Contracts
+              </Link>
+
+              <Link
+                to="/calculator"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/calculator')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Calculator size={15} /> TCE Estimator
+              </Link>
+
+              <Link
+                to="/live-tracker"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/live-tracker')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Map size={15} /> Live AIS
+              </Link>
+
+              <Link
+                to="/chat"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/chat')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <MessageSquare size={15} /> Messages
+              </Link>
+            </>
+          ) : (
+            /* Charterer / Logistics Manager Nav Links */
+            <>
+              <Link
+                to="/dashboard"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/dashboard')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <LayoutDashboard size={15} /> Dashboard
+              </Link>
+
+              <Link
+                to="/planner"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/planner')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Compass size={15} /> Charter Planner
+              </Link>
+
+              <Link
+                to="/contracts"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/contracts')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <FileCheck size={15} /> Bookings
+              </Link>
+
+              <Link
+                to="/live-tracker"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/live-tracker')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Map size={15} /> Live AIS
+              </Link>
+
+              {/* Intelligence & Analytics Dropdown */}
+              <div className="relative" ref={toolsRef}>
+                <button
+                  onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-1.5 cursor-pointer border-none bg-transparent ${
+                    isToolsActive
+                      ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  }`}
+                >
+                  <BarChart2 size={15} />
+                  <span>Intelligence & Tools</span>
+                  <ChevronDown size={14} className={`transition-transform duration-200 text-slate-400 ${toolsDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {toolsDropdownOpen && (
+                  <div className="absolute top-[calc(100%+8px)] left-0 w-64 bg-white rounded-xl border border-slate-200 shadow-lg p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <Link
+                      to="/analytics"
+                      className={`flex items-start gap-3 p-2.5 rounded-lg text-xs transition-colors ${
+                        isPathActive('/analytics') ? 'bg-sky-50 text-sky-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-md bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <BarChart2 size={15} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900">Voyage Analytics</div>
+                        <div className="text-[11px] text-slate-500">Volume trends, KPIs & funnel</div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/calculator"
+                      className={`flex items-start gap-3 p-2.5 rounded-lg text-xs transition-colors ${
+                        isPathActive('/calculator') ? 'bg-sky-50 text-sky-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-md bg-orange-100 text-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Calculator size={15} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900">TCE & Laytime Calculator</div>
+                        <div className="text-[11px] text-slate-500">Voyage profit & demurrage sheet</div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/market-analysis"
+                      className={`flex items-start gap-3 p-2.5 rounded-lg text-xs transition-colors ${
+                        isPathActive('/market-analysis') ? 'bg-sky-50 text-sky-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-md bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <TrendingUp size={15} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900">Baltic Market Indices</div>
+                        <div className="text-[11px] text-slate-500">BDI, BCI, BPI & freight rates</div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      to="/weather"
+                      className={`flex items-start gap-3 p-2.5 rounded-lg text-xs transition-colors ${
+                        isPathActive('/weather') ? 'bg-sky-50 text-sky-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CloudRain size={15} />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900">Weather Intelligence</div>
+                        <div className="text-[11px] text-slate-500">Route cyclone & sea warnings</div>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <Link
+                to="/chat"
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                  isPathActive('/chat')
+                    ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <MessageSquare size={15} /> Messages
+              </Link>
+            </>
+          )}
+
+          {user?.role === 'admin' && (
+            <Link
+              to="/admin"
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all inline-flex items-center gap-2 ${
+                isPathActive('/admin')
+                  ? 'bg-sky-50 text-sky-700 font-semibold shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <Settings size={15} /> Admin
+            </Link>
+          )}
         </nav>
 
-        {/* RIGHT: Notifications + User Profile Control + Mobile Menu Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-          {/* Notification Bell */}
+        {/* Right Controls: Role Badge + Notification + Profile */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          {/* Role Pill */}
+          <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+            {isOwner ? 'Vessel Owner' : 'Charterer'}
+          </span>
+
+          {/* Notifications */}
           <NotificationBell />
-          {/* User Dropdown */}
-          <div style={{ position: 'relative' }} ref={dropdownRef}>
+
+          {/* User Profile Dropdown */}
+          <div className="relative" ref={profileRef}>
             <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '6px 12px',
-                borderRadius: '10px',
-                border: '1px solid #D9E6EF',
-                background: '#FFFFFF',
-                cursor: 'pointer',
-                transition: 'all 0.18s ease',
-                boxShadow: '0 1px 3px rgba(18, 47, 85, 0.04)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#F4FAFD';
-                e.currentTarget.style.borderColor = '#0B82C9';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#FFFFFF';
-                e.currentTarget.style.borderColor = '#D9E6EF';
-              }}
+              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              className="flex items-center gap-2.5 pl-2 pr-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all cursor-pointer bg-white"
             >
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  background: '#EAF6FC',
-                  border: '1.5px solid #0B82C9',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <span style={{ fontSize: '11.5px', fontWeight: 800, color: '#0B82C9' }}>{initials}</span>
+              <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0">
+                {initials}
               </div>
-              <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
-                <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#122F55' }}>
-                  {user?.name || 'Ayush'}
-                </div>
-                <div
-                  style={{
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    color: '#5F7894',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.04em',
-                    marginTop: '2px',
-                  }}
-                >
-                  {user?.company || user?.role || 'GLOBAL'}
-                </div>
+              <div className="hidden sm:block text-left text-xs leading-none">
+                <div className="font-semibold text-slate-800">{user?.name?.split(' ')[0] || 'User'}</div>
               </div>
-              <ChevronDown
-                size={14}
-                color="#5F7894"
-                style={{
-                  transform: dropdownOpen ? 'rotate(180deg)' : 'none',
-                  transition: 'transform 0.2s ease',
-                  marginLeft: '2px',
-                }}
-              />
+              <ChevronDown size={13} className={`text-slate-400 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            {/* Dropdown Menu */}
-            {dropdownOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: 'calc(100% + 8px)',
-                  background: '#FFFFFF',
-                  border: '1px solid #D9E6EF',
-                  borderRadius: '14px',
-                  boxShadow: '0 10px 30px rgba(18, 47, 85, 0.10)',
-                  minWidth: '210px',
-                  zIndex: 50,
-                  overflow: 'hidden',
-                  animation: 'pageEnter 200ms ease-out',
-                }}
-              >
-                <div
-                  style={{
-                    padding: '14px 16px',
-                    borderBottom: '1px solid #D9E6EF',
-                    background: '#F8FAFC',
-                  }}
-                >
-                  <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#122F55' }}>{user?.name}</div>
-                  <div style={{ fontSize: '11px', color: '#5F7894', marginTop: '2px' }}>{user?.email}</div>
+            {profileDropdownOpen && (
+              <div className="absolute right-0 top-[calc(100%+8px)] w-56 bg-white rounded-xl border border-slate-200 shadow-lg py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-3.5 py-2.5 border-b border-slate-100">
+                  <div className="text-xs font-semibold text-slate-900 truncate">{user?.name}</div>
+                  <div className="text-[11px] text-slate-500 truncate mt-0.5">{user?.email}</div>
                 </div>
 
-                <div style={{ padding: '6px 0' }}>
-                  {[
-                    { icon: User, label: 'Profile', action: () => { setDropdownOpen(false); navigate('/profile'); } },
-                    { icon: Settings, label: 'Settings', action: () => { setDropdownOpen(false); navigate('/profile'); } },
-                  ].map((item) => {
-                    const ItemIcon = item.icon;
-                    return (
-                      <button
-                        key={item.label}
-                        onClick={item.action}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '10px',
-                          width: '100%',
-                          padding: '10px 16px',
-                          border: 'none',
-                          background: 'transparent',
-                          cursor: 'pointer',
-                          fontSize: '13.5px',
-                          color: '#122F55',
-                          transition: 'all 0.15s ease',
-                          textAlign: 'left',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = '#F4FAFD';
-                          e.currentTarget.style.color = '#0B82C9';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                          e.currentTarget.style.color = '#122F55';
-                        }}
-                      >
-                        <ItemIcon size={15} color="#0B82C9" />
-                        {item.label}
-                      </button>
-                    );
-                  })}
+                <div className="py-1">
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    <User size={14} className="text-slate-400" />
+                    <span>User Profile</span>
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    <Settings size={14} className="text-slate-400" />
+                    <span>Preferences & Security</span>
+                  </Link>
                 </div>
 
-                <div style={{ borderTop: '1px solid #D9E6EF', padding: '6px 0' }}>
+                <div className="border-t border-slate-100 pt-1">
                   <button
                     onClick={handleLogout}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      width: '100%',
-                      padding: '10px 16px',
-                      border: 'none',
-                      background: 'transparent',
-                      cursor: 'pointer',
-                      fontSize: '13.5px',
-                      color: '#DC2626',
-                      transition: 'background 0.15s ease',
-                      textAlign: 'left',
-                      fontWeight: 600,
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#FEECEC')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                    className="w-full flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer border-none bg-transparent text-left"
                   >
-                    <LogOut size={15} color="#DC2626" />
-                    Sign Out
+                    <LogOut size={14} />
+                    <span>Sign Out</span>
                   </button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Mobile Menu Hamburger (Visible on small screens) */}
+          {/* Mobile Hamburger */}
           <button
-            className="flex lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{
-              padding: '8px',
-              borderRadius: '9px',
-              border: '1px solid #D9E6EF',
-              background: '#FFFFFF',
-              cursor: 'pointer',
-              color: '#122F55',
-            }}
+            className="lg:hidden p-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
             aria-label="Toggle navigation"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
+
       </div>
 
-      {/* Mobile Navigation Drawer / Dropdown */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div
-          className="lg:hidden"
-          style={{
-            position: 'absolute',
-            top: '72px',
-            left: 0,
-            right: 0,
-            background: '#FFFFFF',
-            borderBottom: '1px solid #D9E6EF',
-            boxShadow: '0 10px 30px rgba(18, 47, 85, 0.10)',
-            padding: '16px 24px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-            zIndex: 35,
-          }}
-        >
-          {allItems.map((item) => {
-            const active = isItemActive(item.path);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '11px 14px',
-                  borderRadius: '10px',
-                  textDecoration: 'none',
-                  fontSize: '14px',
-                  fontWeight: active ? 700 : 500,
-                  color: active ? '#122F55' : '#23466B',
-                  background: active ? '#EAF6FC' : 'transparent',
-                  border: active ? '1px solid #CFE7F5' : '1px solid transparent',
-                  borderLeft: active ? '4px solid #0B82C9' : '4px solid transparent',
-                  boxShadow: active ? '0 1px 3px rgba(11, 130, 201, 0.08)' : 'none',
-                }}
-              >
-                <Icon size={17} color="#0B82C9" />
-                <span>{item.label}</span>
+        <div className="lg:hidden border-b border-slate-200 bg-white px-4 py-4 space-y-1 shadow-lg max-h-[calc(100vh-64px)] overflow-y-auto">
+          {isOwner ? (
+            <>
+              <Link to="/owner/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <LayoutDashboard size={16} /> Dashboard
               </Link>
-            );
-          })}
+              <Link to="/owner/fleet" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <Anchor size={16} /> My Fleet
+              </Link>
+              <Link to="/owner/requests" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <Inbox size={16} /> Requests
+              </Link>
+              <Link to="/owner/contracts" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <FileCheck size={16} /> Active Contracts
+              </Link>
+              <Link to="/calculator" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <Calculator size={16} /> TCE Estimator
+              </Link>
+              <Link to="/live-tracker" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <Map size={16} /> Live AIS
+              </Link>
+              <Link to="/chat" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <MessageSquare size={16} /> Messages
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <LayoutDashboard size={16} /> Dashboard
+              </Link>
+              <Link to="/planner" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <Compass size={16} /> Charter Planner
+              </Link>
+              <Link to="/contracts" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <FileCheck size={16} /> Bookings
+              </Link>
+              <Link to="/live-tracker" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                <Map size={16} /> Live AIS
+              </Link>
+              <div className="pt-2 pb-1 border-t border-slate-100">
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-1">Intelligence & Tools</div>
+                <Link to="/analytics" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  <BarChart2 size={16} /> Voyage Analytics
+                </Link>
+                <Link to="/calculator" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  <Calculator size={16} /> TCE & Laytime Calculator
+                </Link>
+                <Link to="/market-analysis" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  <TrendingUp size={16} /> Baltic Markets
+                </Link>
+                <Link to="/weather" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  <CloudRain size={16} /> Weather Intelligence
+                </Link>
+              </div>
+              <div className="pt-2 border-t border-slate-100">
+                <Link to="/chat" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  <MessageSquare size={16} /> Messages
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       )}
     </header>

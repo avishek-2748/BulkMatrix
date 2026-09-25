@@ -1,112 +1,55 @@
 import { useState, useEffect } from 'react';
-import { getKPIs } from '../services/api';
-import { TrendingUp, TrendingDown, Ship, AlertTriangle, Activity, Anchor, BarChart2, ArrowRight, Cloud, MessageSquare, FileCheck } from 'lucide-react';
+import { getKPIs, getMyCharterContracts } from '../services/api';
+import {
+  TrendingUp,
+  TrendingDown,
+  Ship,
+  AlertTriangle,
+  Activity,
+  Anchor,
+  BarChart2,
+  ArrowRight,
+  Cloud,
+  MessageSquare,
+  FileCheck,
+  Compass,
+  Calculator,
+  Clock,
+  CheckCircle,
+  MapPin,
+  ExternalLink
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatNumber } from '../utils/formatters';
 import { useAuth } from '../context/AuthContext';
 
 const SkeletonCard = () => (
-  <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.04)' }}>
-    <div className="skeleton" style={{ height: '12px', width: '60%', marginBottom: '16px' }}></div>
-    <div className="skeleton" style={{ height: '32px', width: '40%', marginBottom: '10px' }}></div>
-    <div className="skeleton" style={{ height: '10px', width: '80%' }}></div>
+  <div className="saas-card p-5">
+    <div className="skeleton h-3 w-1/2 mb-4" />
+    <div className="skeleton h-8 w-1/3 mb-2" />
+    <div className="skeleton h-3 w-3/4" />
   </div>
 );
-
-const MetricCard = ({ title, value, subtitle, trend, icon: Icon, accentColor, accentBg }) => (
-  <div
-    style={{
-      background: '#FFFFFF',
-      border: '1px solid #D9E6EF',
-      borderRadius: '16px',
-      padding: '24px',
-      boxShadow: '0 4px 20px rgba(18, 47, 85, 0.04)',
-      transition: 'all 0.22s ease',
-      cursor: 'default',
-    }}
-    onMouseEnter={e => {
-      e.currentTarget.style.boxShadow = '0 8px 26px rgba(18, 47, 85, 0.08)';
-      e.currentTarget.style.transform = 'translateY(-2px)';
-      e.currentTarget.style.borderColor = '#0B82C9';
-    }}
-    onMouseLeave={e => {
-      e.currentTarget.style.boxShadow = '0 4px 20px rgba(18, 47, 85, 0.04)';
-      e.currentTarget.style.transform = 'none';
-      e.currentTarget.style.borderColor = '#D9E6EF';
-    }}
-  >
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-      <div style={{ flex: 1 }}>
-        <p style={{ fontSize: '11.5px', fontWeight: 700, color: '#5F7894', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '10px' }}>{title}</p>
-        <p style={{ fontSize: '32px', fontWeight: 800, color: '#122F55', lineHeight: 1, marginBottom: '10px', letterSpacing: '-0.02em' }}>{value}</p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          {trend !== undefined && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', fontSize: '12px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', background: trend >= 0 ? '#E8F8EF' : '#FEECEC', color: trend >= 0 ? '#16A34A' : '#DC2626' }}>
-              {trend >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-              {Math.abs(trend)}%
-            </span>
-          )}
-          <span style={{ fontSize: '12.5px', color: '#5F7894' }}>{subtitle}</span>
-        </div>
-      </div>
-      <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginLeft: '16px', border: `1px solid ${accentColor}25` }}>
-        <Icon size={22} color={accentColor} />
-      </div>
-    </div>
-  </div>
-);
-
-const QuickAction = ({ to, icon: Icon, title, description, color, bg }) => (
-  <Link
-    to={to}
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-      background: '#FFFFFF',
-      border: '1px solid #D9E6EF',
-      borderRadius: '14px',
-      padding: '18px 20px',
-      textDecoration: 'none',
-      transition: 'all 0.2s ease',
-      flex: 1,
-    }}
-    onMouseEnter={e => {
-      e.currentTarget.style.borderColor = color;
-      e.currentTarget.style.boxShadow = `0 6px 20px ${color}20`;
-      e.currentTarget.style.transform = 'translateY(-2px)';
-    }}
-    onMouseLeave={e => {
-      e.currentTarget.style.borderColor = '#D9E6EF';
-      e.currentTarget.style.boxShadow = 'none';
-      e.currentTarget.style.transform = 'none';
-    }}
-  >
-    <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: `1px solid ${color}25` }}>
-      <Icon size={20} color={color} />
-    </div>
-    <div style={{ flex: 1 }}>
-      <p style={{ fontSize: '14.5px', fontWeight: 700, color: '#122F55', marginBottom: '2px' }}>{title}</p>
-      <p style={{ fontSize: '12.5px', color: '#5F7894', lineHeight: 1.4, margin: 0 }}>{description}</p>
-    </div>
-    <ArrowRight size={16} color="#7890A8" />
-  </Link>
-);
-
-const alerts = [
-  { color: '#DC2626', bg: '#FEECEC', border: '#FECACA', severity: 'CRITICAL', title: 'High Cyclone Risk', desc: 'Expected to affect Paradip area within 48 hours. Consider rerouting.', time: '10 min ago' },
-  { color: '#FF7426', bg: '#FFF1E8', border: '#FFD8C2', severity: 'WARNING', title: 'Congestion Warning', desc: 'Haldia port waiting time increased by +2 days.', time: '2 hrs ago' },
-  { color: '#0B82C9', bg: '#EAF6FC', border: '#CFE7F5', severity: 'INFO', title: 'BDI Trending Up', desc: 'Freight rates trending upwards. Ideal for short-term charters.', time: '5 hrs ago' },
-];
 
 const Home = () => {
   const [kpis, setKpis] = useState(null);
+  const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
-    getKPIs().then(data => { setKpis(data); setLoading(false); }).catch(() => { setError('Failed to load KPIs.'); setLoading(false); });
+    Promise.all([
+      getKPIs().catch(() => null),
+      getMyCharterContracts().catch(() => [])
+    ]).then(([kpiData, contractData]) => {
+      if (kpiData) setKpis(kpiData);
+      if (contractData) setContracts(contractData);
+      setLoading(false);
+    }).catch(() => {
+      setError('Failed to load dashboard metrics.');
+      setLoading(false);
+    });
   }, []);
 
   const greeting = () => {
@@ -116,80 +59,363 @@ const Home = () => {
     return 'Good evening';
   };
 
+  const alerts = [
+    {
+      severity: 'CRITICAL',
+      badgeClass: 'saas-badge-danger',
+      title: 'High Cyclone Risk in Paradip',
+      desc: 'Severe depression forming over Bay of Bengal. 48-hr voyage delay expected.',
+      time: '15 min ago'
+    },
+    {
+      severity: 'WARNING',
+      badgeClass: 'saas-badge-warning',
+      title: 'Haldia Port Congestion Alert',
+      desc: 'Average waiting time increased by +2.5 days for Supramax and Panamax.',
+      time: '2 hrs ago'
+    },
+    {
+      severity: 'INFO',
+      badgeClass: 'saas-badge-info',
+      title: 'BDI Benchmark Trending Up',
+      desc: 'Dry bulk index up +3.8% week-over-week. Spot freight rates rising.',
+      time: '5 hrs ago'
+    }
+  ];
+
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', paddingBottom: '40px' }}>
-      {/* Header */}
-      <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
+    <div className="space-y-8 pb-12 max-w-7xl mx-auto">
+      {/* SaaS Page Header */}
+      <div className="saas-page-header">
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 800, color: '#122F55', letterSpacing: '-0.02em', marginBottom: '4px' }}>
-            {greeting()}, {user?.name?.split(' ')[0] || 'Captain'} 👋
+          <h1 className="saas-title flex items-center gap-2">
+            {greeting()}, {user?.name?.split(' ')[0] || 'Manager'}
           </h1>
-          <p style={{ fontSize: '14px', color: '#5F7894' }}>Here's your maritime intelligence overview for today</p>
+          <p className="saas-subtitle">
+            BulkMatrix dry bulk freight intelligence, market indices, and voyage operations.
+          </p>
         </div>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#E8F8EF', border: '1px solid #BBF7D0', borderRadius: '999px', padding: '6px 14px' }}>
-          <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#16A34A', animation: 'pulse-dot 2s infinite' }}></span>
-          <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#16A34A' }}>Live Data Feed Active</span>
+
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Live Market Feed
+          </div>
+
+          <Link
+            to="/planner"
+            className="saas-btn-primary"
+          >
+            <Compass size={15} /> New Charter Plan
+          </Link>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+      {/* KPI Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {loading ? (
-          [1,2,3,4].map(i => <SkeletonCard key={i} />)
+          [1, 2, 3, 4].map(i => <SkeletonCard key={i} />)
         ) : error ? (
-          <div style={{ gridColumn: '1/-1', padding: '24px', background: '#FEECEC', border: '1px solid #FECACA', borderRadius: '14px', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <AlertTriangle size={18} /> {error}
+          <div className="col-span-full p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-sm flex items-center gap-2">
+            <AlertTriangle size={16} /> {error}
           </div>
-        ) : kpis ? (<>
-          <MetricCard title="Current BDI" value={formatNumber(kpis.bdi)} trend={kpis.bdiTrend} subtitle="7-Day Trend" icon={Activity} accentColor="#0B82C9" accentBg="#EAF6FC" />
-          <MetricCard title="Active Charters" value={kpis.activeCharters} subtitle="Vessels currently booked" icon={Anchor} accentColor="#122F55" accentBg="#F4FAFD" />
-          <MetricCard title="Port Congestion" value={kpis.congestionIndex} subtitle="East Coast Ports" icon={Ship} accentColor="#FF7426" accentBg="#FFF1E8" />
-          <MetricCard title="Weather Risk" value={kpis.weatherRisk?.split(' ')[0]} subtitle={kpis.weatherRisk?.split(' ').slice(1).join(' ')} icon={Cloud} accentColor="#DC2626" accentBg="#FEECEC" />
-        </>) : null}
+        ) : kpis ? (
+          <>
+            {/* KPI 1: Baltic Dry Index */}
+            <div className="saas-card p-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
+                    Baltic Dry Index (BDI)
+                  </span>
+                  <div className="text-2xl font-bold text-slate-900 tracking-tight">
+                    {formatNumber(kpis.bdi)}
+                  </div>
+                </div>
+                <div className="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0">
+                  <Activity size={18} />
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs">
+                <span className={`saas-badge ${kpis.bdiTrend >= 0 ? 'saas-badge-success' : 'saas-badge-danger'}`}>
+                  {kpis.bdiTrend >= 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+                  {kpis.bdiTrend >= 0 ? '+' : ''}{kpis.bdiTrend}%
+                </span>
+                <span className="text-slate-400">vs 7-day average</span>
+              </div>
+            </div>
+
+            {/* KPI 2: Active Charters */}
+            <div className="saas-card p-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
+                    Active Voyages
+                  </span>
+                  <div className="text-2xl font-bold text-slate-900 tracking-tight">
+                    {kpis.activeCharters || contracts.filter(c => c.status === 'ACCEPTED' || c.status === 'ACTIVE').length}
+                  </div>
+                </div>
+                <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0">
+                  <Anchor size={18} />
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>Vessels currently on water</span>
+                <Link to="/contracts" className="text-sky-600 font-semibold hover:underline">View all</Link>
+              </div>
+            </div>
+
+            {/* KPI 3: Port Congestion */}
+            <div className="saas-card p-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
+                    Port Congestion Index
+                  </span>
+                  <div className="text-2xl font-bold text-amber-700 tracking-tight">
+                    {kpis.congestionIndex}
+                  </div>
+                </div>
+                <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
+                  <Ship size={18} />
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-500">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                <span>East Coast Ports (Haldia/Paradip)</span>
+              </div>
+            </div>
+
+            {/* KPI 4: Weather Risk */}
+            <div className="saas-card p-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
+                    Maritime Weather Risk
+                  </span>
+                  <div className="text-2xl font-bold text-rose-600 tracking-tight">
+                    {kpis.weatherRisk?.split(' ')[0] || 'Elevated'}
+                  </div>
+                </div>
+                <div className="w-9 h-9 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0">
+                  <Cloud size={18} />
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>Bay of Bengal advisory</span>
+                <Link to="/weather" className="text-rose-600 font-semibold hover:underline">Details</Link>
+              </div>
+            </div>
+          </>
+        ) : null}
       </div>
 
-      {/* Quick Actions + Alerts */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '20px', alignItems: 'start' }}>
-        {/* Quick Actions */}
-        <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.04)' }}>
-          <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#122F55', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ width: '3px', height: '18px', background: '#FF7426', borderRadius: '2px', display: 'inline-block' }}></span>
-            Quick Actions
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <QuickAction to="/planner" icon={Anchor} title="New Charter Plan" description="Generate AI-powered vessel and freight recommendations" color="#FF7426" bg="#FFF1E8" />
-            <QuickAction to="/contracts" icon={FileCheck} title="Charter Bookings & Fixtures" description="Track confirmed voyages, owner responses, and fixture note recaps" color="#16A34A" bg="#E8F8EF" />
-            <QuickAction to="/analytics" icon={BarChart2} title="Voyage Analytics" description="Cargo volume trends, contract funnel, and route distribution insights" color="#0B82C9" bg="#EAF6FC" />
-            <QuickAction to="/chat" icon={MessageSquare} title="Charter Messages" description="Negotiate charter terms and coordinate with vessel owners" color="#7C3AED" bg="#EDE9FE" />
-            <QuickAction to="/live-tracker" icon={Ship} title="Live Fleet AIS Tracker" description="Track active vessels, positions, and live AIS movement" color="#122F55" bg="#F4FAFD" />
-            <QuickAction to="/weather" icon={Cloud} title="Weather Intelligence" description="Live marine weather conditions and risk alerts" color="#0B82C9" bg="#EAF6FC" />
+      {/* Main Analytics & Operations Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        {/* Left Column (2 Cols wide on desktop): Operational Contracts & Pipeline */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* Contracts Table Preview */}
+          <div className="saas-card p-6">
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+              <div>
+                <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <FileCheck size={18} className="text-sky-600" /> Active Charter Pipeline
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">Recent bookings, fixture requests, and owner confirmations</p>
+              </div>
+              <Link to="/contracts" className="text-xs font-semibold text-sky-600 hover:text-sky-700 flex items-center gap-1">
+                View all ({contracts.length}) <ArrowRight size={13} />
+              </Link>
+            </div>
+
+            {contracts.length === 0 ? (
+              <div className="py-12 text-center text-slate-400">
+                <Anchor size={28} className="mx-auto mb-2 opacity-50" />
+                <p className="text-sm font-medium text-slate-600 mb-1">No active contracts yet</p>
+                <p className="text-xs text-slate-400 mb-4">Run an AI match in Charter Planner to initiate vessel requests.</p>
+                <Link to="/planner" className="saas-btn-primary text-xs py-1.5 px-3">
+                  Open Charter Planner
+                </Link>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+                      <th className="py-2.5 px-2">Contract</th>
+                      <th className="py-2.5 px-2">Cargo / Route</th>
+                      <th className="py-2.5 px-2">Volume</th>
+                      <th className="py-2.5 px-2">Assigned Vessel</th>
+                      <th className="py-2.5 px-2 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                    {contracts.slice(0, 5).map(contract => (
+                      <tr key={contract._id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3 px-2 font-mono font-medium text-slate-900">
+                          #{contract._id.slice(-6).toUpperCase()}
+                        </td>
+                        <td className="py-3 px-2">
+                          <div className="font-semibold text-slate-900">{contract.cargoType}</div>
+                          <div className="text-[11px] text-slate-400">{contract.originPort} → {contract.destinationPort}</div>
+                        </td>
+                        <td className="py-3 px-2 font-medium">
+                          {contract.volume?.toLocaleString()} MT
+                        </td>
+                        <td className="py-3 px-2">
+                          <span className="font-medium text-slate-800">
+                            {contract.vesselId?.vesselName || 'Pending Assignment'}
+                          </span>
+                        </td>
+                        <td className="py-3 px-2 text-right">
+                          <span className={`saas-badge ${
+                            contract.status === 'ACCEPTED' ? 'saas-badge-success' :
+                            contract.status === 'ACTIVE' ? 'saas-badge-info' :
+                            contract.status === 'REJECTED' ? 'saas-badge-danger' :
+                            'saas-badge-warning'
+                          }`}>
+                            {contract.status === 'ACCEPTED' ? 'Accepted' :
+                             contract.status === 'ACTIVE' ? 'On Voyage' :
+                             contract.status === 'REJECTED' ? 'Declined' : 'Pending Owner'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
+
+          {/* Quick Operations Hub (Grid of 4 clean cards) */}
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+              Platform Modules
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link
+                to="/planner"
+                className="saas-card-interactive flex items-start gap-3.5 p-4.5"
+              >
+                <div className="w-9 h-9 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Compass size={18} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 mb-0.5">Charter Planner</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    AI vessel matching, freight cost forecasts, and route optimizations.
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                to="/analytics"
+                className="saas-card-interactive flex items-start gap-3.5 p-4.5"
+              >
+                <div className="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <BarChart2 size={18} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 mb-0.5">Voyage Analytics</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Cargo volume trends, contract funnel, and load port distributions.
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                to="/calculator"
+                className="saas-card-interactive flex items-start gap-3.5 p-4.5"
+              >
+                <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Calculator size={18} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 mb-0.5">TCE & Laytime Calculator</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Time charter equivalent estimator, bunker costs, and demurrage settlement.
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                to="/live-tracker"
+                className="saas-card-interactive flex items-start gap-3.5 p-4.5"
+              >
+                <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Ship size={18} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 mb-0.5">Live Fleet AIS Tracker</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Track dry bulk carriers, underway speeds, headings, and weather risks.
+                  </p>
+                </div>
+              </Link>
+            </div>
+          </div>
+
         </div>
 
-        {/* Recent Alerts */}
-        <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.04)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#122F55', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '3px', height: '18px', background: '#DC2626', borderRadius: '2px', display: 'inline-block' }}></span>
-              Recent Alerts
-            </h2>
-            <Link to="/weather" style={{ fontSize: '12.5px', color: '#0B82C9', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              View All <ArrowRight size={13} />
+        {/* Right Column: Operational Risk & Alerts */}
+        <div className="space-y-6">
+          
+          <div className="saas-card p-6">
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <AlertTriangle size={16} className="text-amber-500" /> Operational Advisories
+              </h2>
+              <Link to="/weather" className="text-xs font-semibold text-sky-600 hover:text-sky-700">
+                Weather map
+              </Link>
+            </div>
+
+            <div className="space-y-3">
+              {alerts.map((alert, i) => (
+                <div
+                  key={i}
+                  className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/60 text-xs space-y-1"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className={`saas-badge text-[10px] py-0.5 px-2 ${alert.badgeClass}`}>
+                      {alert.severity}
+                    </span>
+                    <span className="text-[11px] text-slate-400">{alert.time}</span>
+                  </div>
+                  <div className="font-bold text-slate-900 pt-1">{alert.title}</div>
+                  <p className="text-slate-500 leading-relaxed text-[11.5px]">{alert.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Direct Messaging Shortcut */}
+          <div className="saas-card p-5 bg-gradient-to-br from-slate-900 to-slate-800 text-white border-none shadow-md">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                <MessageSquare size={16} />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold">Charter Communications</h4>
+                <p className="text-[11px] text-slate-300">Direct negotiations with fleet owners</p>
+              </div>
+            </div>
+            <p className="text-xs text-slate-300 mb-4 leading-relaxed">
+              Negotiate freight rates, review fixture recap notes, and coordinate port arrival readiness.
+            </p>
+            <Link
+              to="/chat"
+              className="inline-flex items-center justify-center gap-1.5 w-full py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg text-xs font-bold transition-colors"
+            >
+              Open Active Negotiations <ArrowRight size={13} />
             </Link>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {alerts.map((a, i) => (
-              <div key={i} style={{ background: a.bg, border: `1px solid ${a.border}`, borderLeft: `3px solid ${a.color}`, borderRadius: '12px', padding: '12px 14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 700, color: a.color, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{a.severity}</span>
-                  <span style={{ fontSize: '11px', color: '#7890A8' }}>{a.time}</span>
-                </div>
-                <p style={{ fontSize: '13.5px', fontWeight: 700, color: '#122F55', marginBottom: '3px' }}>{a.title}</p>
-                <p style={{ fontSize: '12.5px', color: '#5F7894', lineHeight: 1.5 }}>{a.desc}</p>
-              </div>
-            ))}
-          </div>
+
         </div>
+
       </div>
     </div>
   );

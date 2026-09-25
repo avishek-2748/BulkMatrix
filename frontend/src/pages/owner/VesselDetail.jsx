@@ -79,100 +79,140 @@ const VesselDetail = () => {
   if (!vessel) return <div className="text-center p-12 text-gray-500">Vessel not found.</div>;
 
   return (
-    <div className="max-w-5xl mx-auto pb-12">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <Link to="/owner/fleet" className="p-2 bg-white rounded-lg border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm">
-          <ChevronLeft size={20} />
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{vessel.vesselName}</h1>
-          <p className="text-sm text-gray-500 font-medium mt-1">{vessel.vesselClass} · IMO {vessel.imoNumber} · {vessel.flag}</p>
+    <div className="space-y-6 pb-12 max-w-5xl mx-auto">
+      {/* SaaS Page Header */}
+      <div className="saas-page-header">
+        <div className="flex items-center gap-4">
+          <Link 
+            to="/owner/fleet" 
+            className="p-2.5 bg-white rounded-xl border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm"
+          >
+            <ChevronLeft size={20} />
+          </Link>
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="saas-title">{vessel.vesselName}</h1>
+              <span className={`saas-badge ${
+                vessel.status === 'AVAILABLE' ? 'saas-badge-success' :
+                vessel.status === 'ON_CHARTER' ? 'saas-badge-info' :
+                'saas-badge-danger'
+              }`}>
+                {vessel.status}
+              </span>
+            </div>
+            <p className="saas-subtitle">
+              {vessel.vesselClass} • IMO {vessel.imoNumber} • Flag: {vessel.flag || 'Marshall Islands'} • Registered Fleet Asset
+            </p>
+          </div>
         </div>
-        <span className={`px-4 py-1.5 text-sm font-bold rounded-full ${
-          vessel.status === 'AVAILABLE' ? 'bg-green-100 text-green-700' :
-          vessel.status === 'ON_CHARTER' ? 'bg-yellow-100 text-yellow-700' :
-          'bg-red-100 text-red-700'
-        }`}>{vessel.status}</span>
+
+        <div className="flex items-center gap-3">
+          {activeTab === 'details' && (
+            <button
+              onClick={() => editMode ? handleSaveEdit() : setEditMode(true)}
+              disabled={saving}
+              className={editMode ? 'saas-btn-primary' : 'saas-btn-secondary'}
+            >
+              {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              <span>{editMode ? (saving ? 'Saving Specs...' : 'Save Specifications') : 'Edit Specifications'}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-8 p-1 bg-gray-100 rounded-xl w-fit">
-        {['details', 'availability'].map(tab => (
+      <div className="flex gap-2 p-1.5 bg-slate-100/80 rounded-xl w-fit border border-slate-200/60">
+        {[
+          { id: 'details', label: 'Technical Specifications' },
+          { id: 'availability', label: 'Availability & Dry Dock Schedule' }
+        ].map(tab => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2 rounded-lg text-sm font-bold transition-all capitalize ${
-              activeTab === tab ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+              activeTab === tab.id 
+                ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60' 
+                : 'text-slate-500 hover:text-slate-900'
             }`}
           >
-            {tab === 'availability' ? 'Availability Calendar' : 'Vessel Details'}
+            {tab.label}
           </button>
         ))}
       </div>
 
       {/* Details Tab */}
       {activeTab === 'details' && (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="px-8 py-5 border-b border-gray-50 flex justify-between items-center">
-            <h2 className="font-bold text-gray-900">Technical Specifications</h2>
-            <button
-              onClick={() => editMode ? handleSaveEdit() : setEditMode(true)}
-              disabled={saving}
-              className="flex items-center gap-2 text-sm font-bold px-4 py-2 rounded-lg transition-all"
-              style={{ background: editMode ? '#0B82C9' : '#F4F7FB', color: editMode ? 'white' : '#122F55' }}
-            >
-              {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-              {editMode ? (saving ? 'Saving...' : 'Save Changes') : 'Edit Vessel'}
-            </button>
+        <div className="saas-card p-0 overflow-hidden border border-slate-200 shadow-sm">
+          <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div>
+              <h2 className="font-bold text-slate-900 text-sm">Vessel Particulars & Class Survey</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Official dimensional parameters and load line deadweight capacity.</p>
+            </div>
+            {editMode && (
+              <span className="saas-badge saas-badge-warning text-[10px]">Editing Active</span>
+            )}
           </div>
 
-          <div className="p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { label: 'Vessel Name', key: 'vesselName' },
-              { label: 'IMO Number', key: 'imoNumber' },
-              { label: 'Flag', key: 'flag' },
-              { label: 'Year Built', key: 'yearBuilt', type: 'number' },
-              { label: 'DWT (Tonnes)', key: 'dwt', type: 'number' },
-              { label: 'Draft (m)', key: 'draft', type: 'number' },
-              { label: 'LOA (m)', key: 'loa', type: 'number' },
-              { label: 'Beam (m)', key: 'beam', type: 'number' },
-            ].map(({ label, key, type = 'text' }) => (
+              { label: 'Vessel Commercial Name', key: 'vesselName' },
+              { label: 'IMO Identification Number', key: 'imoNumber' },
+              { label: 'Flag State Administration', key: 'flag' },
+              { label: 'Year Built / Commissioned', key: 'yearBuilt', type: 'number' },
+              { label: 'Deadweight Tonnage (DWT)', key: 'dwt', type: 'number', unit: 'MT' },
+              { label: 'Summer Draft (m)', key: 'draft', type: 'number', unit: 'm' },
+              { label: 'Length Overall (LOA)', key: 'loa', type: 'number', unit: 'm' },
+              { label: 'Extreme Beam (m)', key: 'beam', type: 'number', unit: 'm' },
+            ].map(({ label, key, type = 'text', unit }) => (
               <div key={key}>
-                <label className={labelCls}>{label}</label>
+                <label className="saas-label">{label}</label>
                 {editMode ? (
                   <input
                     type={type}
                     value={editForm[key] || ''}
                     onChange={e => setEditForm(prev => ({ ...prev, [key]: e.target.value }))}
-                    className={inputCls}
+                    className="saas-input"
                   />
                 ) : (
-                  <p className="text-base font-semibold text-gray-800 py-3 px-4 bg-gray-50 rounded-xl">{vessel[key] || '—'}</p>
+                  <div className="text-sm font-semibold text-slate-800 py-2.5 px-3.5 bg-slate-50 rounded-xl border border-slate-200/60">
+                    {vessel[key] ? `${vessel[key]} ${unit ? unit : ''}` : '—'}
+                  </div>
                 )}
               </div>
             ))}
 
             <div>
-              <label className={labelCls}>Vessel Class</label>
+              <label className="saas-label">Vessel Class Category</label>
               {editMode ? (
-                <select value={editForm.vesselClass || ''} onChange={e => setEditForm(prev => ({ ...prev, vesselClass: e.target.value }))} className={inputCls}>
+                <select 
+                  value={editForm.vesselClass || ''} 
+                  onChange={e => setEditForm(prev => ({ ...prev, vesselClass: e.target.value }))} 
+                  className="saas-input"
+                >
                   {['Handysize', 'Supramax', 'Panamax', 'Capesize'].map(c => <option key={c}>{c}</option>)}
                 </select>
               ) : (
-                <p className="text-base font-semibold text-gray-800 py-3 px-4 bg-gray-50 rounded-xl">{vessel.vesselClass || '—'}</p>
+                <div className="text-sm font-semibold text-slate-800 py-2.5 px-3.5 bg-slate-50 rounded-xl border border-slate-200/60">
+                  {vessel.vesselClass || '—'}
+                </div>
               )}
             </div>
 
             <div>
-              <label className={labelCls}>Fuel Type</label>
+              <label className="saas-label">Primary Bunker Fuel Specification</label>
               {editMode ? (
-                <select value={editForm.fuelType || ''} onChange={e => setEditForm(prev => ({ ...prev, fuelType: e.target.value }))} className={inputCls}>
-                  <option value="VLSFO">VLSFO</option>
-                  <option value="HSFO">HSFO</option>
+                <select 
+                  value={editForm.fuelType || ''} 
+                  onChange={e => setEditForm(prev => ({ ...prev, fuelType: e.target.value }))} 
+                  className="saas-input"
+                >
+                  <option value="VLSFO">VLSFO (Very Low Sulfur)</option>
+                  <option value="HSFO">HSFO (Scrubber Fitted)</option>
                 </select>
               ) : (
-                <p className="text-base font-semibold text-gray-800 py-3 px-4 bg-gray-50 rounded-xl">{vessel.fuelType || '—'}</p>
+                <div className="text-sm font-semibold text-slate-800 py-2.5 px-3.5 bg-slate-50 rounded-xl border border-slate-200/60">
+                  {vessel.fuelType || '—'}
+                </div>
               )}
             </div>
           </div>
@@ -183,67 +223,100 @@ const VesselDetail = () => {
       {activeTab === 'availability' && (
         <div className="space-y-6">
           {/* Add Availability Form */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-            <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Plus size={18} className="text-blue-500" /> Mark Vessel as Busy
-            </h3>
+          <div className="saas-card p-6 sm:p-8">
+            <div className="border-b border-slate-100 pb-4 mb-6">
+              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
+                <Plus size={18} className="text-blue-600" /> Log Scheduled Maintenance or Off-Hire Period
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">Prevent automatic charter matching while the vessel is in dry dock or committed.</p>
+            </div>
+
             <form onSubmit={handleAddAvailability} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className={labelCls}>Busy From</label>
-                <input type="date" required value={availForm.busyFrom} onChange={e => setAvailForm(p => ({ ...p, busyFrom: e.target.value }))} className={inputCls} />
+                <label className="saas-label">Unavailable From Date</label>
+                <input 
+                  type="date" 
+                  required 
+                  value={availForm.busyFrom} 
+                  onChange={e => setAvailForm(p => ({ ...p, busyFrom: e.target.value }))} 
+                  className="saas-input" 
+                />
               </div>
               <div>
-                <label className={labelCls}>Busy Until</label>
-                <input type="date" required value={availForm.busyTo} onChange={e => setAvailForm(p => ({ ...p, busyTo: e.target.value }))} className={inputCls} />
+                <label className="saas-label">Unavailable Until Date</label>
+                <input 
+                  type="date" 
+                  required 
+                  value={availForm.busyTo} 
+                  onChange={e => setAvailForm(p => ({ ...p, busyTo: e.target.value }))} 
+                  className="saas-input" 
+                />
               </div>
               <div>
-                <label className={labelCls}>Reason</label>
-                <input type="text" placeholder="e.g. On Charter, Dry Dock, Maintenance" value={availForm.reason} onChange={e => setAvailForm(p => ({ ...p, reason: e.target.value }))} className={inputCls} />
+                <label className="saas-label">Reason / Off-Hire Nature</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Special Survey Drydock, Engine Overhaul" 
+                  value={availForm.reason} 
+                  onChange={e => setAvailForm(p => ({ ...p, reason: e.target.value }))} 
+                  className="saas-input" 
+                />
               </div>
               <div>
-                <label className={labelCls}>Location</label>
-                <input type="text" placeholder="e.g. Singapore, Port Klang" value={availForm.location} onChange={e => setAvailForm(p => ({ ...p, location: e.target.value }))} className={inputCls} />
+                <label className="saas-label">Shipyard or Port Location</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Sembcorp Marine, Singapore" 
+                  value={availForm.location} 
+                  onChange={e => setAvailForm(p => ({ ...p, location: e.target.value }))} 
+                  className="saas-input" 
+                />
               </div>
-              <div className="col-span-1 sm:col-span-2">
-                <button type="submit" disabled={addingAvail} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50">
+              <div className="col-span-1 sm:col-span-2 pt-2">
+                <button 
+                  type="submit" 
+                  disabled={addingAvail} 
+                  className="saas-btn-primary"
+                >
                   {addingAvail ? <Loader2 size={16} className="animate-spin" /> : <Calendar size={16} />}
-                  Add Unavailable Period
+                  <span>Add Scheduled Block</span>
                 </button>
               </div>
             </form>
           </div>
 
           {/* Availability History */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="px-8 py-5 border-b border-gray-50">
-              <h3 className="font-bold text-gray-900">Scheduled Unavailability</h3>
+          <div className="saas-card p-0 overflow-hidden border border-slate-200 shadow-sm">
+            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+              <h3 className="font-bold text-slate-900 text-sm">Scheduled Off-Hire Records</h3>
             </div>
             {availability.length === 0 ? (
-              <div className="p-12 text-center text-gray-400">
-                <Calendar size={40} className="mx-auto mb-3 text-gray-200" />
-                <p>No unavailability periods scheduled. The vessel is available by default.</p>
+              <div className="p-12 text-center text-slate-400">
+                <Calendar size={36} className="mx-auto mb-2.5 text-slate-300" />
+                <p className="text-sm font-semibold text-slate-600">No scheduled off-hire periods</p>
+                <p className="text-xs text-slate-400 mt-1">This vessel is fully available for open spot and contract charters.</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-slate-100">
                 {availability.map(rec => (
-                  <div key={rec._id} className="px-8 py-5 flex items-center justify-between">
+                  <div key={rec._id} className="px-6 py-4 flex items-center justify-between hover:bg-slate-50/60 transition-colors">
                     <div className="flex items-start gap-4">
-                      <div className="p-2.5 bg-red-50 text-red-500 rounded-lg mt-0.5">
+                      <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0 mt-0.5">
                         <Calendar size={18} />
                       </div>
                       <div>
-                        <p className="font-bold text-gray-800">{rec.reason || 'Unavailable'}</p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {new Date(rec.busyFrom).toLocaleDateString()} → {new Date(rec.busyTo).toLocaleDateString()}
+                        <p className="font-bold text-slate-900 text-sm">{rec.reason || 'Off-Hire / Dry Dock'}</p>
+                        <p className="text-xs text-slate-500 mt-1">
+                          {new Date(rec.busyFrom).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} → {new Date(rec.busyTo).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </p>
                         {rec.location && (
-                          <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                          <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
                             <MapPin size={12} /> {rec.location}
                           </p>
                         )}
                       </div>
                     </div>
-                    <span className="px-3 py-1 bg-red-50 text-red-600 text-xs font-bold rounded-full">BUSY</span>
+                    <span className="saas-badge saas-badge-danger">OFF-HIRE</span>
                   </div>
                 ))}
               </div>

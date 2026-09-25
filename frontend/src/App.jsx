@@ -30,12 +30,12 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 const DashboardLayout = () => {
   const location = useLocation();
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F4FAFD', color: '#23466B', fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#F8FAFC', color: '#0F172A', fontFamily: "'Inter', sans-serif" }}>
       <Navbar />
       <main
         key={location.pathname}
-        className="flex-1 page-enter"
-        style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', padding: '32px 36px 56px', boxSizing: 'border-box' }}
+        className="flex-1 page-enter w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10"
+        style={{ boxSizing: 'border-box' }}
       >
         <Outlet />
       </main>

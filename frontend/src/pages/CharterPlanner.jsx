@@ -129,26 +129,37 @@ const CharterPlanner = () => {
 
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '40px' }}>
-      {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>Charter Planner</h1>
-        <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Configure parameters to generate intelligent vessel and route recommendations</p>
+    <div className="space-y-6 pb-12 max-w-7xl mx-auto">
+      {/* SaaS Page Header */}
+      <div className="saas-page-header">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="saas-title flex items-center gap-2.5">
+              <Sparkles className="text-blue-600" size={24} /> AI Charter Party & Route Planner
+            </h1>
+            <span className="saas-badge saas-badge-info">
+              PREDICTIVE ML OPTIMIZATION
+            </span>
+          </div>
+          <p className="saas-subtitle">
+            Configure parcel volume and delivery windows to generate optimal single or multi-vessel fleet fixtures with freight cost projections.
+          </p>
+        </div>
       </div>
 
       {error && (
-        <div style={{ background: 'var(--danger-bg)', border: '1px solid var(--danger-border)', borderRadius: '10px', padding: '12px 16px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <AlertTriangle size={16} color="var(--danger)" />
-          <span style={{ fontSize: '13.5px', color: 'var(--danger)', fontWeight: 500 }}>{error}</span>
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-sm font-semibold flex items-center gap-2.5 shadow-sm">
+          <AlertTriangle size={18} className="text-rose-600 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
       {/* Form */}
       <form onSubmit={handleSubmit}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Cargo Details */}
           <SectionCard title="Cargo Details" icon={Package}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="flex flex-col gap-4">
               <div>
                 <Label>Cargo Volume (tonnes)</Label>
                 <input type="number" required min="1000" value={formData.cargo_volume_tonnes} onChange={e => setFormData({...formData, cargo_volume_tonnes: e.target.value})} placeholder="e.g. 150,000" style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
@@ -173,7 +184,7 @@ const CharterPlanner = () => {
 
           {/* Route Details */}
           <SectionCard title="Route Details" icon={MapPin}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="flex flex-col gap-4">
               <div>
                 <Label>Origin Port</Label>
                 <select value={formData.origin_port} onChange={e => setFormData({...formData, origin_port: e.target.value})} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
@@ -182,16 +193,16 @@ const CharterPlanner = () => {
               </div>
               <div>
                 <Label>Destination Ports</Label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                <div className="grid grid-cols-2 gap-2">
                   {DESTINATION_PORTS.map(port => {
                     const checked = formData.destination_ports.includes(port);
                     return (
-                      <label key={port} style={{ display: 'flex', alignItems: 'center', gap: '7px', padding: '7px 10px', borderRadius: '7px', border: `1.5px solid ${checked ? 'var(--brand-blue)' : 'var(--border)'}`, background: checked ? 'var(--light-blue-bg)' : 'white', cursor: 'pointer', transition: 'all 0.15s' }}>
+                      <label key={port} className={`flex items-center gap-2 p-2 rounded-lg border text-xs font-semibold cursor-pointer transition-all ${checked ? 'border-blue-500 bg-blue-50/60 text-blue-900' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'}`}>
                         <input type="checkbox" className="sr-only" checked={checked} onChange={() => handleCheckboxChange(port)} />
-                        <div style={{ width: '14px', height: '14px', borderRadius: '4px', border: `2px solid ${checked ? 'var(--brand-blue)' : '#CBD5E1'}`, background: checked ? 'var(--brand-blue)' : 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}>
+                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0 ${checked ? 'bg-blue-600 border-blue-600' : 'border-slate-300 bg-white'}`}>
                           {checked && <svg width="8" height="6" fill="none" viewBox="0 0 8 6"><path d="M1 3l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                         </div>
-                        <span style={{ fontSize: '12px', fontWeight: 500, color: checked ? 'var(--brand-blue)' : 'var(--text-secondary)' }}>{port}</span>
+                        <span className="truncate">{port}</span>
                       </label>
                     );
                   })}
@@ -202,7 +213,7 @@ const CharterPlanner = () => {
 
           {/* Arrival Window */}
           <SectionCard title="Arrival Window" icon={Calendar}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="flex flex-col gap-4 h-full justify-between">
               <div>
                 <Label>Start Date</Label>
                 <input type="date" required value={formData.arrival_window_start} onChange={e => setFormData({...formData, arrival_window_start: e.target.value})} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
@@ -214,12 +225,10 @@ const CharterPlanner = () => {
               <button
                 type="submit"
                 disabled={loading}
-                style={{ marginTop: 'auto', width: '100%', padding: '13px', background: loading ? '#D9E6EF' : '#FF7426', color: loading ? '#7890A8' : '#FFFFFF', border: 'none', borderRadius: '11px', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', transition: 'all 0.2s ease', boxShadow: loading ? 'none' : '0 2px 8px rgba(255, 116, 38, 0.28)' }}
-                onMouseEnter={e => { if (!loading) { e.currentTarget.style.background = '#F5661F'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 116, 38, 0.38)'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
-                onMouseLeave={e => { if (!loading) { e.currentTarget.style.background = '#FF7426'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)'; e.currentTarget.style.transform = 'none'; } }}
+                className="saas-btn-primary w-full justify-center py-3 mt-2"
               >
-                <Sparkles size={16} />
-                {loading ? 'Analyzing Market...' : 'Generate Recommendation'}
+                {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                <span>{loading ? 'Evaluating Market Freight...' : 'Generate Recommendation'}</span>
               </button>
             </div>
           </SectionCard>

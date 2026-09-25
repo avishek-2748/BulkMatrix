@@ -11,13 +11,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const STATUS_COLORS = {
-  PENDING: "#D97706",
-  ACCEPTED: "#16A34A",
-  ACTIVE: "#0B82C9",
-  REJECTED: "#DC2626",
-};
-
 const STATUS_LABELS = {
   PENDING: "Awaiting Owner",
   ACCEPTED: "Owner Accepted",
@@ -25,53 +18,18 @@ const STATUS_LABELS = {
   REJECTED: "Declined",
 };
 
-const PIE_COLORS = ["#0B82C9", "#FF7426", "#16A34A", "#7C3AED", "#D97706", "#DC2626"];
-
-const KPICard = ({ title, value, subtitle, icon: Icon, color, bg, trend }) => (
-  <div
-    style={{
-      background: "#FFFFFF",
-      border: "1px solid #D9E6EF",
-      borderRadius: "16px",
-      padding: "24px",
-      boxShadow: "0 4px 20px rgba(18, 47, 85, 0.04)",
-      transition: "all 0.22s ease",
-    }}
-    onMouseEnter={e => {
-      e.currentTarget.style.transform = "translateY(-2px)";
-      e.currentTarget.style.boxShadow = "0 8px 24px rgba(18, 47, 85, 0.08)";
-    }}
-    onMouseLeave={e => {
-      e.currentTarget.style.transform = "none";
-      e.currentTarget.style.boxShadow = "0 4px 20px rgba(18, 47, 85, 0.04)";
-    }}
-  >
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-      <div>
-        <p style={{ fontSize: "11px", fontWeight: 700, color: "#5F7894", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "10px" }}>{title}</p>
-        <p style={{ fontSize: "34px", fontWeight: 800, color: "#122F55", lineHeight: 1, marginBottom: "8px", letterSpacing: "-0.02em" }}>{value}</p>
-        <p style={{ fontSize: "12.5px", color: "#5F7894" }}>{subtitle}</p>
-      </div>
-      <div style={{ width: "48px", height: "48px", borderRadius: "12px", background: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <Icon size={22} color={color} />
-      </div>
-    </div>
-    {trend !== undefined && (
-      <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid #F0F7FC", fontSize: "12px", color: trend >= 0 ? "#16A34A" : "#DC2626", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px" }}>
-        <TrendingUp size={13} />
-        {trend >= 0 ? "+" : ""}{trend}% vs last month
-      </div>
-    )}
-  </div>
-);
+const PIE_COLORS = ["#0284C7", "#F97316", "#10B981", "#8B5CF6", "#F59E0B", "#EF4444"];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div style={{ background: "#122F55", color: "#fff", padding: "10px 14px", borderRadius: "10px", fontSize: "13px", fontWeight: 600 }}>
-        <p style={{ marginBottom: "4px", color: "#7EC8F4" }}>{label}</p>
+      <div className="bg-slate-900 text-white px-3 py-2 rounded-lg text-xs shadow-lg border border-slate-700">
+        <div className="text-slate-400 font-medium mb-1">{label}</div>
         {payload.map((entry, i) => (
-          <p key={i} style={{ color: "#fff" }}>{entry.name}: <strong>{entry.value?.toLocaleString()}</strong></p>
+          <div key={i} className="flex items-center justify-between gap-3">
+            <span className="text-slate-300">{entry.name}:</span>
+            <strong className="text-white font-bold">{entry.value?.toLocaleString()}</strong>
+          </div>
         ))}
       </div>
     );
@@ -128,8 +86,6 @@ const VoyageAnalytics = () => {
     return { label, tonnes: slice.reduce((s, c) => s + (c.volume || 0), 0), contracts: slice.length };
   });
 
-  const sk = { background: "linear-gradient(90deg,#EAF3F8 25%,#D9EEF6 50%,#EAF3F8 75%)", borderRadius: "10px" };
-
   const exportAnalyticsCSV = () => {
     if (!contracts || contracts.length === 0) return;
     const headers = ['Voyage ID', 'Status', 'Commodity', 'Tonnage (MT)', 'Load Port', 'Discharge Port', 'Rate ($/MT)', 'Owner', 'Vessel', 'Date'];
@@ -155,124 +111,140 @@ const VoyageAnalytics = () => {
   };
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", paddingBottom: "56px" }}>
-      {/* Header */}
-      <div style={{ marginBottom: "28px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px" }}>
+    <div className="space-y-8 pb-12 max-w-7xl mx-auto">
+      {/* SaaS Page Header */}
+      <div className="saas-page-header">
         <div>
-          <h1 style={{ fontSize: "27px", fontWeight: 800, color: "#122F55", letterSpacing: "-0.02em", marginBottom: "4px", display: "flex", alignItems: "center", gap: "10px" }}>
-            <BarChart2 size={26} color="#0B82C9" /> Voyage Analytics
+          <h1 className="saas-title flex items-center gap-2.5">
+            <BarChart2 size={24} className="text-sky-600" />
+            Voyage & Cargo Analytics
           </h1>
-          <p style={{ fontSize: "14px", color: "#5F7894" }}>Cargo volume trends, contract funnel, and route distribution across all your voyages</p>
+          <p className="saas-subtitle">
+            Fleet cargo throughput trends, booking conversion funnel, and load port geographic breakdown.
+          </p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={exportAnalyticsCSV}
             disabled={contracts.length === 0}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "7px",
-              background: "#FFFFFF",
-              color: "#122F55",
-              border: "1px solid #D9E6EF",
-              padding: "10px 18px",
-              borderRadius: "12px",
-              fontSize: "13px",
-              fontWeight: 700,
-              cursor: contracts.length === 0 ? "not-allowed" : "pointer",
-              boxShadow: "0 2px 8px rgba(18,47,85,0.04)",
-              opacity: contracts.length === 0 ? 0.5 : 1
-            }}
+            className="saas-btn-secondary"
           >
-            <FileSpreadsheet size={16} color="#0B82C9" /> Export CSV
+            <FileSpreadsheet size={15} className="text-sky-600" /> Export CSV
           </button>
           <Link
             to="/calculator"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "7px",
-              background: "#FFFFFF",
-              color: "#122F55",
-              border: "1px solid #D9E6EF",
-              padding: "10px 18px",
-              borderRadius: "12px",
-              fontSize: "13px",
-              fontWeight: 700,
-              textDecoration: "none",
-              boxShadow: "0 2px 8px rgba(18,47,85,0.04)"
-            }}
+            className="saas-btn-secondary"
           >
-            <Calculator size={16} color="#FF7426" /> TCE & Laytime
+            <Calculator size={15} className="text-orange-500" /> TCE Calculator
           </Link>
-          <Link to="/contracts" style={{ display: "inline-flex", alignItems: "center", gap: "7px", background: "#0B82C9", color: "#FFFFFF", padding: "10px 20px", borderRadius: "12px", fontSize: "13px", fontWeight: 700, textDecoration: "none", boxShadow: "0 4px 14px rgba(11,130,201,0.25)" }}>
-            View All Bookings <ArrowRight size={16} />
+          <Link
+            to="/contracts"
+            className="saas-btn-primary"
+          >
+            View Bookings <ArrowRight size={14} />
           </Link>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: "16px", marginBottom: "28px" }}>
-        {loading ? [1,2,3,4].map(i => <div key={i} style={{ ...sk, height: "140px" }} />) : (
-          <>
-            <KPICard title="Total Voyages" value={totalVoyages} subtitle="All charter requests" icon={Ship} color="#0B82C9" bg="#EAF6FC" />
-            <KPICard title="Confirmed & Active" value={confirmedVoyages} subtitle="Accepted or on voyage" icon={CheckCircle} color="#16A34A" bg="#DCFCE7" trend={confirmedVoyages > 0 ? 12 : 0} />
-            <KPICard title="Total Cargo Volume" value={`${(totalCargo / 1000).toFixed(1)}kt`} subtitle="Across all voyages" icon={Package} color="#FF7426" bg="#FFF1E8" />
-            <KPICard title="Booking Success Rate" value={`${successRate}%`} subtitle={`${rejectedCount} declined`} icon={Activity} color="#7C3AED" bg="#EDE9FE" />
-          </>
-        )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="saas-card p-5">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Total Voyages</span>
+          <div className="text-3xl font-bold text-slate-900 tracking-tight">{loading ? '—' : totalVoyages}</div>
+          <span className="text-xs text-slate-400 mt-2 block">All requested charters</span>
+        </div>
+
+        <div className="saas-card p-5">
+          <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider block mb-1">Confirmed & Active</span>
+          <div className="text-3xl font-bold text-emerald-700 tracking-tight">{loading ? '—' : confirmedVoyages}</div>
+          <span className="text-xs text-slate-400 mt-2 block">Accepted or on water</span>
+        </div>
+
+        <div className="saas-card p-5">
+          <span className="text-xs font-semibold text-orange-600 uppercase tracking-wider block mb-1">Aggregated Tonnage</span>
+          <div className="text-3xl font-bold text-slate-900 tracking-tight">
+            {loading ? '—' : `${(totalCargo / 1000).toFixed(1)}k`} <span className="text-sm font-normal text-slate-500">MT</span>
+          </div>
+          <span className="text-xs text-slate-400 mt-2 block">Across all voyages</span>
+        </div>
+
+        <div className="saas-card p-5">
+          <span className="text-xs font-semibold text-sky-600 uppercase tracking-wider block mb-1">Booking Success Rate</span>
+          <div className="text-3xl font-bold text-sky-700 tracking-tight">{loading ? '—' : `${successRate}%`}</div>
+          <span className="text-xs text-slate-400 mt-2 block">{rejectedCount} inquiries declined</span>
+        </div>
       </div>
 
       {/* Row 1: Monthly Trend + Status Funnel */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "20px", marginBottom: "20px" }}>
-        <div style={{ background: "#FFFFFF", border: "1px solid #D9E6EF", borderRadius: "16px", padding: "24px", boxShadow: "0 4px 20px rgba(18,47,85,0.04)" }}>
-          <p style={{ fontSize: "11px", fontWeight: 700, color: "#7890A8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px" }}>Monthly Trend</p>
-          <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#122F55", marginBottom: "20px" }}>Cargo Volume (Tonnes) vs Contracts</h3>
-          {loading ? <div style={{ ...sk, height: "220px" }} /> : (
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={monthlyTrend} margin={{ top: 5, right: 5, bottom: 0, left: 0 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        {/* Monthly Trend Area Chart (2 Cols) */}
+        <div className="lg:col-span-2 saas-card p-6">
+          <div className="pb-4 mb-4 border-b border-slate-100">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Throughput Trajectory</span>
+            <h2 className="text-base font-bold text-slate-900 mt-0.5">Cargo Volume (MT) vs Charter Bookings</h2>
+          </div>
+
+          {loading ? (
+            <div className="h-64 flex items-center justify-center text-slate-400 text-xs">Loading chart data...</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={260}>
+              <AreaChart data={monthlyTrend} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
                 <defs>
                   <linearGradient id="gTonnes" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0B82C9" stopOpacity={0.18} />
-                    <stop offset="95%" stopColor="#0B82C9" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#0284C7" stopOpacity={0.16} />
+                    <stop offset="95%" stopColor="#0284C7" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gContracts" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FF7426" stopOpacity={0.18} />
-                    <stop offset="95%" stopColor="#FF7426" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#F97316" stopOpacity={0.16} />
+                    <stop offset="95%" stopColor="#F97316" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="#EAF3F8" strokeDasharray="4 3" vertical={false} />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#7890A8", fontWeight: 600 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#7890A8" }} axisLine={false} tickLine={false} />
+                <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#64748B" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: "#64748B" }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Area type="monotone" dataKey="tonnes" name="Tonnes" stroke="#0B82C9" strokeWidth={2.5} fill="url(#gTonnes)" dot={{ r: 4, fill: "#0B82C9" }} />
-                <Area type="monotone" dataKey="contracts" name="Contracts" stroke="#FF7426" strokeWidth={2.5} fill="url(#gContracts)" dot={{ r: 4, fill: "#FF7426" }} />
+                <Area type="monotone" dataKey="tonnes" name="Cargo Volume (MT)" stroke="#0284C7" strokeWidth={2} fill="url(#gTonnes)" dot={{ r: 3.5, fill: "#0284C7" }} />
+                <Area type="monotone" dataKey="contracts" name="Total Contracts" stroke="#F97316" strokeWidth={2} fill="url(#gContracts)" dot={{ r: 3.5, fill: "#F97316" }} />
               </AreaChart>
             </ResponsiveContainer>
           )}
         </div>
 
-        <div style={{ background: "#FFFFFF", border: "1px solid #D9E6EF", borderRadius: "16px", padding: "24px", boxShadow: "0 4px 20px rgba(18,47,85,0.04)" }}>
-          <p style={{ fontSize: "11px", fontWeight: 700, color: "#7890A8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px" }}>Contract Funnel</p>
-          <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#122F55", marginBottom: "20px" }}>Status Breakdown</h3>
-          {loading ? <div style={{ ...sk, height: "220px" }} /> : statusFunnel.length === 0 ? (
-            <div style={{ height: "220px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#7890A8" }}>
-              <Ship size={36} color="#D9E6EF" />
-              <p style={{ fontSize: "13px", marginTop: "12px" }}>No contracts yet</p>
+        {/* Contract Funnel (1 Col) */}
+        <div className="saas-card p-6">
+          <div className="pb-4 mb-4 border-b border-slate-100">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Conversion Pipeline</span>
+            <h2 className="text-base font-bold text-slate-900 mt-0.5">Status Funnel</h2>
+          </div>
+
+          {loading ? (
+            <div className="h-64 flex items-center justify-center text-slate-400 text-xs">Loading funnel...</div>
+          ) : statusFunnel.length === 0 ? (
+            <div className="h-64 flex flex-col items-center justify-center text-slate-400 text-xs text-center">
+              <Ship size={32} className="text-slate-300 mb-2" />
+              <p>No contracts in funnel yet</p>
             </div>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="space-y-4 pt-2">
               {statusFunnel.map(item => {
-                const color = STATUS_COLORS[item.status] || "#7890A8";
                 const pct = totalVoyages > 0 ? Math.round((item.count / totalVoyages) * 100) : 0;
                 return (
-                  <div key={item.name}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#122F55" }}>{item.name}</span>
-                      <span style={{ fontSize: "13px", fontWeight: 800, color }}>{item.count} <span style={{ color: "#7890A8", fontWeight: 600 }}>({pct}%)</span></span>
+                  <div key={item.name} className="space-y-1.5">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-semibold text-slate-800">{item.name}</span>
+                      <span className="font-mono font-bold text-slate-600">{item.count} <span className="text-slate-400 font-normal">({pct}%)</span></span>
                     </div>
-                    <div style={{ background: "#EAF3F8", borderRadius: "99px", height: "8px", overflow: "hidden" }}>
-                      <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: "99px", transition: "width 0.6s ease" }} />
+                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          item.status === 'ACCEPTED' ? 'bg-emerald-500' :
+                          item.status === 'ACTIVE' ? 'bg-sky-500' :
+                          item.status === 'REJECTED' ? 'bg-rose-500' : 'bg-amber-500'
+                        }`}
+                        style={{ width: `${Math.max(4, pct)}%` }}
+                      />
                     </div>
                   </div>
                 );
@@ -283,113 +255,136 @@ const VoyageAnalytics = () => {
       </div>
 
       {/* Row 2: Origin Port Bar + Commodity Pie */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "20px", marginBottom: "20px" }}>
-        <div style={{ background: "#FFFFFF", border: "1px solid #D9E6EF", borderRadius: "16px", padding: "24px", boxShadow: "0 4px 20px rgba(18,47,85,0.04)" }}>
-          <p style={{ fontSize: "11px", fontWeight: 700, color: "#7890A8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px" }}>Route Intelligence</p>
-          <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#122F55", marginBottom: "20px" }}>Cargo Volume by Origin Port</h3>
-          {loading ? <div style={{ ...sk, height: "240px" }} /> : portData.length === 0 ? (
-            <div style={{ height: "240px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#7890A8" }}>
-              <Anchor size={36} color="#D9E6EF" />
-              <p style={{ fontSize: "13px", marginTop: "12px" }}>No route data yet</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        {/* Origin Port Bar Chart (2 Cols) */}
+        <div className="lg:col-span-2 saas-card p-6">
+          <div className="pb-4 mb-4 border-b border-slate-100">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Port Traffic</span>
+            <h2 className="text-base font-bold text-slate-900 mt-0.5">Cargo Volume by Load Port</h2>
+          </div>
+
+          {loading ? (
+            <div className="h-60 flex items-center justify-center text-slate-400 text-xs">Loading port distribution...</div>
+          ) : portData.length === 0 ? (
+            <div className="h-60 flex flex-col items-center justify-center text-slate-400 text-xs text-center">
+              <Anchor size={32} className="text-slate-300 mb-2" />
+              <p>No port activity recorded yet</p>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={portData} barCategoryGap="30%">
-                <CartesianGrid stroke="#EAF3F8" strokeDasharray="4 3" vertical={false} />
-                <XAxis dataKey="port" tick={{ fontSize: 11, fill: "#7890A8", fontWeight: 600 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#7890A8" }} axisLine={false} tickLine={false} />
+              <BarChart data={portData} barCategoryGap="28%">
+                <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="port" tick={{ fontSize: 11, fill: "#64748B" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: "#64748B" }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="tonnes" name="Tonnes" radius={[6, 6, 0, 0]}>
-                  {portData.map((_, i) => <Cell key={i} fill={i === 0 ? "#0B82C9" : i === 1 ? "#168FD0" : "#41A8DC"} />)}
+                <Bar dataKey="tonnes" name="Cargo (MT)" radius={[4, 4, 0, 0]}>
+                  {portData.map((_, i) => (
+                    <Cell key={i} fill={i === 0 ? "#0284C7" : i === 1 ? "#0369A1" : "#38BDF8"} />
+                  ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           )}
         </div>
 
-        <div style={{ background: "#FFFFFF", border: "1px solid #D9E6EF", borderRadius: "16px", padding: "24px", boxShadow: "0 4px 20px rgba(18,47,85,0.04)" }}>
-          <p style={{ fontSize: "11px", fontWeight: 700, color: "#7890A8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px" }}>Cargo Mix</p>
-          <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#122F55", marginBottom: "20px" }}>Commodity Distribution</h3>
-          {loading ? <div style={{ ...sk, height: "200px" }} /> : commodityData.length === 0 ? (
-            <div style={{ height: "200px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#7890A8" }}>
-              <Package size={36} color="#D9E6EF" />
-              <p style={{ fontSize: "13px", marginTop: "12px" }}>No commodity data</p>
+        {/* Commodity Distribution (1 Col) */}
+        <div className="saas-card p-6">
+          <div className="pb-4 mb-4 border-b border-slate-100">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Cargo Composition</span>
+            <h2 className="text-base font-bold text-slate-900 mt-0.5">Commodity Mix</h2>
+          </div>
+
+          {loading ? (
+            <div className="h-60 flex items-center justify-center text-slate-400 text-xs">Loading commodities...</div>
+          ) : commodityData.length === 0 ? (
+            <div className="h-60 flex flex-col items-center justify-center text-slate-400 text-xs text-center">
+              <Package size={32} className="text-slate-300 mb-2" />
+              <p>No commodity data</p>
             </div>
           ) : (
-            <>
-              <ResponsiveContainer width="100%" height={160}>
+            <div>
+              <ResponsiveContainer width="100%" height={150}>
                 <PieChart>
-                  <Pie data={commodityData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
-                    {commodityData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                  <Pie data={commodityData} cx="50%" cy="50%" innerRadius={42} outerRadius={65} paddingAngle={2} dataKey="value">
+                    {commodityData.map((_, i) => (
+                      <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                    ))}
                   </Pie>
-                  <Tooltip formatter={v => [`${v?.toLocaleString()}t`, "Volume"]} />
+                  <Tooltip formatter={v => [`${v?.toLocaleString()} MT`, "Volume"]} />
                 </PieChart>
               </ResponsiveContainer>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px" }}>
+              <div className="space-y-2 mt-3 pt-3 border-t border-slate-100">
                 {commodityData.map((item, i) => (
-                  <div key={item.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: PIE_COLORS[i % PIE_COLORS.length], flexShrink: 0 }} />
-                      <span style={{ fontSize: "12.5px", fontWeight: 600, color: "#122F55" }}>{item.name}</span>
+                  <div key={item.name} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <span className="font-semibold text-slate-800">{item.name}</span>
                     </div>
-                    <span style={{ fontSize: "12px", color: "#5F7894", fontWeight: 700 }}>{item.value?.toLocaleString()}t</span>
+                    <span className="font-mono text-slate-500 font-medium">{item.value?.toLocaleString()} MT</span>
                   </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Recent Contracts Table */}
-      <div style={{ background: "#FFFFFF", border: "1px solid #D9E6EF", borderRadius: "16px", padding: "24px", boxShadow: "0 4px 20px rgba(18,47,85,0.04)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+      {/* Transaction Log Table */}
+      <div className="saas-card p-6">
+        <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
           <div>
-            <p style={{ fontSize: "11px", fontWeight: 700, color: "#7890A8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "4px" }}>Transaction Log</p>
-            <h3 style={{ fontSize: "16px", fontWeight: 800, color: "#122F55", margin: 0 }}>Recent Charter Contracts</h3>
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Audited Records</span>
+            <h2 className="text-base font-bold text-slate-900 mt-0.5">Voyage Transaction Log</h2>
           </div>
-          <Link to="/contracts" style={{ fontSize: "13px", color: "#0B82C9", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-            View All <ArrowRight size={14} />
+          <Link to="/contracts" className="text-xs font-semibold text-sky-600 hover:text-sky-700 flex items-center gap-1">
+            View all bookings <ArrowRight size={13} />
           </Link>
         </div>
-        {loading ? <div style={{ ...sk, height: "200px" }} /> : contracts.length === 0 ? (
-          <div style={{ padding: "48px 0", textAlign: "center", color: "#7890A8" }}>
-            <Ship size={40} color="#D9E6EF" style={{ margin: "0 auto 12px" }} />
-            <p style={{ fontWeight: 600 }}>No contracts yet. Start a charter plan to see voyages here.</p>
-            <Link to="/planner" style={{ marginTop: "16px", display: "inline-flex", alignItems: "center", gap: "6px", background: "#0B82C9", color: "#fff", padding: "8px 18px", borderRadius: "10px", fontSize: "13px", fontWeight: 700, textDecoration: "none" }}>
-              Open Charter Planner <ArrowRight size={14} />
-            </Link>
+
+        {contracts.length === 0 ? (
+          <div className="py-12 text-center text-slate-400 text-xs">
+            No voyage transactions recorded yet.
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr style={{ borderBottom: "2px solid #EAF3F8" }}>
-                  {["Contract ID", "Cargo / Volume", "Route", "Owner", "Laycan", "Status"].map(col => (
-                    <th key={col} style={{ textAlign: "left", padding: "10px 14px", fontSize: "11px", fontWeight: 700, color: "#7890A8", textTransform: "uppercase", letterSpacing: "0.06em" }}>{col}</th>
-                  ))}
+                <tr className="border-b border-slate-100 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+                  <th className="py-2.5 px-3">Contract ID</th>
+                  <th className="py-2.5 px-3">Cargo / Volume</th>
+                  <th className="py-2.5 px-3">Voyage Route</th>
+                  <th className="py-2.5 px-3">Owner</th>
+                  <th className="py-2.5 px-3">Laycan</th>
+                  <th className="py-2.5 px-3 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody>
-                {contracts.slice(0, 10).map((c, i) => (
-                  <tr key={c._id} style={{ borderBottom: "1px solid #F0F7FC", background: i % 2 === 0 ? "#FFFFFF" : "#FAFCFE", transition: "background 0.15s" }}
-                    onMouseEnter={e => e.currentTarget.style.background = "#EAF6FC"}
-                    onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "#FFFFFF" : "#FAFCFE"}>
-                    <td style={{ padding: "13px 14px", fontSize: "13px", fontWeight: 700, color: "#122F55" }}>#{c._id.slice(-6).toUpperCase()}</td>
-                    <td style={{ padding: "13px 14px" }}>
-                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#122F55" }}>{c.cargoType}</span><br />
-                      <span style={{ fontSize: "11.5px", color: "#7890A8" }}>{c.volume?.toLocaleString()} MT</span>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {contracts.slice(0, 8).map(c => (
+                  <tr key={c._id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3 px-3 font-mono font-bold text-slate-900">
+                      #{c._id.slice(-6).toUpperCase()}
                     </td>
-                    <td style={{ padding: "13px 14px", fontSize: "13px", color: "#122F55" }}>
-                      <span style={{ fontWeight: 700 }}>{c.originPort}</span>
-                      <span style={{ color: "#7890A8" }}> to {c.destinationPort}</span>
+                    <td className="py-3 px-3">
+                      <div className="font-semibold text-slate-900">{c.cargoType}</div>
+                      <div className="text-[11px] text-slate-400">{c.volume?.toLocaleString()} MT</div>
                     </td>
-                    <td style={{ padding: "13px 14px", fontSize: "13px", color: "#5F7894", fontWeight: 600 }}>{c.vesselOwnerId?.company || c.vesselOwnerId?.name || "-"}</td>
-                    <td style={{ padding: "13px 14px", fontSize: "12px", color: "#5F7894" }}>
-                      {c.arrivalWindowStart ? new Date(c.arrivalWindowStart).toLocaleDateString("en-US", { day: "2-digit", month: "short" }) : "Immediate"}
+                    <td className="py-3 px-3">
+                      <span className="font-semibold text-slate-800">{c.originPort}</span>
+                      <span className="text-slate-400"> → {c.destinationPort}</span>
                     </td>
-                    <td style={{ padding: "13px 14px" }}>
-                      <span style={{ padding: "3px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: 700, background: (STATUS_COLORS[c.status] || "#7890A8") + "20", color: STATUS_COLORS[c.status] || "#7890A8", border: `1px solid ${STATUS_COLORS[c.status] || "#7890A8"}40` }}>
+                    <td className="py-3 px-3 text-slate-600">
+                      {c.vesselOwnerId?.company || c.vesselOwnerId?.name || 'Vessel Owner'}
+                    </td>
+                    <td className="py-3 px-3 text-slate-500">
+                      {c.arrivalWindowStart ? new Date(c.arrivalWindowStart).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Immediate'}
+                    </td>
+                    <td className="py-3 px-3 text-right">
+                      <span className={`saas-badge ${
+                        c.status === 'ACCEPTED' ? 'saas-badge-success' :
+                        c.status === 'ACTIVE' ? 'saas-badge-info' :
+                        c.status === 'REJECTED' ? 'saas-badge-danger' : 'saas-badge-warning'
+                      }`}>
                         {STATUS_LABELS[c.status] || c.status}
                       </span>
                     </td>
@@ -400,6 +395,7 @@ const VoyageAnalytics = () => {
           </div>
         )}
       </div>
+
     </div>
   );
 };
