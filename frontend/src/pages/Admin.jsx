@@ -44,15 +44,15 @@ const Admin = () => {
     }
   };
 
-  const inputStyle = { width: '100%', padding: '10px 14px', border: '1.5px solid var(--border)', borderRadius: '8px', fontSize: '14px', color: 'var(--text-primary)', background: 'white', outline: 'none', transition: 'all 0.2s', boxSizing: 'border-box' };
-  const onFocus = e => { e.target.style.borderColor = 'var(--brand-blue)'; e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.08)'; };
-  const onBlur = e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; };
+  const inputStyle = { width: '100%', padding: '10px 14px', border: '1.5px solid #D9E6EF', borderRadius: '10px', fontSize: '14px', color: '#122F55', background: '#FFFFFF', outline: 'none', transition: 'all 0.2s', boxSizing: 'border-box' };
+  const onFocus = e => { e.target.style.borderColor = '#0B82C9'; e.target.style.boxShadow = '0 0 0 3px rgba(11, 130, 201, 0.14)'; };
+  const onBlur = e => { e.target.style.borderColor = '#D9E6EF'; e.target.style.boxShadow = 'none'; };
 
   const statCards = stats ? [
-    { label: 'Data Freshness', value: stats.dataFreshness || '--', icon: Clock, color: '#1D4ED8', bg: '#EFF6FF' },
-    { label: 'Last Updated', value: stats.lastUpdated ? new Date(stats.lastUpdated).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '--', icon: RefreshCw, color: '#7C3AED', bg: '#F5F3FF' },
-    { label: 'Dataset Status', value: stats.datasetStatus || 'UNKNOWN', icon: Database, color: stats.datasetStatus === 'LIVE' ? '#16A34A' : '#D97706', bg: stats.datasetStatus === 'LIVE' ? '#F0FDF4' : '#FFFBEB' },
-    { label: 'Total Records', value: stats.totalRecords?.toLocaleString() || '--', icon: HardDrive, color: '#DC2626', bg: '#FEF2F2' },
+    { label: 'Data Freshness', value: stats.dataFreshness || '--', icon: Clock, color: '#0B82C9', bg: '#EAF6FC' },
+    { label: 'Last Updated', value: stats.lastUpdated ? new Date(stats.lastUpdated).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '--', icon: RefreshCw, color: '#122F55', bg: '#F8FAFC' },
+    { label: 'Dataset Status', value: stats.datasetStatus || 'UNKNOWN', icon: Database, color: stats.datasetStatus === 'LIVE' ? '#16A34A' : '#FF7426', bg: stats.datasetStatus === 'LIVE' ? '#E8F8EF' : '#FFF1E8' },
+    { label: 'Total Records', value: stats.totalRecords?.toLocaleString() || '--', icon: HardDrive, color: '#0B82C9', bg: '#EAF6FC' },
   ] : [];
 
   return (
@@ -60,28 +60,28 @@ const Admin = () => {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
         <div>
-          <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>System Administration</h1>
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Data pipeline management and simulation controls</p>
+          <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#122F55', letterSpacing: '-0.02em', marginBottom: '4px' }}>System Administration</h1>
+          <p style={{ fontSize: '14px', color: '#5F7894' }}>Data pipeline management and simulation controls</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 14px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', borderRadius: '20px' }}>
-          <Shield size={14} color="var(--success)" />
-          <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--success)' }}>Admin Privileges Active</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', background: '#E8F8EF', border: '1px solid #BBF7D0', borderRadius: '999px' }}>
+          <Shield size={14} color="#16A34A" />
+          <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#16A34A' }}>Admin Privileges Active</span>
         </div>
       </div>
 
       {/* Stat Cards */}
       {loading ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '20px' }}>
-          {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: '100px', borderRadius: '14px' }}></div>)}
+          {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: '100px', borderRadius: '16px' }}></div>)}
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
           {statCards.map(c => (
-            <div key={c.label} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
+            <div key={c.label} style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '20px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <p style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px' }}>{c.label}</p>
-                  <p style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)' }}>{c.value}</p>
+                  <p style={{ fontSize: '11.5px', fontWeight: 600, color: '#7890A8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px' }}>{c.label}</p>
+                  <p style={{ fontSize: '22px', fontWeight: 800, color: '#122F55' }}>{c.value}</p>
                 </div>
                 <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <c.icon size={18} color={c.color} />
@@ -94,45 +94,78 @@ const Admin = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         {/* AIS Simulation */}
-        <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Activity size={16} color="var(--brand-blue)" /> Simulated AIS Controls
+        <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#122F55', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Activity size={16} color="#0B82C9" /> Simulated AIS Controls
           </h2>
-          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '20px', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '13px', color: '#5F7894', marginBottom: '20px', lineHeight: 1.6 }}>
             Manually override vessel positions to test the Live Operations map rendering and alert triggers.
           </p>
 
           {syncStatus === 'success' && (
-            <div style={{ background: 'var(--success-bg)', border: '1px solid var(--success-border)', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle size={15} color="var(--success)" />
-              <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--success)' }}>AIS position updated successfully!</span>
+            <div style={{ background: '#E8F8EF', border: '1px solid #BBF7D0', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle size={15} color="#16A34A" />
+              <span style={{ fontSize: '13px', fontWeight: 600, color: '#16A34A' }}>AIS position updated successfully!</span>
             </div>
           )}
           {syncStatus === 'error' && (
-            <div style={{ background: 'var(--danger-bg)', border: '1px solid var(--danger-border)', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertTriangle size={15} color="var(--danger)" />
-              <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--danger)' }}>Failed to update AIS position.</span>
+            <div style={{ background: '#FEECEC', border: '1px solid #FECACA', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertTriangle size={15} color="#DC2626" />
+              <span style={{ fontSize: '13px', fontWeight: 600, color: '#DC2626' }}>Failed to update AIS position.</span>
             </div>
           )}
 
           <form onSubmit={handleUpdateAIS} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Select Active Vessel</label>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Select Active Vessel</label>
               <select value={selectedVessel} onChange={e => { setSelectedVessel(e.target.value); const v = fleet.find(f => f.id === e.target.value); if (v) { setNewLat(v.latitude); setNewLng(v.longitude); }}} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
                 {fleet.map(v => <option key={v.id} value={v.id}>{v.vesselName}</option>)}
               </select>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Latitude Override</label>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Latitude Override</label>
                 <input type="number" step="any" value={newLat} onChange={e => setNewLat(e.target.value)} placeholder="e.g. 20.1234" style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Longitude Override</label>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Longitude Override</label>
                 <input type="number" step="any" value={newLng} onChange={e => setNewLng(e.target.value)} placeholder="e.g. 86.1234" style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
               </div>
             </div>
-            <button type="submit" disabled={isSyncing || !selectedVessel} style={{ padding: '12px', background: (isSyncing || !selectedVessel) ? '#94A3B8' : 'var(--brand-blue)', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 700, cursor: (isSyncing || !selectedVessel) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all 0.2s', boxShadow: 'var(--shadow-blue)' }}>
+            <button
+              type="submit"
+              disabled={isSyncing || !selectedVessel}
+              style={{
+                padding: '11px',
+                background: (isSyncing || !selectedVessel) ? '#D9E6EF' : '#FF7426',
+                color: (isSyncing || !selectedVessel) ? '#7890A8' : '#FFFFFF',
+                border: 'none',
+                borderRadius: '11px',
+                fontSize: '14px',
+                fontWeight: 700,
+                cursor: (isSyncing || !selectedVessel) ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'all 0.2s ease',
+                boxShadow: (isSyncing || !selectedVessel) ? 'none' : '0 2px 8px rgba(255, 116, 38, 0.28)'
+              }}
+              onMouseEnter={e => {
+                if (!isSyncing && selectedVessel) {
+                  e.currentTarget.style.background = '#F5661F';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 116, 38, 0.38)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }
+              }}
+              onMouseLeave={e => {
+                if (!isSyncing && selectedVessel) {
+                  e.currentTarget.style.background = '#FF7426';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)';
+                  e.currentTarget.style.transform = 'none';
+                }
+              }}
+            >
               {isSyncing ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Syncing...</> : <><Send size={16} /> Force AIS Position Sync</>}
             </button>
           </form>

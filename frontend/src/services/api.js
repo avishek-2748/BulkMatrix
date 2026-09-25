@@ -59,43 +59,23 @@ export const getAllFleet = async () => {
   return response.data;
 };
 
-export const getFreightAnalytics = async () => {
-  const response = await api.get('/analytics/freight');
-  return response.data;
-};
-
-export const getCongestionAnalytics = async () => {
-  const response = await api.get('/analytics/congestion');
-  return response.data;
-};
-
-export const getRiskCalendar = async () => {
-  const response = await api.get('/analytics/risk-calendar');
-  return response.data;
-};
-
-export const getCommodityAnalytics = async () => {
-  const response = await api.get('/analytics/commodity');
-  return response.data;
-};
-
 export const getFxAnalytics = async () => {
   const response = await api.get('/analytics/fx');
   return response.data;
 };
 
-export const getFuelAnalytics = async () => {
-  const response = await api.get('/analytics/fuel');
+// MARKET ANALYSIS APIs (Supports Live Feed)
+export const getMarketOverview = async (refresh = false) => {
+  const response = await api.get('/market-analysis/overview', {
+    params: refresh ? { refresh: 'true' } : {},
+  });
   return response.data;
 };
 
-export const runScenario = async (data) => {
-  const response = await api.post('/analytics/scenario', data);
-  return response.data;
-};
-
-export const getModelPerformance = async () => {
-  const response = await api.get('/analytics/model-performance');
+export const getMarketIndexDetail = async (indexKey, range = '30d', refresh = false) => {
+  const response = await api.get(`/market-analysis/${indexKey}`, {
+    params: { range, ...(refresh ? { refresh: 'true' } : {}) },
+  });
   return response.data;
 };
 

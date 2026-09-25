@@ -11,23 +11,29 @@ const ORIGIN_PORTS = ['Hay Point', 'Newcastle', 'Gladstone', 'Port Hedland', 'Ba
 const inputStyle = {
   width: '100%',
   padding: '10px 14px',
-  border: '1.5px solid var(--border)',
-  borderRadius: '8px',
+  border: '1.5px solid #D9E6EF',
+  borderRadius: '10px',
   fontSize: '14px',
-  color: 'var(--text-primary)',
-  background: 'white',
+  color: '#122F55',
+  background: '#FFFFFF',
   outline: 'none',
-  transition: 'all 0.2s',
+  transition: 'all 0.2s ease',
   boxSizing: 'border-box',
 };
 
-const onFocus = e => { e.target.style.borderColor = 'var(--brand-blue)'; e.target.style.boxShadow = '0 0 0 3px rgba(29,78,216,0.08)'; };
-const onBlur = e => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; };
+const onFocus = e => {
+  e.target.style.borderColor = '#0B82C9';
+  e.target.style.boxShadow = '0 0 0 3px rgba(11, 130, 201, 0.14)';
+};
+const onBlur = e => {
+  e.target.style.borderColor = '#D9E6EF';
+  e.target.style.boxShadow = 'none';
+};
 
 const SectionCard = ({ title, icon: Icon, iconColor, children }) => (
-  <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
-    <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '14px', borderBottom: '1px solid var(--border)' }}>
-      <Icon size={16} color={iconColor || 'var(--brand-blue)'} />
+  <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
+    <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '14px', borderBottom: '1px solid #D9E6EF' }}>
+      <Icon size={16} color={iconColor || '#0B82C9'} />
       {title}
     </h3>
     {children}
@@ -35,7 +41,7 @@ const SectionCard = ({ title, icon: Icon, iconColor, children }) => (
 );
 
 const Label = ({ children }) => (
-  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{children}</label>
+  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{children}</label>
 );
 
 const CharterPlanner = () => {
@@ -173,9 +179,9 @@ const CharterPlanner = () => {
               <button
                 type="submit"
                 disabled={loading}
-                style={{ marginTop: 'auto', width: '100%', padding: '12px', background: loading ? '#94A3B8' : 'var(--brand-blue)', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', transition: 'all 0.2s', boxShadow: loading ? 'none' : 'var(--shadow-blue)' }}
-                onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#1E40AF'; }}
-                onMouseLeave={e => { if (!loading) e.currentTarget.style.background = 'var(--brand-blue)'; }}
+                style={{ marginTop: 'auto', width: '100%', padding: '13px', background: loading ? '#D9E6EF' : '#FF7426', color: loading ? '#7890A8' : '#FFFFFF', border: 'none', borderRadius: '11px', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', transition: 'all 0.2s ease', boxShadow: loading ? 'none' : '0 2px 8px rgba(255, 116, 38, 0.28)' }}
+                onMouseEnter={e => { if (!loading) { e.currentTarget.style.background = '#F5661F'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 116, 38, 0.38)'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                onMouseLeave={e => { if (!loading) { e.currentTarget.style.background = '#FF7426'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)'; e.currentTarget.style.transform = 'none'; } }}
               >
                 <Sparkles size={16} />
                 {loading ? 'Analyzing Market...' : 'Generate Recommendation'}
@@ -187,12 +193,12 @@ const CharterPlanner = () => {
 
       {/* Results */}
       {result && (
-        <div style={{ marginTop: '32px', animation: 'fadeInUp 0.4s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', paddingBottom: '16px', borderBottom: '2px solid var(--border)' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <TrendingUp size={20} color="var(--brand-blue)" /> Recommendation Results
+        <div style={{ marginTop: '32px', animation: 'fadeInUp 0.3s ease-out' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', paddingBottom: '16px', borderBottom: '2px solid #D9E6EF' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#122F55', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <TrendingUp size={20} color="#0B82C9" /> Recommendation Results
             </h2>
-            <span style={{ padding: '4px 12px', background: 'var(--success-bg)', border: '1px solid var(--success-border)', borderRadius: '20px', fontSize: '11.5px', fontWeight: 700, color: 'var(--success)', letterSpacing: '0.04em' }}>ML ENGINE SYNCED</span>
+            <span style={{ padding: '4px 12px', background: '#E8F8EF', border: '1px solid #BBF7D0', borderRadius: '999px', fontSize: '11.5px', fontWeight: 700, color: '#16A34A', letterSpacing: '0.04em' }}>ML ENGINE SYNCED</span>
           </div>
 
           {/* Multi-Vessel Banner / Single Vessel Banner */}
@@ -343,68 +349,69 @@ const CharterPlanner = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
             {/* Freight Forecast Chart */}
-            <div style={{ gridColumn: '1 / 3', background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px' }}>Freight Rate Forecast ($/tonne)</h3>
+            <div style={{ gridColumn: '1 / 3', background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '20px' }}>Freight Rate Forecast ($/tonne)</h3>
               <div style={{ height: '220px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-                    <XAxis dataKey="name" stroke="#94A3B8" tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <YAxis stroke="#94A3B8" tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
-                    <Tooltip contentStyle={{ background: 'white', border: '1px solid var(--border)', borderRadius: '8px', boxShadow: 'var(--shadow-md)', fontSize: '13px' }} formatter={v => [`$${v}`, 'Freight Rate']} />
-                    <Line type="monotone" dataKey="rate" stroke="#1D4ED8" strokeWidth={3} dot={{ r: 5, fill: 'white', stroke: '#1D4ED8', strokeWidth: 2 }} activeDot={{ r: 7 }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#E7EFF5" vertical={false} />
+                    <XAxis dataKey="name" stroke="#7890A8" tick={{ fill: '#7890A8', fontSize: 11.5 }} axisLine={false} tickLine={false} />
+                    <YAxis stroke="#7890A8" tick={{ fill: '#7890A8', fontSize: 11.5 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
+                    <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '10px', boxShadow: '0 6px 20px rgba(18, 47, 85, 0.08)', fontSize: '13px', color: '#122F55' }} formatter={v => [`$${v}`, 'Freight Rate']} />
+                    <Line type="monotone" dataKey="rate" stroke="#0B82C9" strokeWidth={3} dot={{ r: 5, fill: 'white', stroke: '#0B82C9', strokeWidth: 2 }} activeDot={{ r: 7 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
             {/* Market Signal */}
-            <div style={{ background: isBuyNow ? 'var(--success-bg)' : 'var(--warning-bg)', border: `1px solid ${isBuyNow ? 'var(--success-border)' : 'var(--warning-border)'}`, borderRadius: '14px', padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: isBuyNow ? 'var(--success)' : 'var(--warning)' }}></div>
-              <p style={{ fontSize: '11px', fontWeight: 700, color: isBuyNow ? 'var(--success)' : 'var(--warning)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>Market Signal</p>
-              <p style={{ fontSize: '36px', fontWeight: 900, color: isBuyNow ? 'var(--success)' : 'var(--warning)', letterSpacing: '-0.02em', marginBottom: '12px', lineHeight: 1 }}>{result.marketSignal?.signal ?? 'BUY NOW'}</p>
-              <div style={{ background: 'white', borderRadius: '20px', padding: '4px 14px', marginBottom: '12px', display: 'inline-block' }}>
-                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Confidence: {result.marketSignal?.confidence ?? 85}%</span>
+            <div style={{ background: isBuyNow ? '#E8F8EF' : '#FFF1E8', border: `1px solid ${isBuyNow ? '#BBF7D0' : '#FFD8C2'}`, borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: isBuyNow ? '#16A34A' : '#FF7426' }}></div>
+              <p style={{ fontSize: '11px', fontWeight: 700, color: isBuyNow ? '#16A34A' : '#FF7426', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>Market Signal</p>
+              <p style={{ fontSize: '36px', fontWeight: 900, color: isBuyNow ? '#16A34A' : '#FF7426', letterSpacing: '-0.02em', marginBottom: '12px', lineHeight: 1 }}>{result.marketSignal?.signal ?? 'BUY NOW'}</p>
+              <div style={{ background: '#FFFFFF', borderRadius: '999px', padding: '4px 14px', marginBottom: '12px', display: 'inline-block', border: '1px solid #D9E6EF' }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: '#122F55' }}>Confidence: {result.marketSignal?.confidence ?? 85}%</span>
               </div>
-              <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{result.marketSignal?.reason ?? 'Freight rates expected to increase.'}</p>
+              <p style={{ fontSize: '12.5px', color: '#5F7894', lineHeight: 1.6 }}>{result.marketSignal?.reason ?? 'Freight rates expected to increase.'}</p>
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
             {/* Vessel Recommendation */}
-            <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Anchor size={15} color="var(--brand-blue)" /> Vessel Recommendation
+            <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Anchor size={15} color="#0B82C9" /> Vessel Recommendation
               </h3>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--light-blue-bg)', border: '1px solid rgba(29,78,216,0.2)', borderRadius: '8px', padding: '8px 14px', marginBottom: '16px' }}>
-                <Ship size={18} color="var(--brand-blue)" />
-                <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--brand-blue)' }}>{result.vesselRecommendation?.class ?? 'PANAMAX'}</span>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#FFF1E8', border: '1px solid #FFD8C2', borderRadius: '10px', padding: '8px 14px', marginBottom: '16px' }}>
+                <Ship size={18} color="#FF7426" />
+                <span style={{ fontSize: '18px', fontWeight: 800, color: '#122F55' }}>{result.vesselRecommendation?.class ?? 'PANAMAX'}</span>
+                <span style={{ fontSize: '10px', fontWeight: 800, color: '#FF7426', background: '#FFFFFF', border: '1px solid #FFD8C2', padding: '2px 7px', borderRadius: '999px', letterSpacing: '0.04em' }}>RECOMMENDED</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
                 {[['Draft', result.vesselRecommendation?.draftCompatible ?? true], ['LOA', result.vesselRecommendation?.loaCompatible ?? true], ['Beam', result.vesselRecommendation?.beamCompatible ?? true]].map(([label, ok]) => (
-                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: ok ? 'var(--success-bg)' : 'var(--danger-bg)', borderRadius: '8px' }}>
-                    {ok ? <CheckCircle size={15} color="var(--success)" /> : <XCircle size={15} color="var(--danger)" />}
-                    <span style={{ fontSize: '13px', fontWeight: 500, color: ok ? 'var(--success)' : 'var(--danger)' }}>{label} Compatible</span>
+                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: ok ? '#E8F8EF' : '#FEECEC', borderRadius: '8px' }}>
+                    {ok ? <CheckCircle size={15} color="#16A34A" /> : <XCircle size={15} color="#DC2626" />}
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: ok ? '#16A34A' : '#DC2626' }}>{label} Compatible</span>
                   </div>
                 ))}
               </div>
-              <div style={{ padding: '10px 12px', background: '#EFF6FF', border: '1px solid rgba(29,78,216,0.15)', borderRadius: '8px', display: 'flex', gap: '8px' }}>
-                <Info size={14} color="var(--brand-blue)" style={{ flexShrink: 0, marginTop: '1px' }} />
-                <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>{result.vesselRecommendation?.reason ?? 'Recommended vessel matches port draft restrictions.'}</p>
+              <div style={{ padding: '10px 12px', background: '#EAF6FC', border: '1px solid #CFE7F5', borderRadius: '8px', display: 'flex', gap: '8px' }}>
+                <Info size={14} color="#0B82C9" style={{ flexShrink: 0, marginTop: '1px' }} />
+                <p style={{ fontSize: '12.5px', color: '#5F7894', lineHeight: 1.6, margin: 0 }}>{result.vesselRecommendation?.reason ?? 'Recommended vessel matches port draft restrictions.'}</p>
               </div>
             </div>
 
             {/* Port Time Estimates */}
-            <div style={{ gridColumn: '2 / 4', background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock size={15} color="var(--brand-blue)" /> Port Time Estimates
+            <div style={{ gridColumn: '2 / 4', background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Clock size={15} color="#0B82C9" /> Port Time Estimates
               </h3>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                   <thead>
-                    <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                    <tr style={{ borderBottom: '2px solid #D9E6EF' }}>
                       {['Port', 'Waiting Days', 'Discharge Days', 'Total Time'].map(h => (
-                        <th key={h} style={{ padding: '8px 12px', textAlign: h === 'Port' ? 'left' : 'right', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{h}</th>
+                        <th key={h} style={{ padding: '8px 12px', textAlign: h === 'Port' ? 'left' : 'right', fontWeight: 700, color: '#5F7894', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -412,14 +419,14 @@ const CharterPlanner = () => {
                     {(result.portTimeEstimates || []).map((est, idx) => {
                       const isBest = idx === 0;
                       return (
-                        <tr key={est.port || idx} style={{ borderBottom: '1px solid var(--border)', background: isBest ? 'var(--light-blue-bg)' : 'transparent' }}>
-                          <td style={{ padding: '10px 12px', fontWeight: isBest ? 700 : 500, color: isBest ? 'var(--brand-blue)' : 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            {isBest && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--brand-blue)', flexShrink: 0 }}></span>}
+                        <tr key={est.port || idx} style={{ borderBottom: '1px solid #D9E6EF', background: isBest ? '#EAF6FC' : 'transparent' }}>
+                          <td style={{ padding: '10px 12px', fontWeight: isBest ? 700 : 500, color: isBest ? '#0B82C9' : '#122F55', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            {isBest && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B82C9', flexShrink: 0 }}></span>}
                             {est.port}
                           </td>
-                          <td style={{ padding: '10px 12px', textAlign: 'right', color: 'var(--text-secondary)' }}>{est.waitingDays}</td>
-                          <td style={{ padding: '10px 12px', textAlign: 'right', color: 'var(--text-secondary)' }}>{est.dischargeDays}</td>
-                          <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 700, color: isBest ? 'var(--brand-blue)' : 'var(--text-primary)' }}>{est.total} days</td>
+                          <td style={{ padding: '10px 12px', textAlign: 'right', color: '#5F7894' }}>{est.waitingDays}</td>
+                          <td style={{ padding: '10px 12px', textAlign: 'right', color: '#5F7894' }}>{est.dischargeDays}</td>
+                          <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 700, color: isBest ? '#0B82C9' : '#122F55' }}>{est.total} days</td>
                         </tr>
                       );
                     })}
@@ -427,32 +434,32 @@ const CharterPlanner = () => {
                 </table>
               </div>
               {result.alternatePort && (
-                <div style={{ marginTop: '16px', padding: '12px 14px', background: 'var(--light-blue-bg)', border: '1px solid rgba(29,78,216,0.2)', borderRadius: '10px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                  <Ship size={16} color="var(--brand-blue)" style={{ flexShrink: 0, marginTop: '1px' }} />
+                <div style={{ marginTop: '16px', padding: '12px 14px', background: '#EAF6FC', border: '1px solid #CFE7F5', borderRadius: '10px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <Ship size={16} color="#0B82C9" style={{ flexShrink: 0, marginTop: '1px' }} />
                   <div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--brand-blue)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Alternate Port Recommendation: </span>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{result.alternatePort.port}</span>
-                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{result.alternatePort.reason}</p>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#0B82C9', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Alternate Port Recommendation: </span>
+                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#122F55' }}>{result.alternatePort.port}</span>
+                    <p style={{ fontSize: '12px', color: '#5F7894', marginTop: '2px' }}>{result.alternatePort.reason}</p>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Risk Alerts */}
-            <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <AlertTriangle size={15} color="var(--danger)" /> Risk Alerts
+            <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <AlertTriangle size={15} color="#DC2626" /> Risk Alerts
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {(result.riskAlerts || []).map((alert, i) => {
                   const isHigh = alert.severity === 'HIGH';
                   const isMed = alert.severity === 'MEDIUM';
-                  const c = isHigh ? 'var(--danger)' : isMed ? 'var(--warning)' : 'var(--success)';
-                  const bg = isHigh ? 'var(--danger-bg)' : isMed ? 'var(--warning-bg)' : 'var(--success-bg)';
+                  const c = isHigh ? '#DC2626' : isMed ? '#FF7426' : '#16A34A';
+                  const bg = isHigh ? '#FEECEC' : isMed ? '#FFF1E8' : '#E8F8EF';
                   return (
                     <div key={i} style={{ background: bg, borderLeft: `3px solid ${c}`, borderRadius: '8px', padding: '10px 12px' }}>
                       <p style={{ fontSize: '11px', fontWeight: 700, color: c, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>{alert.severity} · {alert.type}</p>
-                      <p style={{ fontSize: '12.5px', color: 'var(--text-primary)', fontWeight: 500 }}>{alert.message}</p>
+                      <p style={{ fontSize: '12.5px', color: '#122F55', fontWeight: 500 }}>{alert.message}</p>
                     </div>
                   );
                 })}

@@ -67,7 +67,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [user, navigate]);
 
@@ -125,7 +125,7 @@ const Signup = () => {
         company: formData.company
       });
 
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -143,11 +143,11 @@ const Signup = () => {
     paddingRight: '14px',
     paddingTop: '11px',
     paddingBottom: '11px',
-    border: '1.5px solid var(--border)',
+    border: '1.5px solid #D9E6EF',
     borderRadius: '10px',
     fontSize: '14px',
-    color: 'var(--text-primary)',
-    background: '#FAFAFA',
+    color: '#122F55',
+    background: '#FFFFFF',
     outline: 'none',
     transition: 'all 0.2s',
     boxSizing: 'border-box'
@@ -155,16 +155,16 @@ const Signup = () => {
 
 
   const onFocus = (e) => {
-    e.target.style.borderColor = 'var(--brand-blue)';
+    e.target.style.borderColor = '#0B82C9';
     e.target.style.background = 'white';
     e.target.style.boxShadow =
-      '0 0 0 3px rgba(29,78,216,0.08)';
+      '0 0 0 3px rgba(11, 130, 201, 0.14)';
   };
 
 
   const onBlur = (e) => {
-    e.target.style.borderColor = 'var(--border)';
-    e.target.style.background = '#FAFAFA';
+    e.target.style.borderColor = '#D9E6EF';
+    e.target.style.background = '#FFFFFF';
     e.target.style.boxShadow = 'none';
   };
 
@@ -185,7 +185,7 @@ const Signup = () => {
         style={{
           flex: 1,
           background:
-            'linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 50%, #2563EB 100%)',
+            'linear-gradient(145deg, #0B2342 0%, #122F55 55%, #0B82C9 100%)',
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '60px',
@@ -562,16 +562,32 @@ const Signup = () => {
               width: '100%',
               padding: '13px',
               background: loading
-                ? '#94A3B8'
-                : 'var(--brand-blue)',
-              color: 'white',
+                ? '#E2E8F0'
+                : '#FF7A2F',
+              color: loading ? '#94A3B8' : '#FFFFFF',
               border: 'none',
               borderRadius: '10px',
               fontSize: '14px',
               fontWeight: 700,
               cursor: loading
                 ? 'not-allowed'
-                : 'pointer'
+                : 'pointer',
+              boxShadow: loading ? 'none' : '0 2px 8px rgba(255, 122, 47, 0.28)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => {
+              if (!loading) {
+                e.currentTarget.style.background = '#FF8235';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 122, 47, 0.38)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }
+            }}
+            onMouseLeave={e => {
+              if (!loading) {
+                e.currentTarget.style.background = '#FF7A2F';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 122, 47, 0.28)';
+                e.currentTarget.style.transform = 'none';
+              }
             }}
           >
             {loading
@@ -587,12 +603,12 @@ const Signup = () => {
             marginTop: '20px',
             textAlign: 'center',
             fontSize: '13.5px',
-            color: 'var(--text-secondary)'
+            color: '#64748B'
           }}
         >
           Already have an account?{' '}
 
-          <Link to="/login" style={{ color: 'var(--brand-blue)', fontWeight: 700, textDecoration: 'none' }}>
+          <Link to="/login" style={{ color: '#168FD0', fontWeight: 700, textDecoration: 'none' }}>
             Sign in
           </Link>
 

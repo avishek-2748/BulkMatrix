@@ -24,3 +24,13 @@ export const fetchPortWeather = async (portId) => {
   const response = await api.get(`/weather/current/${portId}`);
   return response.data;
 };
+
+/**
+ * Fetch 16-day hourly weather + 7-day marine forecast for a specific port.
+ * @param {string} portId - e.g. 'paradip', 'mumbai'
+ * @returns {Promise<Object>} weatherForecast (hourly+daily) and marineForecast (hourly)
+ */
+export const fetchPortForecast = async (portId) => {
+  const response = await api.get(`/weather/forecast/${portId}`);
+  return response.data;
+};
