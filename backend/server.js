@@ -10,6 +10,7 @@ import fleetRoutes from './routes/fleetRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
+import marketAnalysisRoutes from './routes/marketAnalysisRoutes.js';
 
 // Connect Database
 connectDB();
@@ -63,6 +64,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/charter', charterRoutes);
 app.use('/api/fleet', fleetRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/market-analysis', marketAnalysisRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/weather', weatherRoutes);
 

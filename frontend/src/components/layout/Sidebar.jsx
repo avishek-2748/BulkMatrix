@@ -1,33 +1,23 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Anchor, Map, CloudRain, BarChart2, History, Settings, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, Anchor, Map, CloudRain, TrendingUp, Settings } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/planner', label: 'Charter Planner', icon: Anchor },
   { path: '/live', label: 'Live Operations', icon: Map },
   { path: '/weather', label: 'Weather Intelligence', icon: CloudRain },
-  { path: '/analytics', label: 'Analytics', icon: BarChart2 },
-  { path: '/history', label: 'Forecast History', icon: History },
+  { path: '/market-analysis', label: 'Market Analysis', icon: TrendingUp },
 ];
 
 const Sidebar = () => {
   const location = useLocation();
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const allItems = [...navItems];
   if (user?.role === 'admin') {
     allItems.push({ path: '/admin', label: 'System Admin', icon: Settings });
   }
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
-
-  const initials = user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'BM';
 
   return (
     <aside style={{ width: '256px', flexShrink: 0, background: 'var(--sidebar-bg)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', zIndex: 20 }}>
@@ -48,7 +38,9 @@ const Sidebar = () => {
           Main Menu
         </div>
         {allItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = item.path === '/dashboard'
+            ? location.pathname === '/dashboard'
+            : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
           return (
             <Link
               key={item.path}
@@ -76,34 +68,6 @@ const Sidebar = () => {
           );
         })}
       </nav>
-
-      {/* System Status */}
-      <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)' }}>
-        <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', padding: '10px 12px', display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-          <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#16A34A', flexShrink: 0, marginRight: '8px', boxShadow: '0 0 0 2px rgba(22,163,74,0.2)', animation: 'pulse-dot 2s infinite' }}></span>
-          <span style={{ fontSize: '12px', fontWeight: 500, color: '#15803D' }}>ML Engine Ready</span>
-        </div>
-
-        {/* User Profile */}
-        <div style={{ display: 'flex', alignItems: 'center', padding: '10px 12px', background: '#F8FAFC', borderRadius: '8px', border: '1px solid var(--border)' }}>
-          <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'linear-gradient(135deg, #1D4ED8, #2563EB)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginRight: '10px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'white' }}>{initials}</span>
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name || 'User'}</div>
-            <div style={{ fontSize: '10px', fontWeight: 500, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.company || user?.role || 'Member'}</div>
-          </div>
-          <button
-            onClick={handleLogout}
-            style={{ padding: '5px', borderRadius: '6px', border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-secondary)', transition: 'all 0.15s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title="Sign Out"
-            onMouseEnter={e => { e.currentTarget.style.background = 'var(--danger-bg)'; e.currentTarget.style.color = 'var(--danger)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-          >
-            <LogOut size={15} />
-          </button>
-        </div>
-      </div>
     </aside>
   );
 };

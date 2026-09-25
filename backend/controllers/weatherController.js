@@ -1,7 +1,7 @@
 
 
 import INDIAN_PORTS from '../data/indianPorts.js';
-import { fetchAllWeatherData } from '../services/weatherService.js';
+import { fetchAllWeatherData, fetchAllForecastData } from '../services/weatherService.js';
 import { calculateMaritimeRisk } from '../services/riskEngine.js';
 
 /**
@@ -69,6 +69,53 @@ export const getCurrentWeather = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Unable to fetch live weather data. Please try again.',
+      error: err.message,
+    });
+  }
+};
+
+/**
+ * GET /api/weather/forecast/:portId
+ * Fetches 16-day hourly weather forecast + 7-day marine forecast.
+ * Returns daily summaries and hourly data arrays for charting.
+ */
+export const getForecast = async (req, res) => {
+  try {
+    const { portId } = req.params;
+    const port = INDIAN_PORTS.find((p) => p.id === portId);
+
+    if (!port) {
+      return res.status(404).json({
+        success: false,
+        message: `Port not found: "${portId}". Use GET /api/weather/ports to see available ports.`,
+      });
+    }
+
+    // Fetch weather + marine forecast in parallel
+    const { weatherForecast, marineForecast } = await fetchAllForecastData(
+      port.latitude,
+      port.longitude
+    );
+
+    res.json({
+      success: true,
+      location: {
+        id: port.id,
+        name: port.name,
+        city: port.city,
+        state: port.state,
+        latitude: port.latitude,
+        longitude: port.longitude,
+      },
+      weatherForecast,
+      marineForecast,
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.error('❌ Weather forecast fetch error:', err.message);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to fetch forecast data. Please try again.',
       error: err.message,
     });
   }

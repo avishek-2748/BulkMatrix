@@ -108,3 +108,94 @@ export async function fetchAllWeatherData(latitude, longitude) {
 
   return { weather, marine };
 }
+
+/**
+ * Fetch 16-day hourly weather forecast from Open-Meteo Forecast API.
+ * @param {number} latitude
+ * @param {number} longitude
+ * @returns {Promise<Object>} Parsed hourly forecast data grouped by date
+ */
+export async function fetchWeatherForecast(latitude, longitude) {
+  const params = new URLSearchParams({
+    latitude: latitude.toString(),
+    longitude: longitude.toString(),
+    hourly: [
+      'temperature_2m',
+      'precipitation',
+      'weather_code',
+      'wind_speed_10m',
+      'wind_direction_10m',
+      'relative_humidity_2m',
+      'cloud_cover',
+      'apparent_temperature',
+    ].join(','),
+    daily: [
+      'temperature_2m_max',
+      'temperature_2m_min',
+      'precipitation_sum',
+      'weather_code',
+      'wind_speed_10m_max',
+      'wind_gusts_10m_max',
+      'sunrise',
+      'sunset',
+    ].join(','),
+    forecast_days: '16',
+    wind_speed_unit: 'kmh',
+    timezone: 'auto',
+  });
+
+  const url = `https://api.open-meteo.com/v1/forecast?${params}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Open-Meteo Forecast API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return { hourly: data.hourly, daily: data.daily, timezone: data.timezone };
+}
+
+/**
+ * Fetch 7-day hourly marine forecast from Open-Meteo Marine API.
+ * @param {number} latitude
+ * @param {number} longitude
+ * @returns {Promise<Object|null>} Parsed hourly marine forecast or null if unavailable
+ */
+export async function fetchMarineForecast(latitude, longitude) {
+  const params = new URLSearchParams({
+    latitude: latitude.toString(),
+    longitude: longitude.toString(),
+    hourly: [
+      'wave_height',
+      'wave_direction',
+      'wave_period',
+      'sea_surface_temperature',
+    ].join(','),
+    forecast_days: '7',
+    timezone: 'auto',
+  });
+
+  const url = `https://marine-api.open-meteo.com/v1/marine?${params}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    if (response.status === 400) return null; // inland port
+    throw new Error(`Open-Meteo Marine Forecast API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.hourly;
+}
+
+/**
+ * Fetch full forecast (weather + marine) in parallel.
+ * @param {number} latitude
+ * @param {number} longitude
+ * @returns {Promise<{weatherForecast: Object, marineForecast: Object|null}>}
+ */
+export async function fetchAllForecastData(latitude, longitude) {
+  const [weatherForecast, marineForecast] = await Promise.all([
+    fetchWeatherForecast(latitude, longitude),
+    fetchMarineForecast(latitude, longitude),
+  ]);
+  return { weatherForecast, marineForecast };
+}

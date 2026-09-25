@@ -13,10 +13,10 @@ const createShipIcon = (color, isActive) => divIcon({
   iconAnchor: [isActive ? 12 : 9, isActive ? 12 : 9],
 });
 
-const statusColors = { AT_SEA: '#1D4ED8', AT_PORT: '#D97706', HIGH_RISK: '#DC2626' };
+const statusColors = { AT_SEA: '#0B82C9', AT_PORT: '#FF7426', HIGH_RISK: '#DC2626' };
 const statusLabels = { AT_SEA: 'At Sea', AT_PORT: 'At Port' };
-const statusBg = { AT_SEA: '#EFF6FF', AT_PORT: '#FFFBEB' };
-const statusText = { AT_SEA: '#1D4ED8', AT_PORT: '#D97706' };
+const statusBg = { AT_SEA: '#EAF6FC', AT_PORT: '#FFF1E8' };
+const statusText = { AT_SEA: '#0B82C9', AT_PORT: '#FF7426' };
 
 const LiveOps = () => {
   const [fleet, setFleet] = useState([]);
@@ -28,24 +28,24 @@ const LiveOps = () => {
     getAllFleet().then(d => { setFleet(d); setLoading(false); }).catch(() => { setError('Failed to fetch fleet data.'); setLoading(false); });
   }, []);
 
-  const getColor = v => v.alerts.length > 0 ? statusColors.HIGH_RISK : statusColors[v.status] || '#64748B';
+  const getColor = v => v.alerts.length > 0 ? statusColors.HIGH_RISK : statusColors[v.status] || '#7890A8';
 
   return (
     <div style={{ height: 'calc(100vh - 64px - 48px)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
         <div>
-          <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '3px' }}>Live Operations</h1>
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>Real-time fleet tracking and port congestion monitoring</p>
+          <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#122F55', letterSpacing: '-0.02em', marginBottom: '3px' }}>Live Operations</h1>
+          <p style={{ fontSize: '14px', color: '#5F7894' }}>Real-time fleet tracking and port congestion monitoring</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           {[
-            { color: '#1D4ED8', label: 'At Sea' },
-            { color: '#D97706', label: 'At Port' },
+            { color: '#0B82C9', label: 'At Sea' },
+            { color: '#FF7426', label: 'At Port' },
             { color: '#DC2626', label: 'Alert' },
           ].map(l => (
-            <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12.5px', color: 'var(--text-secondary)', fontWeight: 500 }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: l.color, border: '2px solid white', boxShadow: '0 0 0 1px rgba(0,0,0,0.1)' }}></span>
+            <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12.5px', color: '#5F7894', fontWeight: 600 }}>
+              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: l.color, border: '2px solid white', boxShadow: '0 0 0 1px rgba(18,47,85,0.1)' }}></span>
               {l.label}
             </div>
           ))}
@@ -99,38 +99,38 @@ const LiveOps = () => {
 
       {/* Fleet Table */}
       {!loading && fleet.length > 0 && (
-        <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '14px', boxShadow: 'var(--shadow-sm)', overflow: 'hidden', flexShrink: 0 }}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Ship size={15} color="var(--brand-blue)" />
-            <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Active Fleet ({fleet.length})</span>
+        <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '14px', boxShadow: '0 1px 3px rgba(16, 47, 80, 0.04)', overflow: 'hidden', flexShrink: 0 }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Ship size={15} color="#168FD0" />
+            <span style={{ fontSize: '14px', fontWeight: 800, color: '#102F50' }}>Active Fleet ({fleet.length})</span>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
               <thead>
-                <tr style={{ background: '#F8FAFC', borderBottom: '1px solid var(--border)' }}>
+                <tr style={{ background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
                   {['Vessel', 'Class', 'Cargo', 'Destination', 'ETA', 'Status', 'Alerts'].map(h => (
-                    <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                    <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontWeight: 700, color: '#64748B', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {fleet.map(v => (
-                  <tr key={v.id} onClick={() => setActiveVessel(v)} style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background 0.15s' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
+                  <tr key={v.id} onClick={() => setActiveVessel(v)} style={{ borderBottom: '1px solid #E2E8F0', cursor: 'pointer', transition: 'background 0.15s' }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#F1F8FC'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
-                    <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)' }}>{v.vesselName}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{v.vesselClass}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{v.cargo}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{v.destination}</td>
-                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{new Date(v.eta).toLocaleDateString('en-IN', { day:'numeric', month:'short' })}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: '#102F50' }}>{v.vesselName}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{v.vesselClass}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{v.cargo}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{v.destination}</td>
+                    <td style={{ padding: '12px 16px', color: '#64748B' }}>{new Date(v.eta).toLocaleDateString('en-IN', { day:'numeric', month:'short' })}</td>
                     <td style={{ padding: '12px 16px' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '20px', fontSize: '11.5px', fontWeight: 600, background: v.alerts.length > 0 ? 'var(--danger-bg)' : statusBg[v.status], color: v.alerts.length > 0 ? 'var(--danger)' : statusText[v.status] }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '20px', fontSize: '11.5px', fontWeight: 700, background: v.alerts.length > 0 ? '#FEF2F2' : statusBg[v.status], color: v.alerts.length > 0 ? '#DC2626' : statusText[v.status] }}>
                         <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'currentColor' }}></span>
                         {v.alerts.length > 0 ? 'Alert' : statusLabels[v.status]}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px', color: v.alerts.length > 0 ? 'var(--danger)' : 'var(--text-muted)', fontSize: '12px' }}>
+                    <td style={{ padding: '12px 16px', color: v.alerts.length > 0 ? '#DC2626' : '#94A3B8', fontSize: '12px' }}>
                       {v.alerts.length > 0 ? v.alerts[0] : '—'}
                     </td>
                   </tr>

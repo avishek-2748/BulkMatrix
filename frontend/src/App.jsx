@@ -1,30 +1,34 @@
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
-import Sidebar from './components/layout/Sidebar';
+import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import CharterPlanner from './pages/CharterPlanner';
 import LiveOps from './pages/LiveOps';
-import Analytics from './pages/Analytics';
+import MarketAnalysis from './pages/MarketAnalysis';
+import MarketIndexDetail from './pages/MarketIndexDetail';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import WeatherIntelligence from './pages/WeatherIntelligence';
-import ForecastHistory from './pages/ForecastHistory';
+import LandingPage from './pages/LandingPage';
 import { DataProvider } from './context/DataContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
-const DashboardLayout = () => (
-  <div className="flex h-screen overflow-hidden" style={{ background: 'var(--page-bg)', fontFamily: "'Inter', sans-serif" }}>
-    <Sidebar />
-    <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+const DashboardLayout = () => {
+  const location = useLocation();
+  return (
+    <div className="min-h-screen flex flex-col" style={{ background: '#F4FAFD', color: '#23466B', fontFamily: "'Inter', sans-serif" }}>
       <Navbar />
-      <main className="flex-1 overflow-y-auto p-6">
+      <main
+        key={location.pathname}
+        className="flex-1 page-enter"
+        style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', padding: '32px 36px 56px', boxSizing: 'border-box' }}
+      >
         <Outlet />
       </main>
     </div>
-  </div>
-);
+  );
+};
 
 function App() {
   return (
@@ -32,19 +36,22 @@ function App() {
       <DataProvider>
         <BrowserRouter>
           <Routes>
-            {/* Public Routes */}
+            {/* Public Landing Page */}
+            <Route path="/" element={<LandingPage />} />
+
+            {/* Public Auth Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
 
-            {/* Protected Dashboard Routes - Root is protected and opens Login for unauthenticated users */}
+            {/* Protected Dashboard Routes */}
             <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-              <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Home />} />
               <Route path="/planner" element={<CharterPlanner />} />
               <Route path="/live" element={<LiveOps />} />
               <Route path="/weather" element={<WeatherIntelligence />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/history" element={<ForecastHistory />} />
+              {/* Market Analysis - primary route */}
+              <Route path="/market-analysis" element={<MarketAnalysis />} />
+              <Route path="/market-analysis/:indexKey" element={<MarketIndexDetail />} />
               {/* Admin Only Route */}
               <Route path="/admin" element={<ProtectedRoute requireAdmin={true}><Admin /></ProtectedRoute>} />
             </Route>
