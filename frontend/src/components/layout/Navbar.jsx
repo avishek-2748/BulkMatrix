@@ -34,7 +34,7 @@ const getNavItems = (role) => {
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/planner', label: 'Charter Planner', icon: Anchor },
     { path: '/contracts', label: 'Bookings', icon: FileCheck },
-    { path: '/live', label: 'Live Operations', icon: Map },
+    { path: '/live-tracker', label: 'Live Fleet AIS', icon: Map },
     { path: '/weather', label: 'Weather Intelligence', icon: CloudRain },
     { path: '/market-analysis', label: 'Market Analysis', icon: TrendingUp },
     { path: '/chat', label: 'Messages', icon: MessageSquare },
