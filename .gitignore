@@ -22,3 +22,8 @@ data/features/*.parquet
 data/processed/*.csv
 
 models/archived
+
+backend/.envnode_modules/
+frontend/node_modules/
+backend/node_modules/
+.vite/
