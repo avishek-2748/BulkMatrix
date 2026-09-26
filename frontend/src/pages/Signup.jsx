@@ -7,46 +7,15 @@ import {
   Mail,
   User,
   Building2,
+  Phone,
+  MapPin,
   AlertTriangle,
   Loader2,
   CheckCircle2,
-  Shield
+  Shield,
+  Eye,
+  EyeOff
 } from 'lucide-react';
-
-
-// ✅ MOVE FIELD OUTSIDE SIGNUP COMPONENT
-const Field = ({ label, icon: Icon, children }) => (
-  <div>
-    <label
-      style={{
-        display: 'block',
-        fontSize: '13px',
-        fontWeight: 600,
-        color: 'var(--text-primary)',
-        marginBottom: '6px'
-      }}
-    >
-      {label}
-    </label>
-
-    <div style={{ position: 'relative' }}>
-      <Icon
-        size={16}
-        style={{
-          position: 'absolute',
-          left: '14px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          color: 'var(--text-muted)',
-          pointerEvents: 'none'
-        }}
-      />
-
-      {children}
-    </div>
-  </div>
-);
-
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -77,49 +46,27 @@ const Signup = () => {
   useEffect(() => {
     let strength = 0;
     const pwd = formData.password;
-
     if (pwd.length > 5) strength += 1;
     if (pwd.length > 8) strength += 1;
     if (/[A-Z]/.test(pwd)) strength += 1;
     if (/[0-9]/.test(pwd)) strength += 1;
     if (/[^A-Za-z0-9]/.test(pwd)) strength += 1;
-
     setPasswordStrength(Math.min(strength, 4));
   }, [formData.password]);
 
-
-  const strengthColors = [
-    '#E2E8F0',
-    '#DC2626',
-    '#F59E0B',
-    '#2563EB',
-    '#16A34A'
-  ];
-
-  const strengthLabels = [
-    '',
-    'Weak',
-    'Fair',
-    'Good',
-    'Strong'
-  ];
-
+  const strengthColors = ['#E2E8F0', '#DC2626', '#F59E0B', '#2563EB', '#16A34A'];
+  const strengthLabels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError('');
-
     if (formData.password !== formData.confirmPassword) {
       return setError('Passwords do not match');
     }
-
     if (formData.password.length < 6) {
       return setError('Password must be at least 6 characters');
     }
-
     setLoading(true);
-
     try {
       await signup({
         name: formData.name,
@@ -130,567 +77,293 @@ const Signup = () => {
         phoneNumber: formData.phoneNumber,
         address: formData.address
       });
-
-      // If VESSEL_OWNER, they might need to verify email, but we'll navigate them to dashboard or a verification pending page. 
-      // For now, redirect to dashboard.
       navigate('/dashboard');
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-        'Registration failed. Please try again.'
-      );
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-
-  const inputStyle = {
-    width: '100%',
-    paddingLeft: '42px',
-    paddingRight: '14px',
-    paddingTop: '11px',
-    paddingBottom: '11px',
-    border: '1.5px solid #D9E6EF',
-    borderRadius: '10px',
-    fontSize: '14px',
-    color: '#122F55',
-    background: '#FFFFFF',
-    outline: 'none',
-    transition: 'all 0.2s',
-    boxSizing: 'border-box'
-  };
-
-
-  const onFocus = (e) => {
-    e.target.style.borderColor = '#0B82C9';
-    e.target.style.background = 'white';
-    e.target.style.boxShadow =
-      '0 0 0 3px rgba(11, 130, 201, 0.14)';
-  };
-
-
-  const onBlur = (e) => {
-    e.target.style.borderColor = '#D9E6EF';
-    e.target.style.background = '#FFFFFF';
-    e.target.style.boxShadow = 'none';
-  };
-
-
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        fontFamily: "'Inter', sans-serif"
-      }}
-    >
+    <div className="min-h-screen flex font-sans" style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* LEFT PANEL */}
-
       <div
-        className="hidden lg:flex"
+        className="hidden lg:flex flex-col justify-between p-12 relative overflow-hidden"
         style={{
           flex: 1,
-          background:
-            'linear-gradient(145deg, #0B2342 0%, #122F55 55%, #0B82C9 100%)',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '60px',
-          position: 'relative',
-          overflow: 'hidden'
+          background: 'linear-gradient(145deg, #0B2342 0%, #133056 55%, #1a5a8a 100%)',
         }}
       >
-
+        {/* Subtle dot grid */}
         <div
+          className="absolute inset-0 pointer-events-none"
           style={{
-            position: 'absolute',
-            inset: 0,
-            opacity: 0.06,
-            backgroundImage:
-              'radial-gradient(circle at 20% 50%, white 1px, transparent 1px)',
-            backgroundSize: '40px 40px'
+            opacity: 0.05,
+            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+            backgroundSize: '36px 36px',
           }}
         />
 
-        <div style={{ position: 'relative', zIndex: 1 }}>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '48px'
-            }}
-          >
-
+        <div className="relative z-10">
+          {/* Brand */}
+          <div className="flex items-center gap-3.5 mb-14">
             <div
-              style={{
-                width: '44px',
-                height: '44px',
-                background: 'rgba(255,255,255,0.15)',
-                borderRadius: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '14px',
-                border: '1px solid rgba(255,255,255,0.2)'
-              }}
+              className="w-11 h-11 rounded-xl flex items-center justify-center"
+              style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.18)' }}
             >
               <Anchor size={22} color="white" />
             </div>
-
             <div>
-              <div
-                style={{
-                  fontSize: '20px',
-                  fontWeight: 800,
-                  color: 'white'
-                }}
-              >
-                BULKMATRIX
-              </div>
-
-              <div
-                style={{
-                  fontSize: '10px',
-                  color: 'rgba(255,255,255,0.6)'
-                }}
-              >
-                MARITIME INTELLIGENCE
+              <div className="text-white font-black text-lg tracking-wider">BULKMATRIX</div>
+              <div className="text-[10px] tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Maritime Intelligence
               </div>
             </div>
-
           </div>
 
-
-          <h1
-            style={{
-              fontSize: '36px',
-              fontWeight: 800,
-              color: 'white',
-              lineHeight: 1.2
-            }}
-          >
-            Join the Platform
-            <br />
-            Powering Smarter
-            <br />
+          <h1 className="text-white font-black leading-tight mb-5" style={{ fontSize: '36px' }}>
+            Join the Platform<br />
+            Powering Smarter<br />
             Maritime Decisions
           </h1>
 
-
-          <p
-            style={{
-              fontSize: '15px',
-              color: 'rgba(255,255,255,0.7)',
-              lineHeight: 1.7,
-              maxWidth: '380px'
-            }}
-          >
-            Get access to ML-powered freight forecasting,
-            real-time port monitoring, and AI-backed
-            chartering recommendations.
+          <p className="text-base leading-relaxed mb-10 max-w-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
+            Get access to ML-powered freight forecasting, real-time port monitoring, and AI-backed chartering recommendations.
           </p>
 
+          <div className="space-y-3.5">
+            {['No credit card required', 'Full platform access upon approval', 'Enterprise-grade security'].map(f => (
+              <div key={f} className="flex items-center gap-3">
+                <CheckCircle2 size={17} style={{ color: '#A7DAF1', flexShrink: 0 }} />
+                <span className="text-sm" style={{ color: 'rgba(255,255,255,0.80)' }}>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-          {[
-            'No credit card required',
-            'Full platform access upon approval',
-            'Enterprise-grade security'
-          ].map((feature) => (
-            <div
-              key={feature}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                marginTop: '14px'
-              }}
-            >
-              <CheckCircle2
-                size={18}
-                color="rgba(255,255,255,0.8)"
-              />
-
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: 'rgba(255,255,255,0.85)'
-                }}
-              >
-                {feature}
-              </span>
-
-            </div>
-          ))}
-
+        {/* Bottom footnote */}
+        <div className="relative z-10">
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            © {new Date().getFullYear()} BulkMatrix. Enterprise Maritime Intelligence Platform.
+          </p>
         </div>
       </div>
 
-
       {/* RIGHT PANEL */}
-
       <div
-        style={{
-          width: '520px',
-          flexShrink: 0,
-          background: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '50px 48px',
-          overflowY: 'auto'
-        }}
+        className="flex flex-col justify-center bg-white overflow-y-auto"
+        style={{ width: '520px', flexShrink: 0, padding: '48px 48px' }}
       >
-
-        <div style={{ marginBottom: '28px' }}>
-
-          <h2
-            style={{
-              fontSize: '26px',
-              fontWeight: 800,
-              color: 'var(--text-primary)'
-            }}
+        {/* Mobile brand */}
+        <div className="flex items-center gap-3 mb-8 lg:hidden">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center"
+            style={{ background: '#133056' }}
           >
-            Create your account
-          </h2>
-
-          <p
-            style={{
-              fontSize: '14px',
-              color: 'var(--text-secondary)'
-            }}
-          >
-            Fill in the details below to request platform access
-          </p>
-
+            <Anchor size={18} color="white" />
+          </div>
+          <span className="font-black text-base tracking-wider" style={{ color: '#133056' }}>BULKMATRIX</span>
         </div>
 
+        <div className="mb-7">
+          <h2 className="font-black text-2xl mb-1.5" style={{ color: '#133056' }}>Create your account</h2>
+          <p className="text-sm" style={{ color: '#586D85' }}>Fill in the details below to request platform access</p>
+        </div>
+
+        {/* Role toggle */}
+        <div className="grid grid-cols-2 gap-2.5 mb-6">
+          {[
+            { value: 'LOGISTIC_MANAGER', label: 'Logistic Manager', activeColor: '#0B82C9', activeBg: 'rgba(11, 130, 201, 0.06)' },
+            { value: 'VESSEL_OWNER', label: 'Vessel Owner', activeColor: '#16A34A', activeBg: 'rgba(22, 163, 74, 0.06)' }
+          ].map(r => {
+            const isActive = formData.role === r.value;
+            return (
+              <button
+                key={r.value}
+                type="button"
+                onClick={() => setFormData({ ...formData, role: r.value })}
+                className="py-2.5 px-4 rounded-lg text-sm font-semibold transition-all"
+                style={{
+                  border: isActive ? `2px solid ${r.activeColor}` : '1.5px solid #D9E6EF',
+                  background: isActive ? r.activeBg : '#fff',
+                  color: isActive ? r.activeColor : '#586D85',
+                  cursor: 'pointer',
+                }}
+              >
+                {r.label}
+              </button>
+            );
+          })}
+        </div>
 
         {error && (
-          <div
-            style={{
-              background: 'var(--danger-bg)',
-              border: '1px solid var(--danger-border)',
-              borderRadius: '10px',
-              padding: '12px 14px',
-              marginBottom: '18px'
-            }}
-          >
+          <div className="flex items-center gap-2.5 p-3.5 rounded-xl mb-5 text-sm font-medium"
+            style={{ background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B' }}>
+            <AlertTriangle size={16} className="shrink-0" style={{ color: '#DC2626' }} />
             {error}
           </div>
         )}
 
-
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px'
-          }}
-        >
-
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, role: 'LOGISTIC_MANAGER' })}
-              style={{
-                flex: 1,
-                padding: '10px',
-                borderRadius: '8px',
-                border: formData.role === 'LOGISTIC_MANAGER' ? '2px solid #0B82C9' : '1px solid #D9E6EF',
-                background: formData.role === 'LOGISTIC_MANAGER' ? 'rgba(11, 130, 201, 0.05)' : '#FFF',
-                color: formData.role === 'LOGISTIC_MANAGER' ? '#0B82C9' : '#64748B',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              Logistic Manager
-            </button>
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, role: 'VESSEL_OWNER' })}
-              style={{
-                flex: 1,
-                padding: '10px',
-                borderRadius: '8px',
-                border: formData.role === 'VESSEL_OWNER' ? '2px solid #16A34A' : '1px solid #D9E6EF',
-                background: formData.role === 'VESSEL_OWNER' ? 'rgba(22, 163, 74, 0.05)' : '#FFF',
-                color: formData.role === 'VESSEL_OWNER' ? '#16A34A' : '#64748B',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              Vessel Owner
-            </button>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name + Company */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="saas-label">Full Name</label>
+              <div className="relative">
+                <User size={15} className="absolute left-3.5 top-3.5" style={{ color: '#8295AB' }} />
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Ayush Kumar"
+                  className="saas-input pl-10"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="saas-label">Company</label>
+              <div className="relative">
+                <Building2 size={15} className="absolute left-3.5 top-3.5" style={{ color: '#8295AB' }} />
+                <input
+                  type="text"
+                  value={formData.company}
+                  onChange={e => setFormData({ ...formData, company: e.target.value })}
+                  placeholder="Global Freight"
+                  className="saas-input pl-10"
+                />
+              </div>
+            </div>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '16px'
-            }}
-          >
-
-            <Field label="Full Name" icon={User}>
+          {/* Email */}
+          <div>
+            <label className="saas-label">Email Address</label>
+            <div className="relative">
+              <Mail size={15} className="absolute left-3.5 top-3.5" style={{ color: '#8295AB' }} />
               <input
-                type="text"
+                type="email"
                 required
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    name: e.target.value
-                  })
-                }
-                placeholder="Ayush Kumar"
-                style={inputStyle}
-                onFocus={onFocus}
-                onBlur={onBlur}
+                value={formData.email}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
+                placeholder="you@company.com"
+                className="saas-input pl-10"
               />
-            </Field>
-
-
-            <Field label="Company" icon={Building2}>
-              <input
-                type="text"
-                value={formData.company}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    company: e.target.value
-                  })
-                }
-                placeholder="Global Freight"
-                style={inputStyle}
-                onFocus={onFocus}
-                onBlur={onBlur}
-              />
-            </Field>
-
+            </div>
           </div>
 
-
-          <Field label="Email Address" icon={Mail}>
-            <input
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  email: e.target.value
-                })
-              }
-              placeholder="you@company.com"
-              style={inputStyle}
-              onFocus={onFocus}
-              onBlur={onBlur}
-            />
-          </Field>
-
+          {/* VESSEL OWNER extra fields */}
           {formData.role === 'VESSEL_OWNER' && (
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <div style={{ flex: 1 }}>
-                <Field label="Phone Number" icon={User}>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="saas-label">Phone Number</label>
+                <div className="relative">
+                  <Phone size={15} className="absolute left-3.5 top-3.5" style={{ color: '#8295AB' }} />
                   <input
                     type="tel"
                     required
                     value={formData.phoneNumber}
-                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })}
                     placeholder="+1 234 567 8900"
-                    style={inputStyle}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
+                    className="saas-input pl-10"
                   />
-                </Field>
+                </div>
               </div>
-              <div style={{ flex: 1 }}>
-                <Field label="Address" icon={Building2}>
+              <div>
+                <label className="saas-label">Address</label>
+                <div className="relative">
+                  <MapPin size={15} className="absolute left-3.5 top-3.5" style={{ color: '#8295AB' }} />
                   <input
                     type="text"
                     required
                     value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    onChange={e => setFormData({ ...formData, address: e.target.value })}
                     placeholder="HQ City, Country"
-                    style={inputStyle}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
+                    className="saas-input pl-10"
                   />
-                </Field>
+                </div>
               </div>
             </div>
           )}
 
-          <Field label="Password" icon={Lock}>
-
-            <input
-              type={showPassword ? 'text' : 'password'}
-              required
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  password: e.target.value
-                })
-              }
-              placeholder="••••••••"
-              style={{
-                ...inputStyle,
-                paddingRight: '60px'
-              }}
-              onFocus={onFocus}
-              onBlur={onBlur}
-            />
-
-            <button
-              type="button"
-              onClick={() =>
-                setShowPassword(!showPassword)
-              }
-              style={{
-                position: 'absolute',
-                right: '14px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                border: 'none',
-                background: 'transparent',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: 600,
-                color: 'var(--brand-blue)'
-              }}
-            >
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
-
-          </Field>
-
-
-          {formData.password && (
-            <div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '4px',
-                  marginBottom: '4px'
-                }}
+          {/* Password */}
+          <div>
+            <label className="saas-label">Password</label>
+            <div className="relative">
+              <Lock size={15} className="absolute left-3.5 top-3.5" style={{ color: '#8295AB' }} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={formData.password}
+                onChange={e => setFormData({ ...formData, password: e.target.value })}
+                placeholder="••••••••"
+                className="saas-input pl-10 pr-11"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-3 p-0.5"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8295AB' }}
               >
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      height: '4px',
-                      borderRadius: '2px',
-                      background:
-                        i <= passwordStrength
-                          ? strengthColors[passwordStrength]
-                          : '#E2E8F0'
-                    }}
-                  />
-                ))}
-              </div>
-
-              <div
-                style={{
-                  fontSize: '11px',
-                  color: strengthColors[passwordStrength]
-                }}
-              >
-                {strengthLabels[passwordStrength]}
-              </div>
-
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
-          )}
 
+            {/* Password strength bar */}
+            {formData.password && (
+              <div className="mt-2">
+                <div className="flex gap-1 mb-1">
+                  {[1, 2, 3, 4].map(i => (
+                    <div
+                      key={i}
+                      className="flex-1 h-1 rounded-full transition-all"
+                      style={{ background: i <= passwordStrength ? strengthColors[passwordStrength] : '#E2E8F0' }}
+                    />
+                  ))}
+                </div>
+                <span className="text-[11px] font-semibold" style={{ color: strengthColors[passwordStrength] }}>
+                  {strengthLabels[passwordStrength]}
+                </span>
+              </div>
+            )}
+          </div>
 
-          <Field
-            label="Confirm Password"
-            icon={Shield}
-          >
-            <input
-              type={showPassword ? 'text' : 'password'}
-              required
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  confirmPassword: e.target.value
-                })
-              }
-              placeholder="••••••••"
-              style={inputStyle}
-              onFocus={onFocus}
-              onBlur={onBlur}
-            />
-          </Field>
+          {/* Confirm password */}
+          <div>
+            <label className="saas-label">Confirm Password</label>
+            <div className="relative">
+              <Shield size={15} className="absolute left-3.5 top-3.5" style={{ color: '#8295AB' }} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={formData.confirmPassword}
+                onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
+                placeholder="••••••••"
+                className="saas-input pl-10"
+              />
+            </div>
+          </div>
 
-
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            style={{
-              width: '100%',
-              padding: '13px',
-              background: loading
-                ? '#E2E8F0'
-                : '#FF7A2F',
-              color: loading ? '#94A3B8' : '#FFFFFF',
-              border: 'none',
-              borderRadius: '10px',
-              fontSize: '14px',
-              fontWeight: 700,
-              cursor: loading
-                ? 'not-allowed'
-                : 'pointer',
-              boxShadow: loading ? 'none' : '0 2px 8px rgba(255, 122, 47, 0.28)',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={e => {
-              if (!loading) {
-                e.currentTarget.style.background = '#FF8235';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 122, 47, 0.38)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }
-            }}
-            onMouseLeave={e => {
-              if (!loading) {
-                e.currentTarget.style.background = '#FF7A2F';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 122, 47, 0.28)';
-                e.currentTarget.style.transform = 'none';
-              }
-            }}
+            className="saas-btn-primary w-full justify-center py-3 mt-1 text-sm"
           >
-            {loading
-              ? 'Creating Account...'
-              : 'Create Account'}
+            {loading ? <Loader2 size={16} className="animate-spin" /> : null}
+            <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
           </button>
-
         </form>
 
-
-        <p
-          style={{
-            marginTop: '20px',
-            textAlign: 'center',
-            fontSize: '13.5px',
-            color: '#64748B'
-          }}
-        >
+        <p className="text-center text-sm mt-6" style={{ color: '#586D85' }}>
           Already have an account?{' '}
-
-          <Link to="/login" style={{ color: '#168FD0', fontWeight: 700, textDecoration: 'none' }}>
+          <Link to="/login" className="font-bold" style={{ color: '#0B82C9', textDecoration: 'none' }}>
             Sign in
           </Link>
-
         </p>
-
       </div>
-
     </div>
   );
 };

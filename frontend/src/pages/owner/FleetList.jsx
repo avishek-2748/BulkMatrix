@@ -26,12 +26,12 @@ const FleetList = () => {
   const onCharterCount = vessels.filter(v => v.status === 'ON_CHARTER').length;
 
   return (
-    <div className="space-y-8 pb-12 max-w-7xl mx-auto">
+    <div className="space-y-8 pb-16 max-w-7xl mx-auto">
       {/* Page Header */}
       <div className="saas-page-header">
         <div>
           <h1 className="saas-title flex items-center gap-2.5">
-            <Anchor size={24} className="text-sky-600" />
+            <Anchor size={24} className="text-[#4187AB]" />
             My Fleet
           </h1>
           <p className="saas-subtitle">
@@ -48,47 +48,47 @@ const FleetList = () => {
       </div>
 
       {/* Fleet KPI Summary Ribbon */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="saas-card p-5">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Total Fleet</span>
-          <div className="text-2xl font-bold text-slate-900">{loading ? '—' : vessels.length}</div>
-          <span className="text-xs text-slate-400 mt-1 block">Commercial vessels</span>
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
+        <div className="saas-card p-6">
+          <span className="text-[11px] font-bold text-[#586D85] uppercase tracking-wider block mb-1">Total Fleet</span>
+          <div className="text-3xl font-extrabold text-[#133056]">{loading ? '—' : vessels.length}</div>
+          <span className="text-xs text-[#586D85] mt-1 block">Commercial vessels</span>
         </div>
 
-        <div className="saas-card p-5">
-          <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider block mb-1">Available for Spot</span>
-          <div className="text-2xl font-bold text-emerald-700">{loading ? '—' : availableCount}</div>
-          <span className="text-xs text-slate-400 mt-1 block">Ready for fixture requests</span>
+        <div className="saas-card p-6">
+          <span className="text-[11px] font-bold text-[#4187AB] uppercase tracking-wider block mb-1">Available for Spot</span>
+          <div className="text-3xl font-extrabold text-[#4187AB]">{loading ? '—' : availableCount}</div>
+          <span className="text-xs text-[#586D85] mt-1 block">Ready for fixture requests</span>
         </div>
 
-        <div className="saas-card p-5">
-          <span className="text-xs font-semibold text-sky-600 uppercase tracking-wider block mb-1">On Charter</span>
-          <div className="text-2xl font-bold text-sky-700">{loading ? '—' : onCharterCount}</div>
-          <span className="text-xs text-slate-400 mt-1 block">Currently on laden voyage</span>
+        <div className="saas-card p-6">
+          <span className="text-[11px] font-bold text-[#133056] uppercase tracking-wider block mb-1">On Charter</span>
+          <div className="text-3xl font-extrabold text-[#133056]">{loading ? '—' : onCharterCount}</div>
+          <span className="text-xs text-[#586D85] mt-1 block">Currently on laden voyage</span>
         </div>
 
-        <div className="saas-card p-5">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Combined Capacity</span>
-          <div className="text-2xl font-bold text-slate-900">
-            {loading ? '—' : `${(totalDwt / 1000).toFixed(0)}k`} <span className="text-sm font-normal text-slate-500">DWT</span>
+        <div className="saas-card p-6">
+          <span className="text-[11px] font-bold text-[#586D85] uppercase tracking-wider block mb-1">Combined Capacity</span>
+          <div className="text-3xl font-extrabold text-[#133056]">
+            {loading ? '—' : `${(totalDwt / 1000).toFixed(0)}k`} <span className="text-sm font-normal text-[#586D85]">DWT</span>
           </div>
-          <span className="text-xs text-slate-400 mt-1 block">Total cargo deadweight</span>
+          <span className="text-xs text-[#586D85] mt-1 block">Total cargo deadweight</span>
         </div>
       </div>
 
       {/* Content */}
       {loading ? (
         <div className="saas-card p-16 flex flex-col items-center justify-center text-center">
-          <Loader2 className="animate-spin text-sky-500 mb-3" size={32} />
-          <p className="text-sm font-medium text-slate-500">Loading your vessel fleet...</p>
+          <Loader2 className="animate-spin text-[#4187AB] mb-3" size={32} />
+          <p className="text-sm font-medium text-[#586D85]">Loading your vessel fleet...</p>
         </div>
       ) : vessels.length === 0 ? (
         <div className="saas-card p-16 text-center max-w-lg mx-auto">
-          <div className="w-14 h-14 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-sky-100">
+          <div className="w-14 h-14 bg-[#F5FAFE] text-[#4187AB] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#DADCEB]">
             <Anchor size={26} />
           </div>
-          <h3 className="text-base font-bold text-slate-900 mb-1">No vessels registered yet</h3>
-          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+          <h3 className="text-base font-bold text-[#133056] mb-1">No vessels registered yet</h3>
+          <p className="text-sm text-[#586D85] mb-6 leading-relaxed">
             Register your bulk carrier vessels to start receiving charter requests and contract inquiries from procurement managers.
           </p>
           <Link 
@@ -109,7 +109,7 @@ const FleetList = () => {
               <div>
                 {/* Card Top */}
                 <div className="flex items-start justify-between gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center flex-shrink-0 group-hover:bg-sky-50 group-hover:text-sky-600 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[#F5FAFE] text-[#4187AB] border border-[#DADCEB] flex items-center justify-center flex-shrink-0 group-hover:border-[#4187AB] transition-colors">
                     <Ship size={20} />
                   </div>
                   <span className={`saas-badge ${
@@ -122,40 +122,40 @@ const FleetList = () => {
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 group-hover:text-sky-600 transition-colors mb-1">
+                <h3 className="text-base font-bold text-[#133056] group-hover:text-[#4187AB] transition-colors mb-1">
                   {vessel.vesselName}
                 </h3>
-                <p className="text-xs text-slate-500 mb-5 flex items-center gap-1.5">
-                  <span className="font-semibold text-slate-700">{vessel.vesselClass}</span>
+                <p className="text-xs text-[#586D85] mb-5 flex items-center gap-1.5">
+                  <span className="font-semibold text-[#133056]">{vessel.vesselClass}</span>
                   <span>•</span>
                   <span>Flag: {vessel.flag || 'Global'}</span>
                   <span>•</span>
-                  <span className="font-mono text-slate-400">IMO {vessel.imoNumber}</span>
+                  <span className="font-mono text-[#586D85]">IMO {vessel.imoNumber}</span>
                 </p>
 
                 {/* Specs Grid */}
-                <div className="grid grid-cols-2 gap-3 py-3 px-3.5 bg-slate-50/70 border border-slate-100 rounded-xl text-xs mb-4">
+                <div className="grid grid-cols-2 gap-3 py-3 px-3.5 bg-[#F5FAFE] border border-[#DADCEB] rounded-xl text-xs mb-4">
                   <div>
-                    <span className="text-slate-400 block text-[11px] font-medium">Capacity (DWT)</span>
-                    <span className="font-semibold text-slate-800">{vessel.dwt?.toLocaleString() || 'N/A'} MT</span>
+                    <span className="text-[#586D85] block text-[11px] font-medium">Capacity (DWT)</span>
+                    <span className="font-semibold text-[#133056]">{vessel.dwt?.toLocaleString() || 'N/A'} MT</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[11px] font-medium">Built</span>
-                    <span className="font-semibold text-slate-800">{vessel.yearBuilt || 'N/A'}</span>
+                    <span className="text-[#586D85] block text-[11px] font-medium">Built</span>
+                    <span className="font-semibold text-[#133056]">{vessel.yearBuilt || 'N/A'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[11px] font-medium">Draft / LOA</span>
-                    <span className="font-semibold text-slate-800">{vessel.draft || '—'}m / {vessel.loa || '—'}m</span>
+                    <span className="text-[#586D85] block text-[11px] font-medium">Draft / LOA</span>
+                    <span className="font-semibold text-[#133056]">{vessel.draft || '—'}m / {vessel.loa || '—'}m</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[11px] font-medium">Fuel Spec</span>
-                    <span className="font-semibold text-slate-800">{vessel.fuelType || 'VLSFO'}</span>
+                    <span className="text-[#586D85] block text-[11px] font-medium">Fuel Spec</span>
+                    <span className="font-semibold text-[#133056]">{vessel.fuelType || 'VLSFO'}</span>
                   </div>
                 </div>
               </div>
 
               {/* Card Footer */}
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-sky-600 font-semibold group-hover:text-sky-700">
+              <div className="pt-2 border-t border-[#DADCEB] flex items-center justify-between text-xs text-[#4187AB] font-semibold group-hover:text-[#133056]">
                 <span>View Specifications & Availability</span>
                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
               </div>

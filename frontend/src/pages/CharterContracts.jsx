@@ -14,8 +14,7 @@ import {
   Plus, 
   ArrowRight,
   Package,
-  FileSpreadsheet,
-  Calculator
+  FileSpreadsheet
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import FixtureNoteModal from '../components/FixtureNoteModal';
@@ -127,12 +126,6 @@ const CharterContracts = () => {
           >
             <FileSpreadsheet size={15} className="text-sky-600" /> Export CSV
           </button>
-          <Link
-            to="/calculator"
-            className="saas-btn-secondary"
-          >
-            <Calculator size={15} className="text-sky-600" /> TCE Calculator
-          </Link>
           <Link
             to="/planner"
             className="saas-btn-primary"

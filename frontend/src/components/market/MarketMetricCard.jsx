@@ -9,15 +9,15 @@ import {
 import { TrendingUp, TrendingDown, Minus, ArrowRight } from 'lucide-react';
 
 const CATEGORY_COLORS = {
-  'Energy & Bunkers':   { border: '#FF7426', accent: '#FF7426', bg: '#FFF1E8' },
-  'Foreign Exchange':   { border: '#0B82C9', accent: '#0B82C9', bg: '#EAF6FC' },
-  'Macro Currency':     { border: '#168FD0', accent: '#168FD0', bg: '#EAF6FC' },
-  'Dry Bulk Freight':   { border: '#0B82C9', accent: '#0B82C9', bg: '#EAF6FC' },
-  'Dry Bulk Cargo':     { border: '#FF7426', accent: '#FF7426', bg: '#FFF1E8' },
+  'Energy & Bunkers':   { border: '#F3752F', accent: '#F3752F', bg: 'rgba(243, 117, 47, 0.08)' },
+  'Foreign Exchange':   { border: '#4187AB', accent: '#4187AB', bg: 'rgba(65, 135, 171, 0.08)' },
+  'Macro Currency':     { border: '#A7DAF1', accent: '#4187AB', bg: 'rgba(65, 135, 171, 0.08)' },
+  'Dry Bulk Freight':   { border: '#4187AB', accent: '#4187AB', bg: 'rgba(65, 135, 171, 0.08)' },
+  'Dry Bulk Cargo':     { border: '#F3752F', accent: '#F3752F', bg: 'rgba(243, 117, 47, 0.08)' },
 };
 
 function getColor(category) {
-  return CATEGORY_COLORS[category] || { border: '#0B82C9', accent: '#0B82C9', bg: '#EAF6FC' };
+  return CATEGORY_COLORS[category] || { border: '#4187AB', accent: '#4187AB', bg: 'rgba(65, 135, 171, 0.08)' };
 }
 
 function formatValue(value, unit) {
@@ -41,14 +41,14 @@ const SparklineTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
       <div style={{
-        background: '#FFFFFF',
-        border: '1px solid #D9E6EF',
-        borderRadius: '8px',
-        padding: '4px 8px',
+        background: '#133056',
+        border: '1px solid #DADCEB',
+        borderRadius: '6px',
+        padding: '3px 8px',
         fontSize: '11px',
-        color: '#122F55',
+        color: '#FEFFFF',
         fontWeight: 700,
-        boxShadow: '0 4px 12px rgba(18, 47, 85, 0.08)',
+        boxShadow: '0 4px 12px rgba(19, 48, 86, 0.1)',
       }}>
         {payload[0].value?.toLocaleString(undefined, { maximumFractionDigits: 2 })}
       </div>
@@ -64,25 +64,22 @@ const MarketMetricCard = ({ index, loading = false }) => {
   if (loading) {
     return (
       <div style={{
-        background: '#FFFFFF',
-        border: '1px solid #D9E6EF',
-        borderRadius: '16px',
+        background: '#FEFFFF',
+        border: '1px solid #DADCEB',
+        borderRadius: '12px',
         padding: '20px',
-        boxShadow: '0 4px 20px rgba(18, 47, 85, 0.04)',
-        minHeight: '180px',
+        minHeight: '170px',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {[60, 40, 80, 50].map((w, i) => (
             <div key={i} style={{
               height: '14px',
               width: `${w}%`,
-              background: 'linear-gradient(90deg, #F4FAFD 25%, #EAF6FC 50%, #F4FAFD 75%)',
-              backgroundSize: '200% 100%',
+              background: '#F5FAFE',
               borderRadius: '6px',
-              animation: 'shimmer 1.4s infinite',
             }} />
           ))}
-          <div style={{ height: '50px', background: 'linear-gradient(90deg, #F4FAFD 25%, #EAF6FC 50%, #F4FAFD 75%)', backgroundSize: '200% 100%', borderRadius: '8px', animation: 'shimmer 1.4s infinite' }} />
+          <div style={{ height: '45px', background: '#F5FAFE', borderRadius: '8px' }} />
         </div>
       </div>
     );
@@ -94,9 +91,9 @@ const MarketMetricCard = ({ index, loading = false }) => {
   const isUp = index.changePercent > 0;
   const isDown = index.changePercent < 0;
   const TrendIcon = isUp ? TrendingUp : isDown ? TrendingDown : Minus;
-  const trendColor = isUp ? '#16A34A' : isDown ? '#DC2626' : '#7890A8';
-  const trendBg   = isUp ? '#E8F8EF' : isDown ? '#FEECEC' : '#F4FAFD';
-  const lineStroke = isUp ? '#16A34A' : isDown ? '#DC2626' : '#0B82C9';
+  const trendColor = isUp ? '#16A34A' : isDown ? '#DC2626' : '#586D85';
+  const trendBg   = isUp ? '#F0FDF4' : isDown ? '#FEF2F2' : '#F5FAFE';
+  const lineStroke = isUp ? '#16A34A' : isDown ? '#DC2626' : '#4187AB';
 
   return (
     <div
@@ -105,14 +102,14 @@ const MarketMetricCard = ({ index, loading = false }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        background: '#FFFFFF',
-        border: `1px solid ${isHovered ? '#0B82C9' : '#D9E6EF'}`,
+        background: '#FEFFFF',
+        border: `1px solid ${isHovered ? '#4187AB' : '#DADCEB'}`,
         borderLeft: `4px solid ${color.border}`,
-        borderRadius: '16px',
+        borderRadius: '12px',
         padding: '20px',
         boxShadow: isHovered
-          ? '0 8px 26px rgba(18, 47, 85, 0.09)'
-          : '0 4px 20px rgba(18, 47, 85, 0.04)',
+          ? '0 6px 20px rgba(19, 48, 86, 0.08)'
+          : 'none',
         cursor: 'pointer',
         transform: isHovered ? 'translateY(-2px)' : 'none',
         transition: 'transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease',
@@ -129,9 +126,9 @@ const MarketMetricCard = ({ index, loading = false }) => {
         top: 0, right: 0,
         width: '80px', height: '80px',
         background: color.bg,
-        borderRadius: '0 16px 0 80px',
+        borderRadius: '0 12px 0 80px',
         pointerEvents: 'none',
-        opacity: isHovered ? 0.9 : 0.5,
+        opacity: isHovered ? 0.9 : 0.4,
         transition: 'opacity 200ms ease',
       }} />
 
@@ -153,7 +150,7 @@ const MarketMetricCard = ({ index, loading = false }) => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '3px',
-                background: '#E8F8EF',
+                background: '#F0FDF4',
                 color: '#16A34A',
                 fontSize: '9.5px',
                 fontWeight: 800,
@@ -167,8 +164,6 @@ const MarketMetricCard = ({ index, loading = false }) => {
                   height: '5px',
                   borderRadius: '50%',
                   background: '#16A34A',
-                  boxShadow: '0 0 0 2px rgba(22,163,74,0.25)',
-                  animation: 'pulse-dot 1.5s infinite',
                 }} />
                 LIVE
               </span>
@@ -177,7 +172,7 @@ const MarketMetricCard = ({ index, loading = false }) => {
           <div style={{
             fontSize: '14.5px',
             fontWeight: 700,
-            color: '#122F55',
+            color: '#133056',
             lineHeight: 1.3,
           }}>
             {index.name}
@@ -191,7 +186,7 @@ const MarketMetricCard = ({ index, loading = false }) => {
           borderRadius: '999px',
           padding: '3px 8px 3px 6px',
           flexShrink: 0,
-          border: `1px solid ${isUp ? '#BBF7D0' : isDown ? '#FECACA' : '#D9E6EF'}`,
+          border: `1px solid ${isUp ? '#BBF7D0' : isDown ? '#FECACA' : '#DADCEB'}`,
         }}>
           <TrendIcon size={12} color={trendColor} />
           <span style={{ fontSize: '11px', fontWeight: 700, color: trendColor }}>
@@ -203,9 +198,9 @@ const MarketMetricCard = ({ index, loading = false }) => {
       {/* Value */}
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{
-          fontSize: '28px',
+          fontSize: '26px',
           fontWeight: 800,
-          color: '#122F55',
+          color: '#133056',
           letterSpacing: '-0.02em',
           lineHeight: 1,
           fontVariantNumeric: 'tabular-nums',
@@ -213,10 +208,10 @@ const MarketMetricCard = ({ index, loading = false }) => {
           {formatValue(index.currentValue, index.unit)}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
-          <span style={{ fontSize: '12px', color: '#5F7894' }}>
+          <span style={{ fontSize: '12px', color: '#586D85' }}>
             {index.unit}
           </span>
-          <span style={{ fontSize: '12px', color: '#D9E6EF' }}>·</span>
+          <span style={{ fontSize: '12px', color: '#DADCEB' }}>·</span>
           <span style={{ fontSize: '12px', color: trendColor, fontWeight: 600 }}>
             {index.change >= 0 ? '+' : ''}{index.change?.toFixed(2)} today
           </span>
@@ -248,7 +243,7 @@ const MarketMetricCard = ({ index, loading = false }) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingTop: '8px',
-        borderTop: '1px solid #D9E6EF',
+        borderTop: '1px solid #DADCEB',
         marginTop: 'auto',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -265,7 +260,7 @@ const MarketMetricCard = ({ index, loading = false }) => {
               {index.lastUpdated}
             </span>
           ) : (
-            <span style={{ fontSize: '11px', color: '#7890A8' }}>
+            <span style={{ fontSize: '11px', color: '#586D85' }}>
               Updated {index.lastUpdated}
             </span>
           )}
@@ -274,7 +269,7 @@ const MarketMetricCard = ({ index, loading = false }) => {
           display: 'flex',
           alignItems: 'center',
           gap: '4px',
-          color: isHovered ? '#0B82C9' : '#0B82C9',
+          color: '#4187AB',
           fontSize: '11.5px',
           fontWeight: 700,
           transition: 'transform 150ms ease',

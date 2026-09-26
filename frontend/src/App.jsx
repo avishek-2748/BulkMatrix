@@ -21,8 +21,6 @@ import VesselDetail from './pages/owner/VesselDetail';
 import CharterContracts from './pages/CharterContracts';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
-import VoyageAnalytics from './pages/VoyageAnalytics';
-import VoyageCalculator from './pages/VoyageCalculator';
 import { DataProvider } from './context/DataContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -30,11 +28,11 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 const DashboardLayout = () => {
   const location = useLocation();
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F8FAFC', color: '#0F172A', fontFamily: "'Inter', sans-serif" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#FEFFFF', color: '#133056', fontFamily: "'Inter', sans-serif" }}>
       <Navbar />
       <main
         key={location.pathname}
-        className="flex-1 page-enter w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10"
+        className="flex-1 page-enter w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-12 py-8 lg:py-12"
         style={{ boxSizing: 'border-box' }}
       >
         <Outlet />
@@ -62,8 +60,6 @@ function App() {
               <Route path="/dashboard" element={<Home />} />
               <Route path="/planner" element={<CharterPlanner />} />
               <Route path="/contracts" element={<CharterContracts />} />
-              <Route path="/analytics" element={<VoyageAnalytics />} />
-              <Route path="/calculator" element={<VoyageCalculator />} />
               <Route path="/live" element={<LiveOps />} />
               <Route path="/live-tracker" element={<LiveOperations />} />
               <Route path="/weather" element={<WeatherIntelligence />} />

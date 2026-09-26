@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   Ruler,
   CheckCircle2,
-  Info,
   Ship
 } from 'lucide-react';
 
@@ -70,56 +69,64 @@ const AddVessel = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto pb-16">
+    <div className="max-w-4xl mx-auto pb-16 space-y-8">
       {/* Breadcrumb & Header */}
-      <div className="mb-8">
+      <div>
         <Link
           to="/owner/fleet"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-sky-600 transition-colors mb-3"
+          className="inline-flex items-center gap-2 text-xs font-semibold hover:underline mb-4 no-underline"
+          style={{ color: '#4187AB' }}
         >
           <ChevronLeft size={14} /> Back to Fleet Registry
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Register New Vessel</h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Add technical specifications and classification to list your ship for dry bulk chartering.
+            <h1 className="saas-title">Register New Vessel</h1>
+            <p className="saas-subtitle">
+              Add technical specifications and classification parameters to list your ship for dry bulk chartering.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
-              <Ship size={13} /> Fleet Onboarding
+            <span 
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+              style={{
+                backgroundColor: '#F5FAFE',
+                color: '#4187AB',
+                border: '1px solid #DADCEB'
+              }}
+            >
+              <Ship size={13} /> Fleet Registry System
             </span>
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-3 text-rose-700">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-3 text-rose-700 shadow-sm">
           <AlertTriangle className="flex-shrink-0 mt-0.5 text-rose-600" size={18} />
-          <div className="text-sm font-medium">{error}</div>
+          <div className="text-sm font-semibold">{error}</div>
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-3 text-emerald-800">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-start gap-3 text-emerald-800 shadow-sm">
           <CheckCircle2 className="flex-shrink-0 mt-0.5 text-emerald-600" size={18} />
-          <div className="text-sm font-medium">Vessel successfully registered! Redirecting to fleet list...</div>
+          <div className="text-sm font-semibold">Vessel registered successfully! Redirecting to fleet list...</div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         
         {/* SECTION 1: CORE SPECIFICATIONS */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs">
-          <div className="flex items-start justify-between gap-4 pb-5 mb-6 border-b border-slate-100">
+        <div className="saas-card">
+          <div className="flex items-start justify-between gap-4 pb-5 mb-6 border-b" style={{ borderColor: '#DADCEB' }}>
             <div>
-              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Anchor size={17} className="text-sky-600" /> Core Specifications
+              <h2 className="text-base font-bold flex items-center gap-2" style={{ color: '#133056' }}>
+                <Anchor size={18} style={{ color: '#4187AB' }} /> CORE SPECIFICATIONS
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">Official identification, IMO certification, and classification.</p>
+              <p className="text-xs mt-1" style={{ color: '#586D85' }}>Official identification, IMO certification, and classification.</p>
             </div>
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Step 1 of 3</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#586D85' }}>Step 1 of 3</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -136,7 +143,7 @@ const AddVessel = () => {
                 placeholder="e.g. Pacific Voyager"
                 className="saas-input"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Full registered commercial ship name</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Full registered commercial ship name</span>
             </div>
 
             <div>
@@ -152,7 +159,7 @@ const AddVessel = () => {
                 placeholder="e.g. 9123456"
                 className="saas-input font-mono"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">7-digit International Maritime Organization ID</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>7-digit International Maritime Organization ID</span>
             </div>
 
             <div>
@@ -171,7 +178,7 @@ const AddVessel = () => {
                 <option value="Panamax">Panamax / Kamsarmax (60,000 – 80,000 DWT)</option>
                 <option value="Capesize">Capesize (80,000+ DWT)</option>
               </select>
-              <span className="text-[11px] text-slate-400 mt-1 block">Standard bulk carrier class category</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Standard bulk carrier class category</span>
             </div>
 
             <div>
@@ -188,21 +195,21 @@ const AddVessel = () => {
                 <option value="VLSFO">VLSFO (Very Low Sulphur Fuel Oil)</option>
                 <option value="HSFO">HSFO (High Sulphur Fuel Oil with Scrubber)</option>
               </select>
-              <span className="text-[11px] text-slate-400 mt-1 block">Primary propulsion bunker specification</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Primary propulsion bunker specification</span>
             </div>
           </div>
         </div>
 
         {/* SECTION 2: DIMENSIONS & CAPACITY */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs">
-          <div className="flex items-start justify-between gap-4 pb-5 mb-6 border-b border-slate-100">
+        <div className="saas-card">
+          <div className="flex items-start justify-between gap-4 pb-5 mb-6 border-b" style={{ borderColor: '#DADCEB' }}>
             <div>
-              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Ruler size={17} className="text-sky-600" /> Dimensions & Capacity
+              <h2 className="text-base font-bold flex items-center gap-2" style={{ color: '#133056' }}>
+                <Ruler size={18} style={{ color: '#4187AB' }} /> DIMENSIONS & CAPACITY
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">Physical draft constraints, deadweight tonnage, and hull limits.</p>
+              <p className="text-xs mt-1" style={{ color: '#586D85' }}>Physical draft constraints, deadweight tonnage, and hull limits.</p>
             </div>
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Step 2 of 3</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#586D85' }}>Step 2 of 3</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -211,7 +218,7 @@ const AddVessel = () => {
                 <label className="saas-label mb-0">
                   Deadweight Tonnage (DWT) <span className="text-rose-500">*</span>
                 </label>
-                <span className="text-[11px] font-semibold text-slate-400">Metric Tonnes</span>
+                <span className="text-[11px] font-bold" style={{ color: '#586D85' }}>Metric Tonnes</span>
               </div>
               <input
                 type="number"
@@ -223,15 +230,15 @@ const AddVessel = () => {
                 placeholder="e.g. 58000"
                 className="saas-input"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Total cargo-carrying capacity</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Total cargo-carrying capacity</span>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="saas-label mb-0">
-                  Maximum Draft <span className="text-rose-500">*</span>
+                  Draft <span className="text-rose-500">*</span>
                 </label>
-                <span className="text-[11px] font-semibold text-slate-400">Meters</span>
+                <span className="text-[11px] font-bold" style={{ color: '#586D85' }}>Meters</span>
               </div>
               <input
                 type="number"
@@ -243,7 +250,7 @@ const AddVessel = () => {
                 placeholder="e.g. 11.8"
                 className="saas-input"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Maximum laden freshwater / summer draft</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Maximum laden summer draft</span>
             </div>
 
             <div>
@@ -251,7 +258,7 @@ const AddVessel = () => {
                 <label className="saas-label mb-0">
                   Length Overall (LOA) <span className="text-rose-500">*</span>
                 </label>
-                <span className="text-[11px] font-semibold text-slate-400">Meters</span>
+                <span className="text-[11px] font-bold" style={{ color: '#586D85' }}>Meters</span>
               </div>
               <input
                 type="number"
@@ -263,7 +270,7 @@ const AddVessel = () => {
                 placeholder="e.g. 189.9"
                 className="saas-input"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Total vessel hull length</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Total vessel hull length</span>
             </div>
 
             <div>
@@ -271,7 +278,7 @@ const AddVessel = () => {
                 <label className="saas-label mb-0">
                   Beam (Width) <span className="text-rose-500">*</span>
                 </label>
-                <span className="text-[11px] font-semibold text-slate-400">Meters</span>
+                <span className="text-[11px] font-bold" style={{ color: '#586D85' }}>Meters</span>
               </div>
               <input
                 type="number"
@@ -283,21 +290,21 @@ const AddVessel = () => {
                 placeholder="e.g. 32.2"
                 className="saas-input"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Extreme vessel breadth / beam width</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Extreme vessel breadth / beam width</span>
             </div>
           </div>
         </div>
 
-        {/* SECTION 3: REGISTRATION & FLAG */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs">
-          <div className="flex items-start justify-between gap-4 pb-5 mb-6 border-b border-slate-100">
+        {/* SECTION 3: REGISTRATION */}
+        <div className="saas-card">
+          <div className="flex items-start justify-between gap-4 pb-5 mb-6 border-b" style={{ borderColor: '#DADCEB' }}>
             <div>
-              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <ShieldCheck size={17} className="text-sky-600" /> Registry & Jurisdiction
+              <h2 className="text-base font-bold flex items-center gap-2" style={{ color: '#133056' }}>
+                <ShieldCheck size={18} style={{ color: '#4187AB' }} /> REGISTRATION
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">Year of build commissioning and maritime flag state.</p>
+              <p className="text-xs mt-1" style={{ color: '#586D85' }}>Year of build commissioning and maritime flag state.</p>
             </div>
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Step 3 of 3</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#586D85' }}>Step 3 of 3</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -316,7 +323,7 @@ const AddVessel = () => {
                 placeholder="e.g. 2019"
                 className="saas-input"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Delivery shipyard commissioning year</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Delivery shipyard commissioning year</span>
             </div>
 
             <div>
@@ -329,16 +336,16 @@ const AddVessel = () => {
                 required
                 value={formData.flag}
                 onChange={handleChange}
-                placeholder="e.g. Panama, Marshall Islands, Liberia"
+                placeholder="e.g. Panama, Marshall Islands, Singapore"
                 className="saas-input"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">Vessel registry flag authority</span>
+              <span className="text-[11px] mt-1.5 block" style={{ color: '#586D85' }}>Vessel registry flag authority</span>
             </div>
           </div>
         </div>
 
         {/* ACTION BUTTONS */}
-        <div className="flex items-center justify-end gap-3 pt-4">
+        <div className="flex items-center justify-end gap-4 pt-4">
           <Link
             to="/owner/fleet"
             className="saas-btn-secondary"
@@ -348,7 +355,7 @@ const AddVessel = () => {
           <button
             type="submit"
             disabled={loading || success}
-            className="saas-btn-primary min-w-[160px]"
+            className="saas-btn-primary min-w-[170px]"
           >
             {loading ? (
               <>

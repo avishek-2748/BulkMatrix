@@ -253,16 +253,13 @@ const MarketIndexDetail = () => {
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', paddingBottom: '48px' }}>
       {/* Breadcrumb & Action Row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#71859A' }}>
-          <Link to="/market-analysis" style={{ color: '#71859A', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', transition: 'color 0.15s ease' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#0368B8'}
-            onMouseLeave={e => e.currentTarget.style.color = '#71859A'}
-          >
+    <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
+        <div className="flex items-center gap-1.5 text-sm" style={{ color: '#586D85' }}>
+          <Link to="/market-analysis" className="flex items-center gap-1 hover:text-blue-600 transition-colors" style={{ color: '#586D85', textDecoration: 'none' }}>
             <BarChart2 size={13} /> Market Analysis
           </Link>
           <span>/</span>
-          <span style={{ color: '#153356', fontWeight: 600 }}>
+          <span className="font-semibold" style={{ color: '#133056' }}>
             {data?.name || indexKey?.toUpperCase()}
           </span>
         </div>
@@ -271,33 +268,10 @@ const MarketIndexDetail = () => {
           id="refresh-index-btn"
           onClick={() => fetchData(selectedRange, true)}
           disabled={loading || refreshing}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '6px',
-            background: refreshing ? '#D9E6EF' : '#FF7426',
-            border: 'none',
-            borderRadius: '9px', padding: '7px 14px',
-            fontSize: '12.5px', fontWeight: 700,
-            color: refreshing ? '#7890A8' : '#FFFFFF',
-            cursor: refreshing ? 'not-allowed' : 'pointer',
-            boxShadow: refreshing ? 'none' : '0 2px 8px rgba(255, 116, 38, 0.28)',
-            transition: 'all 0.18s ease',
-          }}
-          onMouseEnter={e => {
-            if (!refreshing) {
-              e.currentTarget.style.background = '#F5661F';
-              e.currentTarget.style.boxShadow = '0 4px 14px rgba(255, 116, 38, 0.38)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }
-          }}
-          onMouseLeave={e => {
-            if (!refreshing) {
-              e.currentTarget.style.background = '#FF7426';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)';
-              e.currentTarget.style.transform = 'none';
-            }
-          }}
+          className="saas-btn-primary"
+          style={{ opacity: refreshing ? 0.7 : 1 }}
         >
-          <RefreshCw size={13} style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
+          <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
           {refreshing ? 'Updating Feed...' : 'Refresh Live Feed'}
         </button>
       </div>
@@ -306,35 +280,16 @@ const MarketIndexDetail = () => {
       <button
         id="market-detail-back-btn"
         onClick={() => navigate('/market-analysis')}
-        style={{
-          display: 'flex', alignItems: 'center', gap: '6px',
-          background: '#FFFFFF', border: '1px solid #D9E6EF',
-          borderRadius: '10px', padding: '8px 14px',
-          fontSize: '13px', fontWeight: 600, color: '#122F55',
-          cursor: 'pointer', marginBottom: '20px', transition: 'all 0.15s ease',
-          boxShadow: '0 1px 3px rgba(18, 47, 85, 0.04)',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = '#F0F8FC';
-          e.currentTarget.style.color = '#0B82C9';
-          e.currentTarget.style.borderColor = '#0B82C9';
-          e.currentTarget.style.transform = 'translateY(-1px)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = '#FFFFFF';
-          e.currentTarget.style.color = '#122F55';
-          e.currentTarget.style.borderColor = '#D9E6EF';
-          e.currentTarget.style.transform = 'none';
-        }}
+        className="saas-btn-outline flex items-center gap-1.5 mb-5 text-sm"
       >
         <ArrowLeft size={14} /> Back to Market Analysis
       </button>
 
       {/* Error */}
       {error && (
-        <div style={{ padding: '12px 16px', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <AlertTriangle size={15} color="#DC2626" />
-          <span style={{ fontSize: '13.5px', color: '#DC2626' }}>{error}</span>
+        <div className="flex items-center gap-2.5 p-4 rounded-xl mb-5 text-sm" style={{ background: '#FEF2F2', border: '1px solid #FECACA', color: '#DC2626' }}>
+          <AlertTriangle size={15} className="shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 

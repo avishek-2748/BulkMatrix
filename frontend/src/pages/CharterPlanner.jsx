@@ -9,40 +9,14 @@ import EstimatedFreightCost from '../components/EstimatedFreightCost';
 const DESTINATION_PORTS = ['Paradip', 'Vizag', 'Gangavaram', 'Gopalpur', 'Dhamra', 'Sagar–Sandheads', 'Haldia'];
 const ORIGIN_PORTS = ['Hay Point', 'Newcastle', 'Gladstone', 'Port Hedland', 'Baltimore', 'Norfolk', 'Maputo', 'Russia', 'Indonesia'];
 
-const inputStyle = {
-  width: '100%',
-  padding: '10px 14px',
-  border: '1.5px solid #D9E6EF',
-  borderRadius: '10px',
-  fontSize: '14px',
-  color: '#122F55',
-  background: '#FFFFFF',
-  outline: 'none',
-  transition: 'all 0.2s ease',
-  boxSizing: 'border-box',
-};
-
-const onFocus = e => {
-  e.target.style.borderColor = '#0B82C9';
-  e.target.style.boxShadow = '0 0 0 3px rgba(11, 130, 201, 0.14)';
-};
-const onBlur = e => {
-  e.target.style.borderColor = '#D9E6EF';
-  e.target.style.boxShadow = 'none';
-};
-
-const SectionCard = ({ title, icon: Icon, iconColor, children }) => (
-  <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-    <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '14px', borderBottom: '1px solid #D9E6EF' }}>
-      <Icon size={16} color={iconColor || '#0B82C9'} />
+const SectionCard = ({ title, icon: Icon, children }) => (
+  <div className="saas-card p-6">
+    <h3 className="text-sm font-bold flex items-center gap-2 pb-4 mb-4 border-b border-slate-100" style={{ color: '#133056' }}>
+      <Icon size={16} className="text-blue-600" />
       {title}
     </h3>
     {children}
   </div>
-);
-
-const Label = ({ children }) => (
-  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#5F7894', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{children}</label>
 );
 
 const CharterPlanner = () => {
@@ -159,21 +133,21 @@ const CharterPlanner = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Cargo Details */}
           <SectionCard title="Cargo Details" icon={Package}>
-            <div className="flex flex-col gap-4">
+            <div className="space-y-4">
               <div>
-                <Label>Cargo Volume (tonnes)</Label>
-                <input type="number" required min="1000" value={formData.cargo_volume_tonnes} onChange={e => setFormData({...formData, cargo_volume_tonnes: e.target.value})} placeholder="e.g. 150,000" style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
+                <label className="saas-label">Cargo Volume (tonnes)</label>
+                <input type="number" required min="1000" value={formData.cargo_volume_tonnes} onChange={e => setFormData({...formData, cargo_volume_tonnes: e.target.value})} placeholder="e.g. 150,000" className="saas-input" />
               </div>
               <div>
-                <Label>Commodity</Label>
-                <select value={formData.commodity} onChange={e => setFormData({...formData, commodity: e.target.value})} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
+                <label className="saas-label">Commodity</label>
+                <select value={formData.commodity} onChange={e => setFormData({...formData, commodity: e.target.value})} className="saas-input">
                   <option value="Coal">Coal</option>
                   <option value="Iron Ore">Iron Ore</option>
                 </select>
               </div>
               <div>
-                <Label>Contract Type</Label>
-                <select value={formData.contract_type} onChange={e => setFormData({...formData, contract_type: e.target.value})} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
+                <label className="saas-label">Contract Type</label>
+                <select value={formData.contract_type} onChange={e => setFormData({...formData, contract_type: e.target.value})} className="saas-input">
                   <option value="Spot">Spot</option>
                   <option value="Short Term">Short Term</option>
                   <option value="Medium Term">Medium Term</option>
@@ -184,15 +158,15 @@ const CharterPlanner = () => {
 
           {/* Route Details */}
           <SectionCard title="Route Details" icon={MapPin}>
-            <div className="flex flex-col gap-4">
+            <div className="space-y-4">
               <div>
-                <Label>Origin Port</Label>
-                <select value={formData.origin_port} onChange={e => setFormData({...formData, origin_port: e.target.value})} style={inputStyle} onFocus={onFocus} onBlur={onBlur}>
+                <label className="saas-label">Origin Port</label>
+                <select value={formData.origin_port} onChange={e => setFormData({...formData, origin_port: e.target.value})} className="saas-input">
                   {ORIGIN_PORTS.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
               <div>
-                <Label>Destination Ports</Label>
+                <label className="saas-label">Destination Ports</label>
                 <div className="grid grid-cols-2 gap-2">
                   {DESTINATION_PORTS.map(port => {
                     const checked = formData.destination_ports.includes(port);
@@ -215,12 +189,12 @@ const CharterPlanner = () => {
           <SectionCard title="Arrival Window" icon={Calendar}>
             <div className="flex flex-col gap-4 h-full justify-between">
               <div>
-                <Label>Start Date</Label>
-                <input type="date" required value={formData.arrival_window_start} onChange={e => setFormData({...formData, arrival_window_start: e.target.value})} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
+                <label className="saas-label">Start Date</label>
+                <input type="date" required value={formData.arrival_window_start} onChange={e => setFormData({...formData, arrival_window_start: e.target.value})} className="saas-input" />
               </div>
               <div>
-                <Label>End Date</Label>
-                <input type="date" required value={formData.arrival_window_end} onChange={e => setFormData({...formData, arrival_window_end: e.target.value})} style={inputStyle} onFocus={onFocus} onBlur={onBlur} />
+                <label className="saas-label">End Date</label>
+                <input type="date" required value={formData.arrival_window_end} onChange={e => setFormData({...formData, arrival_window_end: e.target.value})} className="saas-input" />
               </div>
               <button
                 type="submit"
@@ -247,100 +221,89 @@ const CharterPlanner = () => {
 
           {/* Multi-Vessel Banner / Single Vessel Banner */}
           {result.multiVesselRequired ? (
-            <div style={{ background: '#FFFBEB', border: '1.5px solid #FCD34D', borderRadius: '14px', padding: '20px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 12px rgba(245,158,11,0.08)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{ padding: '12px', background: '#FEF3C7', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <AlertTriangle size={26} color="#D97706" />
+            <div className="flex items-start gap-4 p-5 rounded-xl border mb-6" style={{ background: '#FFFBEB', borderColor: '#FCD34D' }}>
+              <div className="p-3 rounded-xl shrink-0" style={{ background: '#FEF3C7' }}>
+                <AlertTriangle size={22} className="text-amber-600" />
+              </div>
+              <div>
+                <div className="flex items-center gap-3 flex-wrap mb-1.5">
+                  <h3 className="text-base font-bold" style={{ color: '#92400E' }}>MULTI-VESSEL FLEET REQUIRED</h3>
+                  <span className="saas-badge" style={{ background: '#F59E0B', color: 'white', border: 'none' }}>AUTOMATIC FLEET OPTIMIZATION</span>
                 </div>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                    <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#92400E', margin: 0 }}>⚠️ MULTI-VESSEL FLEET REQUIRED</h3>
-                    <span style={{ padding: '3px 10px', background: '#F59E0B', color: 'white', borderRadius: '12px', fontSize: '11px', fontWeight: 800, letterSpacing: '0.04em' }}>AUTOMATIC FLEET OPTIMIZATION</span>
-                  </div>
-                  <p style={{ fontSize: '13.5px', color: '#B45309', margin: '6px 0 0 0', lineHeight: 1.5 }}>
-                    Required cargo <strong>({formatNumber(Number(formData.cargo_volume_tonnes || 0))} MT)</strong> exceeds max single vessel capacity <strong>({formatNumber(result.singleVesselCapacity || 0)} MT)</strong> by <strong>{formatNumber(result.capacityShortfall || 0)} MT</strong>.
-                  </p>
-                </div>
+                <p className="text-sm leading-relaxed" style={{ color: '#B45309' }}>
+                  Required cargo <strong>({formatNumber(Number(formData.cargo_volume_tonnes || 0))} MT)</strong> exceeds max single vessel capacity <strong>({formatNumber(result.singleVesselCapacity || 0)} MT)</strong> by <strong>{formatNumber(result.capacityShortfall || 0)} MT</strong>.
+                </p>
               </div>
             </div>
           ) : (
-            <div style={{ background: '#F0FDF4', border: '1.5px solid #86EFAC', borderRadius: '14px', padding: '16px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{ padding: '10px', background: '#DCFCE7', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CheckCircle size={22} color="#16A34A" />
+            <div className="flex items-center gap-4 p-5 rounded-xl border mb-6" style={{ background: '#F0FDF4', borderColor: '#86EFAC' }}>
+              <div className="p-2.5 rounded-xl shrink-0" style={{ background: '#DCFCE7' }}>
+                <CheckCircle size={20} className="text-emerald-600" />
               </div>
               <div>
-                <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#166534', margin: 0 }}>✓ SINGLE VESSEL IS SUFFICIENT</h3>
-                <p style={{ fontSize: '13px', color: '#15803D', margin: '3px 0 0 0' }}>
+                <h3 className="text-base font-bold mb-0.5" style={{ color: '#166534' }}>SINGLE VESSEL IS SUFFICIENT</h3>
+                <p className="text-sm" style={{ color: '#15803D' }}>
                   Required cargo ({formatNumber(Number(formData.cargo_volume_tonnes || 0))} MT) fits within standard {result.vesselRecommendation?.class || 'Capesize'} vessel capacity ({formatNumber(result.singleVesselCapacity || 0)} MT).
                 </p>
               </div>
             </div>
           )}
 
-          {/* AI OPTIMAL FLEET RECOMMENDATION CARD (If Multi-Vessel Required) */}
+          {/* AI OPTIMAL FLEET RECOMMENDATION CARD */}
           {result.multiVesselRequired && result.optimalFleet && (
-            <div style={{ background: 'linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)', border: '2px solid var(--brand-blue)', borderRadius: '16px', padding: '24px', marginBottom: '24px', boxShadow: '0 10px 25px -5px rgba(29, 78, 216, 0.12)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', paddingBottom: '14px', borderBottom: '1px solid #E2E8F0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Award size={22} color="var(--brand-blue)" />
+            <div className="saas-card p-6 mb-6 border-2" style={{ borderColor: '#133056' }}>
+              <div className="flex items-center justify-between mb-5 pb-4 border-b border-slate-100">
+                <div className="flex items-center gap-3">
+                  <Award size={20} className="text-blue-600" />
                   <div>
-                    <h3 style={{ fontSize: '17px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>🏆 AI OPTIMAL FLEET RECOMMENDATION</h3>
-                    <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Ranked #1 for Lowest Freight Cost & Port Feasibility</span>
+                    <h3 className="text-base font-bold" style={{ color: '#133056' }}>AI OPTIMAL FLEET RECOMMENDATION</h3>
+                    <span className="text-xs" style={{ color: '#586D85' }}>Ranked #1 for Lowest Freight Cost & Port Feasibility</span>
                   </div>
                 </div>
                 {result.optimalFleet.savings_percent > 0 && (
-                  <div style={{ background: '#DCFCE7', border: '1px solid #86EFAC', borderRadius: '20px', padding: '6px 16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#15803D' }}>{result.optimalFleet.savings_percent}% SAVINGS</span>
-                    <span style={{ fontSize: '12px', color: '#166534', fontWeight: 600 }}>({formatCurrency(result.optimalFleet.estimated_savings || 0)})</span>
-                  </div>
+                  <span className="saas-badge saas-badge-success text-xs">
+                    {result.optimalFleet.savings_percent}% SAVINGS · {formatCurrency(result.optimalFleet.estimated_savings || 0)}
+                  </span>
                 )}
               </div>
 
               {/* KPI Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' }}>
-                <div style={{ background: 'white', padding: '14px 16px', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Total Freight Cost</p>
-                  <p style={{ fontSize: '20px', fontWeight: 800, color: 'var(--brand-blue)', margin: 0 }}>{formatCurrency(result.optimalFleet.estimated_total_cost || result.optimalFleet.total_cost || 0)}</p>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '2px 0 0 0' }}>${result.optimalFleet.cost_per_tonne || 0} / MT</p>
-                </div>
-                <div style={{ background: 'white', padding: '14px 16px', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Fleet Composition</p>
-                  <p style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{result.optimalFleet.vessel_types_summary}</p>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '2px 0 0 0' }}>{result.optimalFleet.vessel_count || result.optimalFleet.vessels?.length || 0} Vessels Total</p>
-                </div>
-                <div style={{ background: 'white', padding: '14px 16px', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Total Capacity</p>
-                  <p style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>{formatNumber(result.optimalFleet.total_capacity)} MT</p>
-                  <p style={{ fontSize: '11.5px', color: '#16A34A', margin: '2px 0 0 0' }}>Covering {formatNumber(formData.cargo_volume_tonnes)} MT</p>
-                </div>
-                <div style={{ background: 'white', padding: '14px 16px', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '4px' }}>Unused Capacity</p>
-                  <p style={{ fontSize: '18px', fontWeight: 800, color: '#D97706', margin: 0 }}>{formatNumber(result.optimalFleet.unused_capacity)} MT</p>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', margin: '2px 0 0 0' }}>Minimizes buffer waste</p>
-                </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                {[
+                  { label: 'Total Freight Cost', value: formatCurrency(result.optimalFleet.estimated_total_cost || result.optimalFleet.total_cost || 0), sub: `$${result.optimalFleet.cost_per_tonne || 0} / MT`, color: '#133056' },
+                  { label: 'Fleet Composition', value: result.optimalFleet.vessel_types_summary, sub: `${result.optimalFleet.vessel_count || result.optimalFleet.vessels?.length || 0} Vessels Total`, color: '#133056' },
+                  { label: 'Total Capacity', value: `${formatNumber(result.optimalFleet.total_capacity)} MT`, sub: `Covering ${formatNumber(formData.cargo_volume_tonnes)} MT`, color: '#133056' },
+                  { label: 'Unused Capacity', value: `${formatNumber(result.optimalFleet.unused_capacity)} MT`, sub: 'Minimizes buffer waste', color: '#D97706' },
+                ].map(k => (
+                  <div key={k.label} className="bg-white p-3.5 rounded-xl border border-slate-100">
+                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#586D85' }}>{k.label}</p>
+                    <p className="text-base font-black" style={{ color: k.color }}>{k.value}</p>
+                    <p className="text-[11px] mt-0.5" style={{ color: '#8295AB' }}>{k.sub}</p>
+                  </div>
+                ))}
               </div>
 
               {/* Vessel Breakdown Cards */}
-              <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '10px' }}>Allocated Fleet Breakdown</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(result.optimalFleet.vessels?.length || 1, 4)}, 1fr)`, gap: '12px' }}>
+              <p className="text-[11px] font-bold uppercase tracking-wider mb-3" style={{ color: '#586D85' }}>Allocated Fleet Breakdown</p>
+              <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(result.optimalFleet.vessels?.length || 1, 4)}, 1fr)` }}>
                 {(result.optimalFleet.vessels || []).map((v, i) => (
-                  <div key={i} style={{ background: 'white', border: '1px solid #CBD5E1', borderRadius: '12px', padding: '14px 16px', boxShadow: '0 2px 4px rgba(0,0,0,0.03)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--brand-blue)' }}>{v.name || `Vessel ${i+1}`}</span>
-                      <span style={{ padding: '2px 8px', background: '#EFF6FF', color: 'var(--brand-blue)', borderRadius: '6px', fontSize: '11px', fontWeight: 700 }}>{v.vessel_class || v.class}</span>
+                  <div key={i} className="bg-white border border-slate-200 rounded-xl p-3.5">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-bold" style={{ color: '#133056' }}>{v.name || `Vessel ${i+1}`}</span>
+                      <span className="saas-badge saas-badge-info text-[10px] py-0.5">{v.vessel_class || v.class}</span>
                     </div>
-                    <div style={{ fontSize: '12.5px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Payload:</span>
-                        <strong style={{ color: 'var(--text-primary)' }}>{formatNumber(v.capacity)} MT</strong>
+                    <div className="space-y-1.5 text-xs">
+                      <div className="flex justify-between">
+                        <span style={{ color: '#586D85' }}>Payload:</span>
+                        <strong style={{ color: '#133056' }}>{formatNumber(v.capacity)} MT</strong>
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Est. Rate:</span>
-                        <strong style={{ color: 'var(--text-primary)' }}>${v.rate_per_tonne || v.rate_per_ton}/MT</strong>
+                      <div className="flex justify-between">
+                        <span style={{ color: '#586D85' }}>Est. Rate:</span>
+                        <strong style={{ color: '#133056' }}>${v.rate_per_tonne || v.rate_per_ton}/MT</strong>
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '6px', borderTop: '1px solid #F1F5F9' }}>
-                        <span>Total Freight:</span>
-                        <strong style={{ color: 'var(--brand-blue)' }}>{formatCurrency(v.freight_cost || v.cost || 0)}</strong>
+                      <div className="flex justify-between pt-1.5 border-t border-slate-100">
+                        <span style={{ color: '#586D85' }}>Total Freight:</span>
+                        <strong className="text-blue-700">{formatCurrency(v.freight_cost || v.cost || 0)}</strong>
                       </div>
                     </div>
                   </div>
@@ -351,30 +314,24 @@ const CharterPlanner = () => {
 
           {/* ALTERNATIVE FLEET OPTIONS */}
           {result.multiVesselRequired && result.alternativeFleets && result.alternativeFleets.length > 0 && (
-            <div style={{ marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Layers size={16} color="var(--brand-blue)" /> ALTERNATIVE FLEET COMBINATIONS
+            <div className="mb-6">
+              <h3 className="text-sm font-bold flex items-center gap-2 mb-4" style={{ color: '#133056' }}>
+                <Layers size={16} className="text-blue-600" /> Alternative Fleet Combinations
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+              <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
                 {result.alternativeFleets.map((alt, idx) => (
-                  <div key={idx} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '12px', padding: '16px', boxShadow: 'var(--shadow-sm)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                      <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>Option {alt.option_number || idx + 2}</span>
-                      <span style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', background: '#F1F5F9', color: '#475569', borderRadius: '6px' }}>{alt.vessel_count} Vessels</span>
+                  <div key={idx} className="saas-card p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold" style={{ color: '#133056' }}>Option {alt.option_number || idx + 2}</span>
+                      <span className="saas-badge saas-badge-neutral">{alt.vessel_count} Vessels</span>
                     </div>
-                    <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--brand-blue)', margin: '0 0 10px 0' }}>{alt.vessel_types_summary}</p>
-                    <div style={{ fontSize: '12.5px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Total Capacity:</span>
-                        <strong>{formatNumber(alt.total_capacity)} MT</strong>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Unused Buffer:</span>
-                        <strong>{formatNumber(alt.unused_capacity)} MT</strong>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '6px', borderTop: '1px solid #F1F5F9' }}>
-                        <span>Est. Total Cost:</span>
-                        <strong style={{ color: 'var(--text-primary)' }}>{formatCurrency(alt.estimated_total_cost || 0)} (${alt.cost_per_tonne}/MT)</strong>
+                    <p className="text-sm font-bold mb-3 text-blue-700">{alt.vessel_types_summary}</p>
+                    <div className="space-y-1.5 text-xs">
+                      <div className="flex justify-between"><span style={{ color: '#586D85' }}>Total Capacity:</span><strong style={{ color: '#133056' }}>{formatNumber(alt.total_capacity)} MT</strong></div>
+                      <div className="flex justify-between"><span style={{ color: '#586D85' }}>Unused Buffer:</span><strong style={{ color: '#133056' }}>{formatNumber(alt.unused_capacity)} MT</strong></div>
+                      <div className="flex justify-between pt-1.5 border-t border-slate-100">
+                        <span style={{ color: '#586D85' }}>Est. Total Cost:</span>
+                        <strong style={{ color: '#133056' }}>{formatCurrency(alt.estimated_total_cost || 0)} (${alt.cost_per_tonne}/MT)</strong>
                       </div>
                     </div>
                   </div>
@@ -391,17 +348,17 @@ const CharterPlanner = () => {
             originPort={formData.origin_port}
           />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+          <div className="grid gap-4 mb-4" style={{ gridTemplateColumns: '2fr 1fr' }}>
             {/* Freight Forecast Chart */}
-            <div style={{ gridColumn: '1 / 3', background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '20px' }}>Freight Rate Forecast ($/tonne)</h3>
+            <div className="saas-card p-6">
+              <h3 className="text-sm font-bold mb-5" style={{ color: '#133056' }}>Freight Rate Forecast ($/tonne)</h3>
               <div style={{ height: '220px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#E7EFF5" vertical={false} />
                     <XAxis dataKey="name" stroke="#7890A8" tick={{ fill: '#7890A8', fontSize: 11.5 }} axisLine={false} tickLine={false} />
                     <YAxis stroke="#7890A8" tick={{ fill: '#7890A8', fontSize: 11.5 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v}`} />
-                    <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '10px', boxShadow: '0 6px 20px rgba(18, 47, 85, 0.08)', fontSize: '13px', color: '#122F55' }} formatter={v => [`$${v}`, 'Freight Rate']} />
+                    <Tooltip contentStyle={{ background: '#FFFFFF', border: '1px solid #DADCEB', borderRadius: '10px', boxShadow: '0 6px 20px rgba(18, 47, 85, 0.08)', fontSize: '13px', color: '#133056' }} formatter={v => [`$${v}`, 'Freight Rate']} />
                     <Line type="monotone" dataKey="rate" stroke="#0B82C9" strokeWidth={3} dot={{ r: 5, fill: 'white', stroke: '#0B82C9', strokeWidth: 2 }} activeDot={{ r: 7 }} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -409,68 +366,70 @@ const CharterPlanner = () => {
             </div>
 
             {/* Market Signal */}
-            <div style={{ background: isBuyNow ? '#E8F8EF' : '#FFF1E8', border: `1px solid ${isBuyNow ? '#BBF7D0' : '#FFD8C2'}`, borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: isBuyNow ? '#16A34A' : '#FF7426' }}></div>
-              <p style={{ fontSize: '11px', fontWeight: 700, color: isBuyNow ? '#16A34A' : '#FF7426', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>Market Signal</p>
-              <p style={{ fontSize: '36px', fontWeight: 900, color: isBuyNow ? '#16A34A' : '#FF7426', letterSpacing: '-0.02em', marginBottom: '12px', lineHeight: 1 }}>{result.marketSignal?.signal ?? 'BUY NOW'}</p>
-              <div style={{ background: '#FFFFFF', borderRadius: '999px', padding: '4px 14px', marginBottom: '12px', display: 'inline-block', border: '1px solid #D9E6EF' }}>
-                <span style={{ fontSize: '13px', fontWeight: 700, color: '#122F55' }}>Confidence: {result.marketSignal?.confidence ?? 85}%</span>
-              </div>
-              <p style={{ fontSize: '12.5px', color: '#5F7894', lineHeight: 1.6 }}>{result.marketSignal?.reason ?? 'Freight rates expected to increase.'}</p>
+            <div className="saas-card p-6 flex flex-col items-center justify-center text-center relative overflow-hidden"
+              style={{ background: isBuyNow ? '#F0FDF4' : '#FFF5EF', borderColor: isBuyNow ? '#BBF7D0' : '#FFD8C2' }}>
+              <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl" style={{ background: isBuyNow ? '#16A34A' : '#F3752F' }} />
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: isBuyNow ? '#16A34A' : '#F3752F' }}>Market Signal</p>
+              <p className="font-black mb-3" style={{ fontSize: '32px', lineHeight: 1, color: isBuyNow ? '#16A34A' : '#F3752F' }}>{result.marketSignal?.signal ?? 'BUY NOW'}</p>
+              <span className="saas-badge mb-3" style={{ background: 'white', color: '#133056', border: '1px solid #DADCEB' }}>
+                Confidence: {result.marketSignal?.confidence ?? 85}%
+              </span>
+              <p className="text-xs leading-relaxed" style={{ color: '#586D85' }}>{result.marketSignal?.reason ?? 'Freight rates expected to increase.'}</p>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Vessel Recommendation */}
-            <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Anchor size={15} color="#0B82C9" /> Vessel Recommendation
+            <div className="saas-card p-6">
+              <h3 className="text-sm font-bold flex items-center gap-2 mb-4" style={{ color: '#133056' }}>
+                <Anchor size={15} className="text-blue-600" /> Vessel Recommendation
               </h3>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#FFF1E8', border: '1px solid #FFD8C2', borderRadius: '10px', padding: '8px 14px', marginBottom: '16px' }}>
-                <Ship size={18} color="#FF7426" />
-                <span style={{ fontSize: '18px', fontWeight: 800, color: '#122F55' }}>{result.vesselRecommendation?.class ?? 'PANAMAX'}</span>
-                <span style={{ fontSize: '10px', fontWeight: 800, color: '#FF7426', background: '#FFFFFF', border: '1px solid #FFD8C2', padding: '2px 7px', borderRadius: '999px', letterSpacing: '0.04em' }}>RECOMMENDED</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl mb-4" style={{ background: '#FFF5EF', border: '1px solid #FFD8C2' }}>
+                <Ship size={16} style={{ color: '#F3752F' }} />
+                <span className="text-base font-black" style={{ color: '#133056' }}>{result.vesselRecommendation?.class ?? 'PANAMAX'}</span>
+                <span className="text-[10px] font-black px-2 py-0.5 rounded-full" style={{ color: '#F3752F', background: '#fff', border: '1px solid #FFD8C2' }}>RECOMMENDED</span>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
+              <div className="space-y-2 mb-4">
                 {[['Draft', result.vesselRecommendation?.draftCompatible ?? true], ['LOA', result.vesselRecommendation?.loaCompatible ?? true], ['Beam', result.vesselRecommendation?.beamCompatible ?? true]].map(([label, ok]) => (
-                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: ok ? '#E8F8EF' : '#FEECEC', borderRadius: '8px' }}>
-                    {ok ? <CheckCircle size={15} color="#16A34A" /> : <XCircle size={15} color="#DC2626" />}
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: ok ? '#16A34A' : '#DC2626' }}>{label} Compatible</span>
+                  <div key={label} className="flex items-center gap-2.5 px-3 py-2 rounded-lg" style={{ background: ok ? '#F0FDF4' : '#FEF2F2' }}>
+                    {ok ? <CheckCircle size={14} className="text-emerald-600" /> : <XCircle size={14} className="text-rose-600" />}
+                    <span className="text-xs font-semibold" style={{ color: ok ? '#16A34A' : '#DC2626' }}>{label} Compatible</span>
                   </div>
                 ))}
               </div>
-              <div style={{ padding: '10px 12px', background: '#EAF6FC', border: '1px solid #CFE7F5', borderRadius: '8px', display: 'flex', gap: '8px' }}>
-                <Info size={14} color="#0B82C9" style={{ flexShrink: 0, marginTop: '1px' }} />
-                <p style={{ fontSize: '12.5px', color: '#5F7894', lineHeight: 1.6, margin: 0 }}>{result.vesselRecommendation?.reason ?? 'Recommended vessel matches port draft restrictions.'}</p>
+              <div className="flex gap-2 p-3 rounded-lg" style={{ background: '#EAF6FC', border: '1px solid #CFE7F5' }}>
+                <Info size={13} className="text-blue-600 shrink-0 mt-0.5" />
+                <p className="text-xs leading-relaxed m-0" style={{ color: '#586D85' }}>{result.vesselRecommendation?.reason ?? 'Recommended vessel matches port draft restrictions.'}</p>
               </div>
             </div>
 
             {/* Port Time Estimates */}
-            <div style={{ gridColumn: '2 / 4', background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock size={15} color="#0B82C9" /> Port Time Estimates
+            <div className="saas-card p-6 lg:col-span-2">
+              <h3 className="text-sm font-bold flex items-center gap-2 mb-4" style={{ color: '#133056' }}>
+                <Clock size={15} className="text-blue-600" /> Port Time Estimates
               </h3>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+              <div className="overflow-x-auto">
+                <table className="saas-table">
                   <thead>
-                    <tr style={{ borderBottom: '2px solid #D9E6EF' }}>
-                      {['Port', 'Waiting Days', 'Discharge Days', 'Total Time'].map(h => (
-                        <th key={h} style={{ padding: '8px 12px', textAlign: h === 'Port' ? 'left' : 'right', fontWeight: 700, color: '#5F7894', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{h}</th>
-                      ))}
+                    <tr>
+                      <th style={{ textAlign: 'left' }}>Port</th>
+                      <th style={{ textAlign: 'right' }}>Waiting Days</th>
+                      <th style={{ textAlign: 'right' }}>Discharge Days</th>
+                      <th style={{ textAlign: 'right' }}>Total Time</th>
                     </tr>
                   </thead>
                   <tbody>
                     {(result.portTimeEstimates || []).map((est, idx) => {
                       const isBest = idx === 0;
                       return (
-                        <tr key={est.port || idx} style={{ borderBottom: '1px solid #D9E6EF', background: isBest ? '#EAF6FC' : 'transparent' }}>
-                          <td style={{ padding: '10px 12px', fontWeight: isBest ? 700 : 500, color: isBest ? '#0B82C9' : '#122F55', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            {isBest && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B82C9', flexShrink: 0 }}></span>}
+                        <tr key={est.port || idx} style={{ background: isBest ? '#EAF6FC' : undefined }}>
+                          <td className="font-medium flex items-center gap-1.5" style={{ color: isBest ? '#0B82C9' : '#133056', fontWeight: isBest ? 700 : 500 }}>
+                            {isBest && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />}
                             {est.port}
                           </td>
-                          <td style={{ padding: '10px 12px', textAlign: 'right', color: '#5F7894' }}>{est.waitingDays}</td>
-                          <td style={{ padding: '10px 12px', textAlign: 'right', color: '#5F7894' }}>{est.dischargeDays}</td>
-                          <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 700, color: isBest ? '#0B82C9' : '#122F55' }}>{est.total} days</td>
+                          <td style={{ textAlign: 'right', color: '#586D85' }}>{est.waitingDays}</td>
+                          <td style={{ textAlign: 'right', color: '#586D85' }}>{est.dischargeDays}</td>
+                          <td className="font-bold" style={{ textAlign: 'right', color: isBest ? '#0B82C9' : '#133056' }}>{est.total} days</td>
                         </tr>
                       );
                     })}
@@ -478,167 +437,111 @@ const CharterPlanner = () => {
                 </table>
               </div>
               {result.alternatePort && (
-                <div style={{ marginTop: '16px', padding: '12px 14px', background: '#EAF6FC', border: '1px solid #CFE7F5', borderRadius: '10px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                  <Ship size={16} color="#0B82C9" style={{ flexShrink: 0, marginTop: '1px' }} />
+                <div className="mt-4 flex gap-2.5 items-start p-3.5 rounded-xl" style={{ background: '#EAF6FC', border: '1px solid #CFE7F5' }}>
+                  <Ship size={15} className="text-blue-600 shrink-0 mt-0.5" />
                   <div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#0B82C9', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Alternate Port Recommendation: </span>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#122F55' }}>{result.alternatePort.port}</span>
-                    <p style={{ fontSize: '12px', color: '#5F7894', marginTop: '2px' }}>{result.alternatePort.reason}</p>
+                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Alternate Port: </span>
+                    <span className="text-xs font-bold" style={{ color: '#133056' }}>{result.alternatePort.port}</span>
+                    <p className="text-xs mt-0.5" style={{ color: '#586D85' }}>{result.alternatePort.reason}</p>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Risk Alerts */}
-            <div style={{ background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#122F55', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <AlertTriangle size={15} color="#DC2626" /> Risk Alerts
+            <div className="saas-card p-6 lg:col-span-3">
+              <h3 className="text-sm font-bold flex items-center gap-2 mb-4" style={{ color: '#133056' }}>
+                <AlertTriangle size={15} className="text-rose-500" /> Risk Alerts
               </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {(result.riskAlerts || []).map((alert, i) => {
                   const isHigh = alert.severity === 'HIGH';
                   const isMed = alert.severity === 'MEDIUM';
-                  const c = isHigh ? '#DC2626' : isMed ? '#FF7426' : '#16A34A';
-                  const bg = isHigh ? '#FEECEC' : isMed ? '#FFF1E8' : '#E8F8EF';
+                  const c = isHigh ? '#DC2626' : isMed ? '#F3752F' : '#16A34A';
+                  const bg = isHigh ? '#FEF2F2' : isMed ? '#FFF5EF' : '#F0FDF4';
+                  const bc = isHigh ? '#FECACA' : isMed ? '#FFD8C2' : '#BBF7D0';
                   return (
-                    <div key={i} style={{ background: bg, borderLeft: `3px solid ${c}`, borderRadius: '8px', padding: '10px 12px' }}>
-                      <p style={{ fontSize: '11px', fontWeight: 700, color: c, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>{alert.severity} · {alert.type}</p>
-                      <p style={{ fontSize: '12.5px', color: '#122F55', fontWeight: 500 }}>{alert.message}</p>
+                    <div key={i} className="px-4 py-3 rounded-xl border-l-4" style={{ background: bg, borderLeftColor: c, borderTop: `1px solid ${bc}`, borderRight: `1px solid ${bc}`, borderBottom: `1px solid ${bc}` }}>
+                      <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: c }}>{alert.severity} · {alert.type}</p>
+                      <p className="text-xs font-medium" style={{ color: '#133056' }}>{alert.message}</p>
                     </div>
                   );
                 })}
               </div>
             </div>
-
           </div>
 
           {/* Matched Owners Section */}
           {result.suitableOwners && result.suitableOwners.length > 0 && (
-            <div style={{ marginTop: '24px', background: '#FFFFFF', border: '1px solid #D9E6EF', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(18, 47, 85, 0.06)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#122F55', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Anchor size={18} color="#0B82C9" /> Top Matched Vessel Owners
+            <div className="saas-card p-6 mt-4">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-base font-bold flex items-center gap-2" style={{ color: '#133056' }}>
+                  <Anchor size={18} className="text-blue-600" /> Top Matched Vessel Owners
                 </h3>
-                <span style={{ fontSize: '12px', color: '#5F7894', fontWeight: 600 }}>AI Match Algorithm Ranking</span>
+                <span className="text-xs font-semibold" style={{ color: '#586D85' }}>AI Match Algorithm Ranking</span>
               </div>
 
               {requestStatus && (
-                <div style={{
-                  padding: '14px 18px',
-                  borderRadius: '12px',
-                  marginBottom: '16px',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '12px',
-                  background: requestStatus.type === 'success' ? '#DCFCE7' : '#FEE2E2',
-                  color: requestStatus.type === 'success' ? '#166534' : '#991B1B',
-                  border: `1px solid ${requestStatus.type === 'success' ? '#BBF7D0' : '#FECACA'}`
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {requestStatus.type === 'success' ? <CheckCircle size={18} color="#16A34A" /> : <AlertTriangle size={18} color="#DC2626" />}
+                <div className={`flex items-center justify-between flex-wrap gap-3 p-4 rounded-xl mb-5 text-sm font-semibold ${
+                  requestStatus.type === 'success'
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                    : 'bg-rose-50 text-rose-800 border border-rose-200'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    {requestStatus.type === 'success'
+                      ? <CheckCircle size={16} className="text-emerald-600" />
+                      : <AlertTriangle size={16} className="text-rose-600" />}
                     <span>{requestStatus.message}</span>
                   </div>
                   {requestStatus.type === 'success' && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Link
-                        to="/contracts"
-                        style={{
-                          padding: '6px 14px',
-                          background: '#166534',
-                          color: '#FFFFFF',
-                          borderRadius: '8px',
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          textDecoration: 'none',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '5px'
-                        }}
-                      >
-                        Track in Bookings <ArrowRight size={14} />
+                    <div className="flex items-center gap-2">
+                      <Link to="/contracts" className="saas-btn-sm" style={{ background: '#166534', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px', textDecoration: 'none' }}>
+                        Track in Bookings <ArrowRight size={13} />
                       </Link>
-                      <Link
-                        to="/chat"
-                        style={{
-                          padding: '6px 14px',
-                          background: '#FFFFFF',
-                          color: '#166534',
-                          border: '1px solid #BBF7D0',
-                          borderRadius: '8px',
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          textDecoration: 'none',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '5px'
-                        }}
-                      >
+                      <Link to="/chat" className="saas-btn-sm" style={{ background: '#fff', color: '#166534', border: '1px solid #BBF7D0', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px', textDecoration: 'none' }}>
                         Open Chat
                       </Link>
                     </div>
                   )}
                 </div>
               )}
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+
+              <div className="space-y-3">
                 {result.suitableOwners.map((owner, idx) => {
                   const isRequested = requestedOwners.has(owner.ownerId);
                   const isCurrentRequesting = requestingOwnerId === owner.ownerId;
-
                   return (
-                    <div key={owner.ownerId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', border: '1px solid #D9E6EF', borderRadius: '12px', background: idx === 0 ? '#F8FAFC' : '#FFFFFF' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#EAF6FC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#0B82C9', fontSize: '18px' }}>
+                    <div key={owner.ownerId} className={`flex items-center justify-between gap-4 p-5 rounded-xl border transition-all ${
+                      idx === 0 ? 'border-blue-200 bg-blue-50/40' : 'border-slate-200 bg-white hover:bg-slate-50/60'
+                    }`}>
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg shrink-0" style={{ background: '#EAF6FC', color: '#0B82C9' }}>
                           {owner.company ? owner.company.charAt(0) : owner.name.charAt(0)}
                         </div>
                         <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#122F55', margin: 0 }}>{owner.company || owner.name}</h4>
-                            {idx === 0 && <span style={{ padding: '2px 8px', background: '#DCFCE7', color: '#166534', borderRadius: '999px', fontSize: '10px', fontWeight: 800 }}>BEST MATCH</span>}
+                          <div className="flex items-center gap-2.5 mb-0.5">
+                            <h4 className="text-base font-bold" style={{ color: '#133056' }}>{owner.company || owner.name}</h4>
+                            {idx === 0 && <span className="saas-badge saas-badge-success text-[10px]">BEST MATCH</span>}
                           </div>
-                          <p style={{ fontSize: '13px', color: '#5F7894', margin: '4px 0 0 0' }}>
-                            Match Score: <strong style={{ color: '#0B82C9' }}>{owner.score} / 100</strong> • {owner.fleetAvailable} Available {result.vesselRecommendation?.class}s
+                          <p className="text-xs" style={{ color: '#586D85' }}>
+                            Match Score: <strong className="text-blue-700">{owner.score} / 100</strong> · {owner.fleetAvailable} Available {result.vesselRecommendation?.class}s
                           </p>
                         </div>
                       </div>
-                      
+
                       {isRequested ? (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 18px', background: '#DCFCE7', color: '#166534', borderRadius: '8px', fontSize: '13px', fontWeight: 700, border: '1px solid #BBF7D0' }}>
-                          <CheckCircle size={16} /> Request Sent
+                        <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 shrink-0">
+                          <CheckCircle size={15} /> Request Sent
                         </div>
                       ) : (
-                        <button 
+                        <button
                           onClick={() => handleRequestContract(owner)}
                           disabled={isCurrentRequesting || requestingOwnerId !== null}
-                          style={{
-                            padding: '10px 20px',
-                            background: isCurrentRequesting ? '#93C5FD' : '#0B82C9',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            cursor: isCurrentRequesting ? 'not-allowed' : 'pointer',
-                            transition: 'all 0.2s',
-                            boxShadow: '0 2px 8px rgba(11, 130, 201, 0.2)',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                          }}
-                          onMouseEnter={(e) => { if (!isCurrentRequesting) e.target.style.background = '#0969A1'; }}
-                          onMouseLeave={(e) => { if (!isCurrentRequesting) e.target.style.background = '#0B82C9'; }}
+                          className="saas-btn-primary shrink-0"
                         >
                           {isCurrentRequesting ? (
-                            <>
-                              <Loader2 size={16} className="animate-spin" /> Sending...
-                            </>
-                          ) : (
-                            'Request Charter'
-                          )}
+                            <><Loader2 size={15} className="animate-spin" /> Sending...</>
+                          ) : 'Request Charter'}
                         </button>
                       )}
                     </div>

@@ -12,18 +12,18 @@ const OVERVIEW_INDICES = ['bdi', 'fuel', 'usd-inr', 'dxy', 'coal', 'iron-ore'];
 
 // Official BulkMatrix Maritime Enterprise Chart Colors
 const CHART_COLORS = {
-  bdi:        '#0B82C9', // Primary Ocean Blue
-  fuel:       '#FF7426', // Energy / Orange
-  'usd-inr':  '#0B82C9', // Blue
-  dxy:        '#168FD0', // Bright Blue
-  coal:       '#FF7426', // Orange
-  'iron-ore': '#0B82C9', // Blue
+  bdi:        '#4187AB', // Primary Ocean Blue
+  fuel:       '#F3752F', // Energy / Orange
+  'usd-inr':  '#4187AB', // Blue
+  dxy:        '#A7DAF1', // Light Blue
+  coal:       '#F3752F', // Orange
+  'iron-ore': '#4187AB', // Blue
 };
 
 const MiniOverviewChart = ({ index }) => {
   const [hovered, setHovered] = useState(false);
   if (!index?.sparkline?.length) return null;
-  const color = CHART_COLORS[index.id] || '#0B82C9';
+  const color = CHART_COLORS[index.id] || '#4187AB';
   const isUp = index.changePercent >= 0;
 
   return (
@@ -31,30 +31,30 @@ const MiniOverviewChart = ({ index }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: '#FFFFFF',
-        border: `1px solid ${hovered ? '#0B82C9' : '#D9E6EF'}`,
-        borderRadius: '14px',
+        background: '#FEFFFF',
+        border: `1px solid ${hovered ? '#4187AB' : '#DADCEB'}`,
+        borderRadius: '12px',
         padding: '16px',
         boxShadow: hovered
-          ? '0 6px 20px rgba(18, 47, 85, 0.08)'
-          : '0 2px 8px rgba(18, 47, 85, 0.04)',
+          ? '0 6px 20px rgba(19, 48, 86, 0.08)'
+          : 'none',
         transform: hovered ? 'translateY(-2px)' : 'none',
         transition: 'transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
         <div>
-          <div style={{ fontSize: '11px', fontWeight: 700, color: '#7890A8', marginBottom: '2px', letterSpacing: '0.04em' }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, color: '#586D85', marginBottom: '2px', letterSpacing: '0.04em' }}>
             {index.code}
           </div>
-          <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#122F55' }}>
+          <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#133056' }}>
             {index.name.replace(' Index', '').replace(' (BDI)', '')}
           </div>
         </div>
         <span style={{
           fontSize: '11px', fontWeight: 700,
           color: isUp ? '#16A34A' : '#DC2626',
-          background: isUp ? '#E8F8EF' : '#FEECEC',
+          background: isUp ? '#F0FDF4' : '#FEF2F2',
           border: `1px solid ${isUp ? '#BBF7D0' : '#FECACA'}`,
           borderRadius: '999px', padding: '2px 8px',
           display: 'flex', alignItems: 'center', gap: '3px',
@@ -112,100 +112,41 @@ const MarketAnalysis = () => {
   const indices = getOrderedIndices();
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', paddingBottom: '48px' }}>
+    <div className="max-w-7xl mx-auto space-y-8 pb-16">
       {/* Page Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
-        gap: '16px',
-        marginBottom: '28px',
-      }}>
+      <div className="saas-page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-            <h1 style={{ fontSize: '26px', fontWeight: 800, color: '#122F55', letterSpacing: '-0.02em', margin: 0 }}>
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <h1 className="saas-title">
               Market Analysis
             </h1>
             {overview?.isLive && (
-              <span style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px',
-                background: '#E8F8EF',
-                color: '#16A34A',
-                fontSize: '11px',
-                fontWeight: 700,
-                padding: '3px 10px',
-                borderRadius: '999px',
-                border: '1px solid #BBF7D0',
-              }}>
-                <span style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  background: '#16A34A',
-                  animation: 'pulse-dot 1.5s infinite',
-                }} />
+              <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 LIVE API FEED
               </span>
             )}
           </div>
-          <p style={{ fontSize: '14px', color: '#5F7894', margin: 0 }}>
-            Real-time bulk cargo market indicators — BDI, fuel, FX, and commodity benchmarks
+          <p className="saas-subtitle">
+            Real-time bulk cargo market indicators — BDI, fuel, FX, and commodity benchmarks.
           </p>
         </div>
 
         {/* Live Status & Refresh Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{
-            fontSize: '11.5px',
-            color: '#5F7894',
-            textAlign: 'right',
-            lineHeight: 1.3,
-          }}>
+        <div className="flex items-center gap-4">
+          <div className="text-right text-xs text-[#586D85] hidden sm:block">
             <div>TradingEconomics & Yahoo Finance</div>
-            <div style={{ color: '#16A34A', fontWeight: 600 }}>● Live Stream Synced</div>
+            <div className="text-emerald-600 font-semibold">● Live Stream Synced</div>
           </div>
           <button
             id="refresh-market-btn"
             onClick={() => fetchOverview(true)}
             disabled={loading || refreshing}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '7px',
-              background: refreshing ? '#D9E6EF' : '#FF7426',
-              border: 'none',
-              borderRadius: '11px',
-              padding: '10px 18px',
-              fontSize: '13.5px',
-              fontWeight: 700,
-              color: refreshing ? '#7890A8' : '#FFFFFF',
-              cursor: refreshing ? 'not-allowed' : 'pointer',
-              boxShadow: refreshing ? 'none' : '0 2px 8px rgba(255, 116, 38, 0.28)',
-              transition: 'all 0.18s ease',
-            }}
-            onMouseEnter={e => {
-              if (!refreshing) {
-                e.currentTarget.style.background = '#F5661F';
-                e.currentTarget.style.boxShadow = '0 4px 14px rgba(255, 116, 38, 0.38)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }
-            }}
-            onMouseLeave={e => {
-              if (!refreshing) {
-                e.currentTarget.style.background = '#FF7426';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 116, 38, 0.28)';
-                e.currentTarget.style.transform = 'none';
-              }
-            }}
+            className="saas-btn-primary"
           >
             <RefreshCw
               size={14}
-              style={{
-                animation: refreshing ? 'spin 1s linear infinite' : 'none',
-              }}
+              className={refreshing ? 'animate-spin' : ''}
             />
             {refreshing ? 'Updating...' : 'Refresh Live'}
           </button>
@@ -214,77 +155,51 @@ const MarketAnalysis = () => {
 
       {/* Error */}
       {error && (
-        <div style={{
-          padding: '12px 16px',
-          background: '#FEECEC',
-          border: '1px solid #FECACA',
-          borderRadius: '12px',
-          marginBottom: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-        }}>
-          <AlertTriangle size={15} color="#DC2626" />
-          <span style={{ fontSize: '13.5px', color: '#DC2626' }}>{error}</span>
+        <div className="p-3.5 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2.5 text-xs font-semibold text-red-700">
+          <AlertTriangle size={15} className="text-red-600 flex-shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
       {/* === MARKET CONDITIONS SUMMARY === */}
       {!loading && overview?.marketConditions?.length > 0 && (
-        <div style={{
-          background: '#EAF6FC',
-          border: '1px solid #CFE7F5',
-          borderRadius: '16px',
-          padding: '20px 24px',
-          marginBottom: '28px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-          boxShadow: '0 2px 8px rgba(11, 130, 201, 0.04)',
-        }}>
-          <div style={{
-            fontSize: '11px',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            color: '#0B82C9',
-            marginBottom: '4px',
-          }}>
+        <div className="saas-section-alt rounded-2xl p-6 border border-[#DADCEB] space-y-2">
+          <div className="text-[11px] font-bold text-[#4187AB] uppercase tracking-wider mb-2">
             Market Conditions Summary
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div className="space-y-1.5">
             {overview.marketConditions.map((cond, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13.5px', color: '#23466B', lineHeight: 1.5 }}>
-                <span style={{ color: '#0B82C9', fontWeight: 700, flexShrink: 0 }}>·</span>
-                {cond}
+              <div key={i} className="flex items-start gap-2 text-xs text-[#133056] leading-relaxed">
+                <span className="text-[#4187AB] font-bold">•</span>
+                <span>{cond}</span>
               </div>
             ))}
           </div>
-          <div style={{ fontSize: '11px', color: '#7890A8', marginTop: '4px' }}>
-            Based on real historical data from your datasets. Last updated: {overview.lastUpdated}
+          <div className="text-[11px] text-[#586D85] pt-2">
+            Based on historical datasets. Last updated: {overview.lastUpdated}
           </div>
         </div>
       )}
 
       {/* === 6 METRIC CARDS === */}
-      <div style={{ marginBottom: '32px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#122F55', margin: 0 }}>
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-base font-bold text-[#133056]">
             Key Market Indicators
           </h2>
-          <span style={{ fontSize: '12px', color: '#7890A8' }}>
+          <span className="text-xs text-[#586D85]">
             Click any card to view detailed analysis
           </span>
         </div>
 
         {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <MarketMetricCard key={i} loading={true} />
             ))}
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {indices.map(idx => (
               <MarketMetricCard key={idx.id} index={idx} />
             ))}
@@ -294,11 +209,11 @@ const MarketAnalysis = () => {
 
       {/* === COMPACT OVERVIEW TREND CHARTS === */}
       {!loading && indices.length > 0 && (
-        <div>
-          <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#122F55', marginBottom: '14px', margin: '0 0 14px 0' }}>
+        <div className="space-y-4 pt-4 border-t border-[#DADCEB]">
+          <h2 className="text-base font-bold text-[#133056]">
             14-Day Trend Overview
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '14px' }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {indices.map(idx => (
               <MiniOverviewChart key={idx.id} index={idx} />
             ))}
