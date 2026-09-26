@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BulkMatrix - Senior Full-Stack Architectural Audit Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 12mm 14mm 12mm 14mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1e293b;
+    background-color: #ffffff;
+    line-height: 1.5;
+    font-size: 10pt;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page-header {
+    border-bottom: 2.5px solid #0284c7;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .brand-title {
+    font-size: 22pt;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-title span {
+    color: #0284c7;
+  }
+
+  .brand-subtitle {
+    font-size: 10pt;
+    color: #475569;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .doc-meta {
+    text-align: right;
+    font-size: 8.5pt;
+    color: #64748b;
+  }
+
+  .doc-badge {
+    display: inline-block;
+    background: #0284c7;
+    color: #ffffff;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+  }
+
+  h2 {
+    font-size: 12.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    page-break-after: avoid;
+  }
+
+  h2 .sec-num {
+    background: #f0f9ff;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 9.5pt;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #1e293b;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 9.5pt;
+  }
+
+  .executive-summary {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-left: 4px solid #0284c7;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 14px;
+  }
+
+  .executive-summary p {
+    color: #0369a1;
+    font-size: 9.2pt;
+    margin-bottom: 0;
+    line-height: 1.45;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 12px 0;
+    font-size: 8.5pt;
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+
+  th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 7.5pt;
+    letter-spacing: 0.5px;
+    border-top: 1px solid #cbd5e1;
+    border-bottom: 2px solid #cbd5e1;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #fbfcfe;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 9999px;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+
+  .badge-retain {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+  }
+
+  .badge-reject {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+
+  .badge-fixed {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+  }
+
+  .code {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 8pt;
+    background-color: #f1f5f9;
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 8px 0 12px 0;
+    page-break-inside: avoid;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 9pt;
+    color: #0f172a;
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-body {
+    font-size: 8.2pt;
+    color: #475569;
+    line-height: 1.4;
+  }
+
+  .flow-container {
+    background-color: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 10px 0;
+    page-break-inside: avoid;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: center;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 7px 12px;
+    margin-bottom: 6px;
+  }
+
+  .flow-step-icon {
+    font-size: 14pt;
+    margin-right: 10px;
+    width: 24px;
+    text-align: center;
+  }
+
+  .flow-step-content {
+    flex: 1;
+  }
+
+  .flow-step-title {
+    font-weight: 700;
+    font-size: 8.5pt;
+    color: #38bdf8;
+  }
+
+  .flow-step-desc {
+    font-size: 7.8pt;
+    color: #cbd5e1;
+  }
+
+  .flow-arrow-down {
+    text-align: center;
+    color: #38bdf8;
+    font-size: 9pt;
+    line-height: 1;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+
+  .callout-success {
+    background-color: #f0fdf4;
+    border-left: 3.5px solid #22c55e;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    margin: 8px 0;
+    font-size: 8.5pt;
+  }
+
+  .callout-success strong {
+    color: #166534;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .footer {
+    margin-top: 14px;
+    padding-top: 8px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 7.5pt;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: HEADER, EXEC SUMMARY, SECTION A -->
+  <div class="page-header">
+    <div>
+      <div class="brand-title">Bulk<span>Matrix</span></div>
+      <div class="brand-subtitle">Architectural Audit & Technology Stack Rationalization Report</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-badge">Architectural Review</div>
+      <div>Role: Senior Full-Stack Architect</div>
+      <div>Platform: Bulk Freight & Vessel Chartering</div>
+      <div>Focus: Overseas Origins &rarr; East Coast India</div>
+    </div>
+  </div>
+
+  <div class="executive-summary">
+    <p><strong>Executive Summary:</strong> BulkMatrix is an intelligent bulk cargo procurement and vessel planning platform designed to model capesize/panamax shipping dynamics to East Coast Indian ports (Paradip, Dhamra, Vizag, Haldia, Gopalpur, Gangavaram). Following an in-depth codebase audit of package manifests, Express controllers, Python forecasting engines, and Docker configs, this report establishes a lean, high-performance, non-redundant technology stack strictly adhering to the "Do Not Blindly Add" governance mandate.</p>
+  </div>
+
+  <h2><span class="sec-num">A</span> Current Technology Stack (Codebase Verified)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 17%;">Layer</th>
+        <th style="width: 33%;">Technologies Verified</th>
+        <th style="width: 50%;">Codebase Evidence & File Anchors</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Frontend</strong></td>
+        <td>React 19, Vite 8, Tailwind CSS v4, Recharts, Axios, React Router v7, Leaflet, GSAP</td>
+        <td><span class="code">frontend/package.json</span>: <span class="code">react@19.2.8</span>, <span class="code">@tailwindcss/vite</span>, <span class="code">recharts@3.10.1</span>, <span class="code">axios@1.20.0</span>, <span class="code">leaflet@1.9.4</span>, <span class="code">gsap@3.15.0</span></td>
+      </tr>
+      <tr>
+        <td><strong>Backend</strong></td>
+        <td>Node.js (ESM), Express.js 5, Cookie-Parser, CORS, Dotenv, Nodemailer</td>
+        <td><span class="code">backend/package.json</span>: <span class="code">express@5.2.1</span>, <span class="code">cookie-parser</span>, <span class="code">cors</span>; <span class="code">backend/server.js</span> mounts 14 REST routes</td>
+      </tr>
+      <tr>
+        <td><strong>Database</strong></td>
+        <td>MongoDB Atlas, Mongoose 9</td>
+        <td><span class="code">backend/config/db.js</span> connects to Mongo URI; 16 models in <span class="code">backend/models/</span> (Charter, Vessel, Port, Alert, WeatherRisk)</td>
+      </tr>
+      <tr>
+        <td><strong>Authentication</strong></td>
+        <td>JWT (jsonwebtoken 9), bcrypt 6</td>
+        <td><span class="code">backend/middleware/authMiddleware.js</span>: Bearer/cookie token extraction & RBAC (<span class="code">logistics_manager</span>, <span class="code">vessel_owner</span>, <span class="code">admin</span>)</td>
+      </tr>
+      <tr>
+        <td><strong>AI / ML Service</strong></td>
+        <td>Python 3.10+, FastAPI, Pandas, NumPy, CatBoost, Scikit-learn</td>
+        <td><span class="code">backend/main.py</span> runs FastAPI on port 8000; <span class="code">src/prediction_pipeline.py</span> & <span class="code">src/charter_engine.py</span> execute pipeline</td>
+      </tr>
+      <tr>
+        <td><strong>Model Storage</strong></td>
+        <td>Python Pickle (.pkl binaries)</td>
+        <td><span class="code">models/regularized/</span> contains 168 pre-trained per-route CatBoost models (<span class="code">catboost_reg_*.pkl</span>) loaded via <span class="code">pickle.load()</span></td>
+      </tr>
+      <tr>
+        <td><strong>Dev & DevOps</strong></td>
+        <td>Docker, Docker Compose, Git & GitHub</td>
+        <td><span class="code">docker-compose.yml</span> orchestrates 4 services (mongodb, ml-service, backend, frontend); <span class="code">Dockerfile.ml</span> containerizes Python</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PAGE BREAK TO CLEANLY START SECTION B & D -->
+  <div class="page-break"></div>
+
+  <!-- PAGE 2: SECTION B & SECTION D -->
+  <h2><span class="sec-num">B</span> Recommended Technology Stack</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">Frontend Tier <span class="badge badge-retain">APPROVED</span></div>
+      <div class="card-body">
+        &bull; <strong>React 19 + Vite:</strong> Instant HMR and optimal SPA bundle delivery.<br>
+        &bull; <strong>Tailwind CSS v4:</strong> Hardware-accelerated styling for dense data views.<br>
+        &bull; <strong>Recharts & Leaflet:</strong> Interactive BDI curve forecasting & voyage tracking.<br>
+        &bull; <strong>Axios:</strong> Pre-configured with automatic JWT bearer interceptors.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Backend API Gateway <span class="badge badge-retain">APPROVED</span></div>
+      <div class="card-body">
+        &bull; <strong>Node.js + Express 5:</strong> Non-blocking I/O API gateway.<br>
+        &bull; <strong>REST Endpoints:</strong> Clean REST APIs for charters, fleet, and analytics.<br>
+        &bull; <strong>mlService.js:</strong> Resilient proxy to Python ML service with mock fallback.<br>
+        &bull; <strong>Nodemailer:</strong> Transactional charter executed alerts.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Database & Persistence <span class="badge badge-retain">APPROVED</span></div>
+      <div class="card-body">
+        &bull; <strong>MongoDB Atlas:</strong> Managed multi-region document store.<br>
+        &bull; <strong>Mongoose 9:</strong> Strongly typed schemas for nested charter legs, vessel draft specifications, and port tidal restrictions.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">AI / ML Forecasting Engine <span class="badge badge-retain">APPROVED</span></div>
+      <div class="card-body">
+        &bull; <strong>Python 3.10+ & FastAPI:</strong> Asynchronous microservice on port 8000.<br>
+        &bull; <strong>Pandas & Scikit-learn:</strong> Preprocessing, imputation, and scoring.<br>
+        &bull; <strong>CatBoost Regressors:</strong> 15, 30, 90-day horizon rate predictions.<br>
+        &bull; <strong>Pickle Serialization:</strong> Direct loading of 168 pre-trained model files.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Authentication & Security <span class="badge badge-retain">APPROVED</span></div>
+      <div class="card-body">
+        &bull; <strong>JWT + bcrypt:</strong> Cryptographically signed tokens with salted passwords.<br>
+        &bull; <strong>RBAC:</strong> Role enforcement across managers, owners, and administrators.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Deployment & DevOps <span class="badge badge-retain">APPROVED</span></div>
+      <div class="card-body">
+        &bull; <strong>Vercel:</strong> Static SPA edge distribution for React/Vite frontend.<br>
+        &bull; <strong>Render:</strong> Cloud hosting for Node.js backend and Python ML engine.<br>
+        &bull; <strong>Docker:</strong> Containerized local stack & reproducible build images.<br>
+        &bull; <strong>GitHub:</strong> Version control & CI/CD trigger for Vercel/Render.
+      </div>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">D</span> Technologies Worth Retaining & Solidifying</h2>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">Docker & Docker Compose <span class="badge badge-retain">RETAINED</span></div>
+      <div class="card-body">
+        <strong>Justification:</strong> BulkMatrix is a polyglot architecture (Node.js + Python ML + MongoDB). Docker isolates heavy Python machine learning dependencies (CatBoost, LightGBM, Statsmodels) and enables identical local development and cloud container execution.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Scikit-learn, Pandas & CatBoost <span class="badge badge-retain">RETAINED</span></div>
+      <div class="card-body">
+        <strong>Justification:</strong> Actively executed inside <span class="code">src/prediction_pipeline.py</span> for data normalization, route feature engineering, and evaluating multi-horizon freight rate predictions for Capesize/Panamax vessels.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Python Pickle (.pkl) <span class="badge badge-retain">RETAINED</span></div>
+      <div class="card-body">
+        <strong>Justification:</strong> Directly used to deserialize the 168 pre-trained per-route model artifacts stored in <span class="code">models/regularized/</span> with zero extra wrapping libraries.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">GitHub Version Control & CI/CD <span class="badge badge-retain">RETAINED</span></div>
+      <div class="card-body">
+        <strong>Justification:</strong> The authoritative source repository triggering automated previews on Vercel and zero-downtime container deployments on Render.
+      </div>
+    </div>
+  </div>
+
+  <h2><span class="sec-num">E</span> Implementation: Concrete Gaps Resolved</h2>
+  <div class="callout-success">
+    <strong>Auditor Fix 1: ML Dependency Reconciliation (<span class="code">requirement.txt</span>)</strong><br>
+    The ML service (<span class="code">backend/main.py</span>) is powered by FastAPI, but <span class="code">requirement.txt</span> was missing <span class="code">fastapi</span>, <span class="code">uvicorn</span>, and <span class="code">pydantic</span>. Any container build with <span class="code">Dockerfile.ml</span> failed. Added <span class="code">fastapi>=0.100.0</span>, <span class="code">uvicorn>=0.23.0</span>, and <span class="code">pydantic>=2.0.0</span> to ensure reliable container compilation.
+  </div>
+  <div class="callout-success">
+    <strong>Auditor Fix 2: Production Containerization (<span class="code">frontend/nginx.conf</span>, <span class="code">frontend/Dockerfile</span>)</strong><br>
+    Configured a dedicated production Nginx configuration with single-page application fallback (<span class="code">try_files $uri $uri/ /index.html;</span>), eliminating 404 errors on deep SPA navigation. Updated <span class="code">docker-compose.yml</span> to properly map host port 5173 to container port 80.
+  </div>
+
+  <!-- PAGE BREAK TO CLEANLY START SECTION C -->
+  <div class="page-break"></div>
+
+  <!-- PAGE 3: SECTION C -->
+  <h2><span class="sec-num">C</span> Technologies to Remove / Not Add (Strict Technical Rationale)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 17%;">Technology</th>
+        <th style="width: 15%;">Audit Verdict</th>
+        <th style="width: 68%;">Architectural Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Supabase</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Redundant. MongoDB + Mongoose is already deeply integrated with 16 active schemas. Introducing Supabase (PostgreSQL + GoTrue) forces dual databases, breaks referential integrity, and adds zero capability.</td>
+      </tr>
+      <tr>
+        <td><strong>Firebase</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Redundant. Authentication is handled cleanly by JWT + bcrypt, and persistence is on MongoDB. Adding Firebase SDKs duplicates existing auth logic and locks the system into Google vendor constraints.</td>
+      </tr>
+      <tr>
+        <td><strong>React Native</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Out of scope. BulkMatrix is an enterprise desktop procurement platform with wide multi-port route tables, Leaflet maps, and complex scenario planners. It is strictly a web application.</td>
+      </tr>
+      <tr>
+        <td><strong>Java / Spring Boot</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Architectural bloat. The existing Express.js gateway and Python FastAPI service already satisfy all requirements. Adding Java introduces JVM memory overhead and fragments backend logic across 3 runtimes.</td>
+      </tr>
+      <tr>
+        <td><strong>Next.js</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Unwarranted rewrite. BulkMatrix is an authenticated, internal procurement single-page application built on Vite. SSR/Server Components add caching complexity without providing SEO benefits behind auth.</td>
+      </tr>
+      <tr>
+        <td><strong>Google Cloud (GCP)</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Over-engineering. Vercel (frontend) + Render (Node backend + Python ML container) + MongoDB Atlas provide automated CI/CD and cost predictability. Migrating to GCP introduces needless IAM and DevOps friction.</td>
+      </tr>
+      <tr>
+        <td><strong>Framer Motion</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Bundle bloat. <span class="code">frontend/package.json</span> already includes <strong>GSAP</strong> (<span class="code">gsap@3.15.0</span>) and Tailwind CSS transitions for smooth UI animations. Adding Framer Motion adds 30KB+ of dead weight.</td>
+      </tr>
+      <tr>
+        <td><strong>Redis</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Premature optimization. Python holds model objects in memory and MongoDB handles rate indexes. Concurrency in bulk procurement workflows does not warrant the cost and complexity of a dedicated Redis cluster.</td>
+      </tr>
+      <tr>
+        <td><strong>Prisma</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Mismatched ORM. Mongoose is natively tailored for MongoDB schemas, discriminators, and population. Prisma is primarily designed for relational SQL and offers inferior MongoDB capability.</td>
+      </tr>
+      <tr>
+        <td><strong>Botpress</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Mismatched function. The existing chat controller (<span class="code">chatController.js</span>) handles <strong>human-to-human charter negotiations</strong> between cargo logistics managers and vessel owners. Botpress is a conversational AI bot and cannot replace contractual negotiation.</td>
+      </tr>
+      <tr>
+        <td><strong>Joblib</strong></td>
+        <td><span class="badge badge-reject">DO NOT ADD</span></td>
+        <td>Unused. The 168 pre-trained models in <span class="code">models/regularized/</span> are serialized strictly with Python's standard <span class="code">pickle</span> library. Adding Joblib adds no value.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PAGE BREAK TO CLEANLY START SECTION F -->
+  <div class="page-break"></div>
+
+  <!-- PAGE 4: SECTION F FINAL ARCHITECTURE -->
+  <h2><span class="sec-num">F</span> Final BulkMatrix System Architecture</h2>
+
+  <div class="flow-container">
+    <div class="flow-step">
+      <div class="flow-step-icon">💻</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">1. CLIENT TIER &bull; React 19 + Vite + Tailwind CSS SPA (Deployed on Vercel)</div>
+        <div class="flow-step-desc">Recharts BDI forecasting curves &bull; Leaflet Indian East Coast maritime route maps &bull; Axios with auto JWT Bearer interceptor</div>
+      </div>
+    </div>
+
+    <div class="flow-arrow-down">&darr; HTTPS / REST API JSON (Authenticated via Bearer Token)</div>
+
+    <div class="flow-step">
+      <div class="flow-step-icon">🛡️</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">2. API GATEWAY &bull; Node.js + Express 5 REST API (Deployed on Render)</div>
+        <div class="flow-step-desc">JWT authentication &amp; RBAC (Logistics Manager, Vessel Owner, Admin) &bull; Controllers for Charters, Fleet, Contracts, Weather, Chat</div>
+      </div>
+    </div>
+
+    <div class="flow-arrow-down">&darr; Mongoose ODM (mongodb:// cluster connection)</div>
+
+    <div class="flow-step">
+      <div class="flow-step-icon">🍃</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">3. PERSISTENCE TIER &bull; MongoDB Atlas (16 Mongoose Schemas)</div>
+        <div class="flow-step-desc">Charters, Vessels, Ports (Paradip, Dhamra, Vizag, Haldia), WeatherRisk, PortCongestion, Contracts, ChatMessages</div>
+      </div>
+    </div>
+
+    <div class="flow-arrow-down">&darr; Internal HTTP Microservice Proxy (backend/services/mlService.js &rarr; Port 8000)</div>
+
+    <div class="flow-step">
+      <div class="flow-step-icon">🧠</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">4. ML INFERENCE ENGINE &bull; Python FastAPI Microservice (Render Docker Service)</div>
+        <div class="flow-step-desc">charter_engine.py &amp; prediction_pipeline.py &bull; Pandas feature extraction, draft/beam port compatibility constraints</div>
+      </div>
+    </div>
+
+    <div class="flow-arrow-down">&darr; Deserialization via Python pickle.load()</div>
+
+    <div class="flow-step">
+      <div class="flow-step-icon">📦</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">5. SERIALIZED MODEL STORE &bull; 168 Pre-Trained CatBoost Models (models/regularized/*.pkl)</div>
+        <div class="flow-step-desc">15-day, 30-day, and 90-day per-route freight rate regressors &bull; Multi-Vessel Fleet Optimization &amp; Buy/Hold charter signals</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>End-to-End Operational Lifecycle:</h3>
+  <ol style="font-size: 8.8pt; color: #334155; margin-left: 18px; line-height: 1.55;">
+    <li><strong>Voyage Parameter Entry:</strong> Logistics Manager inputs cargo volume (e.g., 75,000 MT coking coal), origin port (e.g., Hay Point, Australia), and target East Coast destination ports (Paradip / Dhamra).</li>
+    <li><strong>Client Dispatch:</strong> Axios dispatches an authenticated JSON payload to the Express API gateway with user JWT.</li>
+    <li><strong>Policy & Gatekeeping:</strong> Express verifies JWT claims, validates cargo tonnage, and forwards the payload to the internal ML proxy (<span class="code">backend/services/mlService.js</span>).</li>
+    <li><strong>Inference Execution:</strong> FastAPI invokes <span class="code">charter_engine.py</span>, extracts historical BDI lag indicators using Pandas, checks draft and beam compatibility against Indian port depth constraints, and executes the regularized CatBoost model.</li>
+    <li><strong>Output Delivery:</strong> The system computes Buy/Hold market signals, port waiting time estimates, and Capesize vs. Panamax cost trade-offs, persisting the record in MongoDB and returning high-confidence analytics to the frontend.</li>
+  </ol>
+
+  <div class="footer">
+    <div>BulkMatrix Architectural Audit Report &bull; Executive Engineering Review</div>
+    <div>Strict "No Blind Technology Inflation" Architecture Standard &bull; 2026</div>
+  </div>
+
+</body>
+</html>

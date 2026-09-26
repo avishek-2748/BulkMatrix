@@ -27,6 +27,9 @@ plotly>=5.15.0
 
 # Web/Dashboard
 streamlit>=1.25.0
+fastapi>=0.100.0
+uvicorn>=0.23.0
+pydantic>=2.0.0
 
 # Utilities
 python-dotenv>=1.0.0
