@@ -31,7 +31,11 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: 'User already exists with this email.' });
     }
 
-    const assignedRole = role || 'LOGISTIC_MANAGER';
+   const assignedRole =
+     role === 'LOGISTICS_MANAGER'
+    ? 'LOGISTIC_MANAGER'
+    : role || 'LOGISTIC_MANAGER';
+
     const user = await User.create({ 
       name, 
       email, 
