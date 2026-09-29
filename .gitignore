@@ -27,3 +27,5 @@ backend/.env
 frontend/node_modules/
 backend/node_modules/
 .vite/
+
+backend/node_modules/
