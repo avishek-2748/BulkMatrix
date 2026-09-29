@@ -23,3 +23,5 @@ Generated: 2026-09-09 15:42:59
 - **xgboost**: 27.66%
 
 🏆 **Best Model Overall**: catboost (23.81%)
+
+### **Our model uses 321 features per prediction, spanning lag features, rolling averages, volatility, ratios, and temporal encodings — all derived from 15 raw datasets.**
